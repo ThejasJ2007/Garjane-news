@@ -1,0 +1,468 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  REPORTER
+  VIEWER
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+enum BreakingNewsLevel {
+  NORMAL
+  BREAKING
+  URGENT
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  avatar        String?
+  role          UserRole  @default(VIEWER)
+  bio           String?
+  bioKn         String?
+  location      String?
+  phone         String?
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  articles      Article[]          @relation("ArticleAuthor")
+  reporterProfile Reporter?        @relation("ReporterUser")
+  newsletterSubscriptions NewsletterSubscriber[] @relation("NewsletterSubscriberUser")
+  articleViews  ArticleView[]
+  comments      Comment[] @relation("CommentUser")
+
+  @@index([email])
+  @@index([role])
+}
+
+model Reporter {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation("ReporterUser", fields: [userId], references: [id], onDelete: Cascade)
+  beat        String?
+  specialization String[]
+  socialLinks Json?
+  isVerified  Boolean  @default(false)
+  joinedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  articles    Article[] @relation("ArticleReporter")
+  videos      Video[] @relation("VideoReporter")
+
+  @@index([beat])
+  @@index([isVerified])
+}
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  nameKn        String
+  slug          String   @unique
+  description   String?
+  descriptionKn String?
+  color         String   @default("#C01A2A")
+  icon          String?
+  parentId      String?
+  parent        Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children      Category[] @relation("CategoryHierarchy")
+  displayOrder  Int      @default(0)
+  isActive      Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  articles      Article[]
+  videos        Video[] @relation("VideoCategory")
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([isActive, displayOrder])
+}
+
+model Location {
+  id            String    @id @default(cuid())
+  name          String
+  nameKn        String
+  slug          String    @unique
+  type          String    // state, district, taluk, locality
+  parentId      String?
+  parent        Location? @relation("LocationHierarchy", fields: [parentId], references: [id])
+  children      Location[] @relation("LocationHierarchy")
+  latitude      Float?
+  longitude     Float?
+  isActive      Boolean   @default(true)
+  displayOrder  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  articles      Article[]
+  videos        Video[] @relation("VideoLocation")
+
+  @@index([slug])
+  @@index([type])
+  @@index([parentId])
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String
+  nameKn    String?
+  slug      String    @unique
+  color     String    @default("#6B7280")
+  createdAt DateTime  @default(now())
+
+  articles  ArticleTag[]
+
+  @@index([slug])
+}
+
+model Article {
+  id              String         @id @default(cuid())
+  slug            String         @unique
+  headline        String
+  headlineKn      String?
+  summary         String?
+  summaryKn       String?
+  content         String
+  contentKn       String?
+  excerpt         String?
+  excerptKn       String?
+  featuredImage   String?
+  featuredImageAlt String?
+  featuredImageCaption String?
+  status          ArticleStatus  @default(DRAFT)
+  breakingLevel   BreakingNewsLevel @default(NORMAL)
+  isFeatured      Boolean        @default(false)
+  isEditorPick    Boolean        @default(false)
+  isLive          Boolean        @default(false)
+  allowComments   Boolean        @default(true)
+  viewCount       Int            @default(0)
+  readTime        Int            @default(0)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  authorId        String
+  author          User           @relation("ArticleAuthor", fields: [authorId], references: [id])
+  reporterId      String?
+  reporter        Reporter?      @relation("ArticleReporter", fields: [reporterId], references: [id])
+  categoryId      String
+  category        Category       @relation(fields: [categoryId], references: [id])
+  locationId      String?
+  location        Location?      @relation(fields: [locationId], references: [id])
+  seoTitle        String?
+  seoDescription  String?
+  seoKeywords     String[]
+  canonicalUrl    String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  tags            ArticleTag[]
+  media           Media[]
+  galleries       PhotoGallery[]
+  liveUpdates     LiveUpdate[]
+  views           ArticleView[]
+  relatedArticles ArticleRelation[] @relation("RelatedArticle")
+  relatedTo       ArticleRelation[] @relation("RelatedToArticle")
+  breakingNews    BreakingNews[] @relation("ArticleBreakingNews")
+  comments        Comment[] @relation("ArticleComments")
+
+  @@index([slug])
+  @@index([status])
+  @@index([categoryId])
+  @@index([locationId])
+  @@index([authorId])
+  @@index([reporterId])
+  @@index([publishedAt])
+  @@index([isFeatured])
+  @@index([isEditorPick])
+  @@index([breakingLevel])
+  @@index([isLive])
+  @@index([status, publishedAt])
+  @@index([categoryId, status, publishedAt])
+  @@index([locationId, status, publishedAt])
+}
+
+model ArticleTag {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, tagId])
+}
+
+model ArticleRelation {
+  id            String   @id @default(cuid())
+  articleId     String
+  article       Article  @relation("RelatedArticle", fields: [articleId], references: [id], onDelete: Cascade)
+  relatedId     String
+  relatedTo     Article  @relation("RelatedToArticle", fields: [relatedId], references: [id], onDelete: Cascade)
+  displayOrder  Int      @default(0)
+
+  @@unique([articleId, relatedId])
+  @@index([articleId])
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  articleId   String
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  type        MediaType
+  url         String
+  alt         String?
+  caption     String?
+  captionKn   String?
+  thumbnailUrl String?
+  width       Int?
+  height      Int?
+  duration    Int?     // for video/audio in seconds
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([articleId])
+  @@index([type])
+}
+
+model PhotoGallery {
+  id          String   @id @default(cuid())
+  articleId   String
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  title       String
+  titleKn     String?
+  description String?
+  descriptionKn String?
+  coverImage  String
+  imageCount  Int      @default(0)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images      GalleryImage[]
+
+  @@index([articleId])
+}
+
+model GalleryImage {
+  id           String      @id @default(cuid())
+  galleryId    String
+  gallery      PhotoGallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  url          String
+  alt          String?
+  caption      String?
+  captionKn    String?
+  width        Int?
+  height       Int?
+  displayOrder Int         @default(0)
+  createdAt    DateTime    @default(now())
+
+  @@index([galleryId])
+}
+
+model LiveUpdate {
+  id          String   @id @default(cuid())
+  articleId   String
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  content     String
+  contentKn   String?
+  timestamp   DateTime @default(now())
+  isBreaking  Boolean  @default(false)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([articleId])
+  @@index([timestamp])
+}
+
+model Video {
+  id            String   @id @default(cuid())
+  title         String
+  titleKn       String?
+  description   String?
+  descriptionKn String?
+  videoUrl      String
+  thumbnailUrl  String
+  duration      Int
+  categoryId    String?
+  category      Category? @relation("VideoCategory", fields: [categoryId], references: [id])
+  locationId    String?
+  location      Location? @relation("VideoLocation", fields: [locationId], references: [id])
+  reporterId    String?
+  reporter      Reporter? @relation("VideoReporter", fields: [reporterId], references: [id])
+  viewCount     Int      @default(0)
+  isPublished   Boolean  @default(false)
+  publishedAt   DateTime?
+  tags          String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([locationId])
+  @@index([isPublished, publishedAt])
+  @@index([viewCount])
+}
+
+model Advertisement {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // banner, sidebar, in-feed, mobile, video-pre-roll
+  imageUrl    String?
+  videoUrl    String?
+  targetUrl   String?
+  htmlCode    String?
+  position    String   // top-banner, sidebar, article-top, article-middle, article-bottom, in-feed, mobile-banner
+  width       Int?
+  height      Int?
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0)
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([position, isActive, startDate, endDate])
+  @@index([type])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  language  String   @default("kn")
+  isActive  Boolean  @default(true)
+  confirmedAt DateTime?
+  token     String   @unique @default(cuid())
+  userId    String?
+  user      User?    @relation("NewsletterSubscriberUser", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([isActive])
+  @@index([userId])
+}
+
+model ArticleView {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  ipAddress String?
+  userAgent String?
+  referrer  String?
+  country   String?
+  city      String?
+  createdAt DateTime @default(now())
+
+  @@index([articleId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([articleId, createdAt])
+}
+
+model BreakingNews {
+  id          String   @id @default(cuid())
+  headline    String
+  headlineKn  String?
+  articleId   String?
+  article     Article? @relation("ArticleBreakingNews", fields: [articleId], references: [id])
+  level       BreakingNewsLevel @default(BREAKING)
+  isActive    Boolean  @default(true)
+  startsAt    DateTime @default(now())
+  expiresAt   DateTime?
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, startsAt, expiresAt])
+  @@index([level])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation("ArticleComments", fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation("CommentUser", fields: [userId], references: [id])
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  content   String
+  isApproved Boolean  @default(false)
+  isSpam    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([articleId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([isApproved])
+  @@index([articleId, isApproved, createdAt])
+}
+
+model SiteSettings {
+  id              String   @id @default("singleton")
+  siteName        String   @default("Garjane News")
+  siteNameKn      String   @default("ಗರ್ಜನೆ ನ್ಯೂಸ್")
+  tagline         String   @default("Your Local News, Your Voice")
+  taglineKn       String   @default("ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ")
+  description     String?
+  descriptionKn   String?
+  logoUrl         String?
+  faviconUrl      String?
+  defaultLanguage String   @default("kn")
+  supportedLanguages String[] @default(["kn", "en"])
+  socialLinks     Json?
+  seoDefaults     Json?
+  analyticsCode   String?
+  adsTxtContent   String?
+  maintenanceMode Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
+model MenuItem {
+  id          String    @id @default(cuid())
+  label       String
+  labelKn     String
+  slug        String
+  href        String?
+  parentId    String?
+  parent      MenuItem? @relation("MenuHierarchy", fields: [parentId], references: [id])
+  children    MenuItem[] @relation("MenuHierarchy")
+  displayOrder Int      @default(0)
+  isActive    Boolean   @default(true)
+  isExternal  Boolean   @default(false)
+  icon        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([parentId])
+  @@index([isActive, displayOrder])
+}
