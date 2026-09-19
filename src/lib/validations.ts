@@ -19,7 +19,7 @@ export const registerSchema = z.object({
 
 export const articleSchema = z.object({
   headline: z.string().min(5, 'Headline must be at least 5 characters').max(200),
-  headlineKn: z.string().max(200).optional(),
+  headlineKn: z.string().min(5, 'ಕನ್ನಡ ಮುಖ್ಯಾಂಶ ಕನಿಷ್ಠ 5 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು / Kannada headline must be at least 5 characters').max(200),
   summary: z.string().max(500).optional(),
   summaryKn: z.string().max(500).optional(),
   content: z.string().min(50, 'Content must be at least 50 characters'),
@@ -166,6 +166,14 @@ export const paginationSchema = z.object({
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
+export const contactSchema = z.object({
+  name: z.string().min(2, 'ಹೆಸರು ಕನಿಷ್ಠ 2 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು / Name must be at least 2 characters').max(100),
+  phone: z.string().min(10, 'ಸರಿಯಾದ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ / Please enter a valid 10-digit phone number').max(15),
+  email: z.string().email('ಸರಿಯಾದ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ / Invalid email address').optional().or(z.literal('')),
+  topic: z.enum(['tip', 'issue', 'ad', 'feedback']).default('tip'),
+  message: z.string().min(10, 'ಸಂದೇಶ ಕನಿಷ್ಠ 10 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು / Message must be at least 10 characters').max(3000),
+});
+
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ArticleInput = z.infer<typeof articleSchema>;
@@ -177,6 +185,7 @@ export type AdvertisementInput = z.infer<typeof advertisementSchema>;
 export type BreakingNewsInput = z.infer<typeof breakingNewsSchema>;
 export type NewsletterInput = z.infer<typeof newsletterSchema>;
 export type CommentInput = z.infer<typeof commentSchema>;
+export type ContactInput = z.infer<typeof contactSchema>;
 export type UserUpdateInput = z.infer<typeof userUpdateSchema>;
 export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;

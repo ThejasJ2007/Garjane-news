@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Expand, ChevronLeft, ChevronRight, X, Camera } from 'lucide-react';
@@ -199,15 +199,9 @@ interface LightboxProps {
 export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTitle, language = 'kn' }: LightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-  if (!isOpen) return null;
-
-  const currentImage = images[currentIndex];
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
-    if (e.key === 'ArrowLeft') goToPrev();
-    if (e.key === 'ArrowRight') goToNext();
-  };
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
   const goToPrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -217,14 +211,30 @@ export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTit
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  useState(() => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+      }
+      if (e.key === 'ArrowRight') {
+        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
-  });
+  }, [isOpen, images.length, onClose]);
+
+  if (!isOpen || images.length === 0) return null;
+
+  const currentImage = images[currentIndex];
 
   return (
     <div

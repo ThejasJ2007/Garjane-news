@@ -1,14 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import React from 'react';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { BreakingTicker } from '@/components/layout/BreakingTicker';
 import { SectionHeader, CategoryNav } from '@/components/layout/SectionHeader';
-import { ArticleGrid, ArticleList } from '@/components/articles/ArticleCard';
+import { ArticleGrid } from '@/components/articles/ArticleCard';
 import { MostRead, TrendingNow } from '@/components/articles/MostRead';
 import { Newsletter } from '@/components/layout/Newsletter';
-import { getLocationBySlug, getArticlesByLocation, getBreakingNews, getAdvertisements } from '@/lib/data';
+import { ArticleSortSelect } from '@/components/articles/ArticleSortSelect';
+import { getLocationBySlug, getArticlesByLocation, getAdvertisements } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,10 +42,9 @@ export default async function LocationPage({ params, searchParams }: LocationPag
   const { page: pageParam = '1', sort = 'publishedAt' } = await searchParams;
   const page = parseInt(pageParam, 10) || 1;
 
-  const [location, articlesData, breakingNews, sidebarAds] = await Promise.all([
+  const [location, articlesData, sidebarAds] = await Promise.all([
     getLocationBySlug(slug),
     getArticlesByLocation(slug, { page, limit: 12, sortBy: sort, sortOrder: 'desc' }),
-    getBreakingNews(),
     getAdvertisements('sidebar'),
   ]);
 
@@ -58,11 +55,8 @@ export default async function LocationPage({ params, searchParams }: LocationPag
   const displayName = location.nameKn || location.name;
 
   return (
-    <>
-      <div className="min-h-screen flex flex-col">
-        <Header breakingNews={breakingNews} user={null} />
-        <main id="main-content" className="flex-1 pt-16 lg:pt-14" role="main">
-          {/* Location Header */}
+    <div className="w-full">
+      {/* Location Header */}
           <div className="bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 border-b border-garjane-border-light dark:border-garjane-border-dark">
             <div className="container mx-auto px-4 py-8 lg:py-12">
               <header className="max-w-3xl">
@@ -99,28 +93,7 @@ export default async function LocationPage({ params, searchParams }: LocationPag
                 {articlesData.data.length > 0 ? (
                   <>
                     {/* Sort Options */}
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-2">
-                        <label htmlFor="sort-select" className="text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted">
-                          Sort by:
-                        </label>
-                        <select
-                          id="sort-select"
-                          defaultValue={sort}
-                          onChange={(e) => {
-                            const url = new URL(window.location.href);
-                            url.searchParams.set('sort', e.target.value);
-                            url.searchParams.delete('page');
-                            window.location.href = url.toString();
-                          }}
-                          className="input w-auto text-body-sm"
-                        >
-                          <option value="publishedAt">Latest First</option>
-                          <option value="viewCount">Most Viewed</option>
-                          <option value="readTime">Shortest Read</option>
-                        </select>
-                      </div>
-                    </div>
+                    <ArticleSortSelect currentSort={sort} />
 
                     {/* Article Grid */}
                     <ArticleGrid
@@ -220,9 +193,6 @@ export default async function LocationPage({ params, searchParams }: LocationPag
               </aside>
             </div>
           </div>
-        </main>
-        <Footer siteSettings={null} />
-      </div>
-    </>
-  );
-}
+        </div>
+      );
+    }

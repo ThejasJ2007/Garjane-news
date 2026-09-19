@@ -80,7 +80,7 @@ export function ArticleCard({
                 {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-2.5 h-2.5" /> Breaking</Badge>}
                 {isLive && <Badge variant="live" size="sm" dot><Radio className="w-2.5 h-2.5" /> Live</Badge>}
                 {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-2.5 h-2.5" /> Featured</Badge>}
-                {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-2.5 h-2.5" /> Editor's Pick</Badge>}
+                {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-2.5 h-2.5" /> Editor&apos;s Pick</Badge>}
               </div>
             )}
           </div>
@@ -105,7 +105,7 @@ export function ArticleCard({
             {showAuthor && article.author && (
               <span className="flex items-center gap-1">
                 {article.author.avatar ? (
-                  <img src={article.author.avatar} alt="" className="w-4 h-4 rounded-full" />
+                  <Image src={article.author.avatar} alt="" width={16} height={16} className="w-4 h-4 rounded-full" />
                 ) : (
                   <span className="w-4 h-4 rounded-full bg-garjane-primary/10 text-garjane-primary text-xs flex items-center justify-center">
                     {article.author.name.charAt(0)}
@@ -147,7 +147,7 @@ export function ArticleCard({
               {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-3 h-3" /> {article.breakingLevel}</Badge>}
               {isLive && <Badge variant="live" size="sm" dot><Radio className="w-3 h-3" /> Live</Badge>}
               {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-3 h-3" /> Featured</Badge>}
-              {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> Editor's Pick</Badge>}
+              {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> Editor&apos;s Pick</Badge>}
             </div>
           )}
           {article.readTime > 0 && (

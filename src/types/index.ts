@@ -1,6 +1,6 @@
 import { Article, Category, Location, Tag, User, Reporter, Media, Video, Advertisement, BreakingNews, MenuItem, SiteSettings, PhotoGallery, LiveUpdate, Comment, NewsletterSubscriber } from '@prisma/client';
 
-export type { Advertisement, PhotoGallery, Video, Category };
+export type { Advertisement, PhotoGallery, Video, Category, Location, Article, Tag, User, BreakingNews, MenuItem, SiteSettings, Media, LiveUpdate, Comment, NewsletterSubscriber, Reporter };
 
 export type VideoWithRelations = Video & {
   category?: Category | null;
@@ -17,6 +17,11 @@ export type ArticleWithRelations = Article & {
   media: Media[];
   galleries: (PhotoGallery & { images: GalleryImage[] })[];
   liveUpdates: LiveUpdate[];
+  relatedArticles?: any[];
+  relatedTo?: any[];
+  breakingNews?: any[];
+  comments?: any[];
+  views?: any[];
   _count?: { views: number; comments: number };
 };
 

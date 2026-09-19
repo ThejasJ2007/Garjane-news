@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { Card, CardContent } from '@/components/ui/Card';
+import { CommentSection } from './CommentSection';
 import type { ArticleWithRelations, Advertisement } from '@/types';
 
 interface ArticleDetailProps {
@@ -622,6 +623,14 @@ export function ArticleDetail({
               </div>
             </div>
           </div>
+
+          {/* Comments Section */}
+          <CommentSection
+            articleId={article.id}
+            allowComments={article.allowComments}
+            comments={article.comments}
+            language={language}
+          />
         </div>
 
         {/* Sidebar */}

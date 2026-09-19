@@ -3,10 +3,24 @@ import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 import { UserSession } from '@/types';
 
+const jwtSecretValue =
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV === 'production'
+    ? ''
+    : 'dev-jwt-secret-key-min-32-characters-garjane');
+
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET environment variable is not set in production.');
+}
+
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-super-secret-jwt-key-min-32-chars-long-enough'
+  jwtSecretValue || 'dev-jwt-secret-key-min-32-characters-garjane'
 );
-const SESSION_PASSWORD = process.env.SESSION_PASSWORD || 'your-session-password-min-32-chars-long-enough';
+const SESSION_PASSWORD =
+  process.env.SESSION_PASSWORD ||
+  (process.env.NODE_ENV === 'production'
+    ? ''
+    : 'dev-session-password-min-32-characters-garjane');
 
 export async function createSession(user: {
   id: string;

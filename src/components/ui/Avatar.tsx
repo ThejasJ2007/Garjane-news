@@ -1,6 +1,5 @@
-'use client';
-
 import { forwardRef, HTMLAttributes } from 'react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { getInitials } from '@/lib/utils';
 
@@ -43,11 +42,12 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         {...props}
       >
         {src ? (
-          <img
+          <Image
             src={src}
             alt={alt || name || 'Avatar'}
-            className="w-full h-full object-cover"
-            loading="lazy"
+            fill
+            className="object-cover"
+            sizes="32px"
           />
         ) : (
           <span aria-hidden="true">{initials}</span>

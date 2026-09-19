@@ -45,82 +45,83 @@ export async function createArticleAction(formData: FormData) {
   }
 
   const data = validated.data;
-  const baseSlug = slugify(data.headline);
-  let slug = baseSlug;
-  let counter = 1;
 
-  while (await prisma.article.findUnique({ where: { slug } })) {
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
+  try {
+    const baseSlug = slugify(data.headline);
+    let slug = baseSlug;
+    let counter = 1;
 
-  const readTime = Math.ceil(data.content.split(/\s+/).length / 200);
+    while (await prisma.article.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
 
-  const article = await prisma.article.create({
-    data: {
-      slug,
-      headline: data.headline,
-      headlineKn: data.headlineKn,
-      summary: data.summary,
-      summaryKn: data.summaryKn,
-      content: data.content,
-      contentKn: data.contentKn,
-      excerpt: data.excerpt,
-      excerptKn: data.excerptKn,
-      featuredImage: data.featuredImage,
-      featuredImageAlt: data.featuredImageAlt,
-      featuredImageCaption: data.featuredImageCaption,
-      status: data.status,
-      breakingLevel: data.breakingLevel,
-      isFeatured: data.isFeatured,
-      isEditorPick: data.isEditorPick,
-      isLive: data.isLive,
-      allowComments: data.allowComments,
-      categoryId: data.categoryId,
-      locationId: data.locationId,
-      reporterId: data.reporterId || (user.role === 'REPORTER' ? user.id : undefined),
-      authorId: user.id,
-      seoTitle: data.seoTitle,
-      seoDescription: data.seoDescription,
-      seoKeywords: data.seoKeywords,
-      scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
-      publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
-      readTime,
-      tags: data.tags ? {
-        create: data.tags.map((tagId) => ({ tagId })),
-      } : undefined,
-    },
-  });
+    const readTime = Math.ceil(data.content.split(/\s+/).length / 200);
 
-  if (data.status === 'PUBLISHED' && (data.breakingLevel === 'BREAKING' || data.breakingLevel === 'URGENT')) {
-    await prisma.breakingNews.create({
+    const article = await prisma.article.create({
       data: {
+        slug,
         headline: data.headline,
         headlineKn: data.headlineKn,
-        articleId: article.id,
-        level: data.breakingLevel,
-        isActive: true,
-        startsAt: new Date(),
+        summary: data.summary,
+        summaryKn: data.summaryKn,
+        content: data.content,
+        contentKn: data.contentKn,
+        excerpt: data.excerpt,
+        excerptKn: data.excerptKn,
+        featuredImage: data.featuredImage,
+        featuredImageAlt: data.featuredImageAlt,
+        featuredImageCaption: data.featuredImageCaption,
+        status: data.status,
+        breakingLevel: data.breakingLevel,
+        isFeatured: data.isFeatured,
+        isEditorPick: data.isEditorPick,
+        isLive: data.isLive,
+        allowComments: data.allowComments,
+        categoryId: data.categoryId,
+        locationId: data.locationId,
+        reporterId: data.reporterId || (user.role === 'REPORTER' ? user.id : undefined),
+        authorId: user.id,
+        seoTitle: data.seoTitle,
+        seoDescription: data.seoDescription,
+        seoKeywords: data.seoKeywords,
+        scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
+        publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
+        readTime,
+        tags: data.tags ? {
+          create: data.tags.map((tagId) => ({ tagId })),
+        } : undefined,
       },
     });
-  }
 
-  revalidatePath('/');
-  revalidatePath('/dashboard/articles');
-  redirect(`/dashboard/articles/${article.id}`);
+    if (data.status === 'PUBLISHED' && (data.breakingLevel === 'BREAKING' || data.breakingLevel === 'URGENT')) {
+      await prisma.breakingNews.create({
+        data: {
+          headline: data.headline,
+          headlineKn: data.headlineKn,
+          articleId: article.id,
+          level: data.breakingLevel,
+          isActive: true,
+          startsAt: new Date(),
+        },
+      }).catch(() => {});
+    }
+
+    revalidatePath('/');
+    revalidatePath('/dashboard/articles');
+    redirect('/dashboard');
+  } catch (err: any) {
+    if (err?.message?.includes('NEXT_REDIRECT') || err?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw err;
+    }
+    return {
+      error: 'ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ ಅಥವಾ ಲೇಖನ ಪ್ರಕಟಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. / Database unavailable or failed to save article.',
+    };
+  }
 }
 
 export async function updateArticleAction(articleId: string, formData: FormData) {
   const user = await requireRole('ADMIN', 'EDITOR', 'REPORTER');
-
-  const article = await prisma.article.findUnique({ where: { id: articleId } });
-  if (!article) {
-    return { error: 'Article not found' };
-  }
-
-  if (user.role === 'REPORTER' && article.authorId !== user.id && article.reporterId !== user.id) {
-    return { error: 'Not authorized to edit this article' };
-  }
 
   const rawData = {
     headline: formData.get('headline') as string,
@@ -156,76 +157,95 @@ export async function updateArticleAction(articleId: string, formData: FormData)
   }
 
   const data = validated.data;
-  const wasPublished = article.status === 'PUBLISHED';
-  const isPublished = data.status === 'PUBLISHED';
 
-  let slug = article.slug;
-  if (data.headline !== article.headline) {
-    const baseSlug = slugify(data.headline);
-    slug = baseSlug;
-    let counter = 1;
-    while (await prisma.article.findFirst({ where: { slug, id: { not: articleId } } })) {
-      slug = `${baseSlug}-${counter}`;
-      counter++;
+  try {
+    const article = await prisma.article.findUnique({ where: { id: articleId } });
+    if (!article) {
+      return { error: 'Article not found' };
     }
-  }
 
-  const readTime = Math.ceil(data.content.split(/\s+/).length / 200);
+    if (user.role === 'REPORTER' && article.authorId !== user.id && article.reporterId !== user.id) {
+      return { error: 'Not authorized to edit this article' };
+    }
 
-  await prisma.article.update({
-    where: { id: articleId },
-    data: {
-      slug,
-      headline: data.headline,
-      headlineKn: data.headlineKn,
-      summary: data.summary,
-      summaryKn: data.summaryKn,
-      content: data.content,
-      contentKn: data.contentKn,
-      excerpt: data.excerpt,
-      excerptKn: data.excerptKn,
-      featuredImage: data.featuredImage,
-      featuredImageAlt: data.featuredImageAlt,
-      featuredImageCaption: data.featuredImageCaption,
-      status: data.status,
-      breakingLevel: data.breakingLevel,
-      isFeatured: data.isFeatured,
-      isEditorPick: data.isEditorPick,
-      isLive: data.isLive,
-      allowComments: data.allowComments,
-      categoryId: data.categoryId,
-      locationId: data.locationId,
-      reporterId: data.reporterId,
-      seoTitle: data.seoTitle,
-      seoDescription: data.seoDescription,
-      seoKeywords: data.seoKeywords,
-      scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
-      publishedAt: !wasPublished && isPublished ? new Date() : article.publishedAt,
-      readTime,
-      tags: data.tags ? {
-        deleteMany: {},
-        create: data.tags.map((tagId) => ({ tagId })),
-      } : undefined,
-    },
-  });
+    const wasPublished = article.status === 'PUBLISHED';
+    const isPublished = data.status === 'PUBLISHED';
 
-  if (!wasPublished && isPublished && (data.breakingLevel === 'BREAKING' || data.breakingLevel === 'URGENT')) {
-    await prisma.breakingNews.create({
+    let slug = article.slug;
+    if (data.headline !== article.headline) {
+      const baseSlug = slugify(data.headline);
+      slug = baseSlug;
+      let counter = 1;
+      while (await prisma.article.findFirst({ where: { slug, id: { not: articleId } } })) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
+
+    const readTime = Math.ceil(data.content.split(/\s+/).length / 200);
+
+    await prisma.article.update({
+      where: { id: articleId },
       data: {
+        slug,
         headline: data.headline,
         headlineKn: data.headlineKn,
-        articleId,
-        level: data.breakingLevel,
-        isActive: true,
-        startsAt: new Date(),
+        summary: data.summary,
+        summaryKn: data.summaryKn,
+        content: data.content,
+        contentKn: data.contentKn,
+        excerpt: data.excerpt,
+        excerptKn: data.excerptKn,
+        featuredImage: data.featuredImage,
+        featuredImageAlt: data.featuredImageAlt,
+        featuredImageCaption: data.featuredImageCaption,
+        status: data.status,
+        breakingLevel: data.breakingLevel,
+        isFeatured: data.isFeatured,
+        isEditorPick: data.isEditorPick,
+        isLive: data.isLive,
+        allowComments: data.allowComments,
+        categoryId: data.categoryId,
+        locationId: data.locationId,
+        reporterId: data.reporterId,
+        seoTitle: data.seoTitle,
+        seoDescription: data.seoDescription,
+        seoKeywords: data.seoKeywords,
+        scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
+        publishedAt: !wasPublished && isPublished ? new Date() : article.publishedAt,
+        readTime,
+        tags: data.tags ? {
+          deleteMany: {},
+          create: data.tags.map((tagId) => ({ tagId })),
+        } : undefined,
       },
     });
-  }
 
-  revalidatePath('/');
-  revalidatePath('/dashboard/articles');
-  revalidatePath(`/article/${slug}`);
-  redirect(`/dashboard/articles/${articleId}`);
+    if (!wasPublished && isPublished && (data.breakingLevel === 'BREAKING' || data.breakingLevel === 'URGENT')) {
+      await prisma.breakingNews.create({
+        data: {
+          headline: data.headline,
+          headlineKn: data.headlineKn,
+          articleId,
+          level: data.breakingLevel,
+          isActive: true,
+          startsAt: new Date(),
+        },
+      }).catch(() => {});
+    }
+
+    revalidatePath('/');
+    revalidatePath('/dashboard/articles');
+    revalidatePath(`/article/${slug}`);
+    redirect('/dashboard');
+  } catch (err: any) {
+    if (err?.message?.includes('NEXT_REDIRECT') || err?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw err;
+    }
+    return {
+      error: 'ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ ಅಥವಾ ಲೇಖನ ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ. / Database unavailable or failed to update article.',
+    };
+  }
 }
 
 export async function deleteArticleAction(articleId: string) {
@@ -445,19 +465,28 @@ export async function getDashboardStats() {
 
   const where = user.role === 'REPORTER' ? { authorId: user.id } : {};
 
-  const [totalArticles, publishedArticles, draftArticles, totalViews] = await Promise.all([
-    prisma.article.count({ where }),
-    prisma.article.count({ where: { ...where, status: 'PUBLISHED' } }),
-    prisma.article.count({ where: { ...where, status: 'DRAFT' } }),
-    prisma.article.aggregate({ where, _sum: { viewCount: true } }),
-  ]);
+  try {
+    const [totalArticles, publishedArticles, draftArticles, totalViews] = await Promise.all([
+      prisma.article.count({ where }),
+      prisma.article.count({ where: { ...where, status: 'PUBLISHED' } }),
+      prisma.article.count({ where: { ...where, status: 'DRAFT' } }),
+      prisma.article.aggregate({ where, _sum: { viewCount: true } }),
+    ]);
 
-  return {
-    totalArticles,
-    publishedArticles,
-    draftArticles,
-    totalViews: totalViews._sum.viewCount || 0,
-  };
+    return {
+      totalArticles,
+      publishedArticles,
+      draftArticles,
+      totalViews: totalViews._sum.viewCount || 0,
+    };
+  } catch {
+    return {
+      totalArticles: 0,
+      publishedArticles: 0,
+      draftArticles: 0,
+      totalViews: 0,
+    };
+  }
 }
 
 export async function getRecentArticles(limit = 10) {
@@ -466,13 +495,17 @@ export async function getRecentArticles(limit = 10) {
 
   const where = user.role === 'REPORTER' ? { authorId: user.id } : {};
 
-  return prisma.article.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-    take: limit,
-    include: {
-      category: { select: { name: true, nameKn: true, color: true } },
-      media: { where: { type: 'IMAGE' }, take: 1 },
-    },
-  });
+  try {
+    return await prisma.article.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      include: {
+        category: { select: { name: true, nameKn: true, color: true } },
+        media: { where: { type: 'IMAGE' }, take: 1 },
+      },
+    });
+  } catch {
+    return [];
+  }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Youtube, Rss, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import { getSiteSettings } from '@/lib/data';
 
 interface FooterProps {
@@ -16,26 +16,23 @@ export function Footer({ siteSettings }: FooterProps) {
     company: [
       { label: 'About Us', labelKn: 'ನಮ್ಮ ಬಗ್ಗೆ', href: '/about' },
       { label: 'Contact', labelKn: 'ಸಂಪರ್ಕ', href: '/contact' },
-      { label: 'Careers', labelKn: 'ಉದ್ಯೋಗಗಳು', href: '/careers' },
-      { label: 'Press', labelKn: 'ಪ್ರಕಾಶನ', href: '/press' },
+      { label: 'Editorial Policy', labelKn: 'ಸಂಪಾದಕೀಯ ನೀತಿ', href: '/editorial-policy' },
     ],
     editorial: [
       { label: 'Editorial Policy', labelKn: 'ಸಂಪಾದಕೀಯ ನೀತಿ', href: '/editorial-policy' },
-      { label: 'Ethics', labelKn: 'ನೈತಿಕತೆ', href: '/ethics' },
-      { label: 'Corrections', labelKn: 'ಸुधಾರಣೆಗಳು', href: '/corrections' },
-      { label: 'Letters to Editor', labelKn: 'ಸಂಪಾದಕಿಗೆ ಪತ್ರಗಳು', href: '/letters' },
+      { label: 'Ethics & Standards', labelKn: 'ನೈತಿಕತೆ ಮತ್ತು ಮಾನದಂಡ', href: '/editorial-policy' },
+      { label: 'Corrections Policy', labelKn: 'ತಿದ್ದುಪಡಿ ನೀತಿ', href: '/editorial-policy' },
+      { label: 'Letters to Editor', labelKn: 'ಸಂಪಾದಕರಿಗೆ ಪತ್ರಗಳು', href: '/contact' },
     ],
     legal: [
       { label: 'Privacy Policy', labelKn: 'ಗೌಪ್ಯತಾ ನೀತಿ', href: '/privacy' },
       { label: 'Terms of Service', labelKn: 'ಸೇವಾ ಷರತ್ತುಗಳು', href: '/terms' },
-      { label: 'Cookie Policy', labelKn: 'ಕುಕಿ ನೀತಿ', href: '/cookies' },
-      { label: 'Accessibility', labelKn: 'ಪ್ರವೇಶಯೋಗ್ಯತೆ', href: '/accessibility' },
     ],
     audience: [
-      { label: 'Advertise', labelKn: 'ಜಾಹಿರಾತು', href: '/advertise' },
-      { label: 'Subscribe', labelKn: 'ಚಂದಾದಾರರಾಗು', href: '/subscribe' },
+      { label: 'Advertise with Us', labelKn: 'ಜಾಹೀರಾತು ನೀಡಿ', href: '/contact' },
       { label: 'Newsletter', labelKn: 'ನ್ಯೂಸ್‌ಲೆಟರ್', href: '/newsletter' },
-      { label: 'RSS Feeds', labelKn: 'ಆರ್‌ಎಸ್‌ಎಸ್ ಫೀಡ್ಗಳು', href: '/rss' },
+      { label: 'Photo Galleries', labelKn: 'ಚಿತ್ರಾವಳಿ', href: '/gallery' },
+      { label: 'Videos', labelKn: 'ವೀಡಿಯೋಗಳು', href: '/video' },
     ],
   };
 
@@ -75,9 +72,6 @@ export function Footer({ siteSettings }: FooterProps) {
                   <Youtube className="w-5 h-5" />
                 </a>
               )}
-              <a href="/rss" className="text-garjane-secondary-light/60 hover:text-garjane-accent transition-colors" aria-label="RSS Feed">
-                <Rss className="w-5 h-5" />
-              </a>
             </div>
           </div>
 
@@ -166,8 +160,6 @@ export function Footer({ siteSettings }: FooterProps) {
           <div className="flex items-center gap-6 text-body-sm text-garjane-secondary-light/60">
             <Link href="/privacy" className="hover:text-garjane-accent transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-garjane-accent transition-colors">Terms</Link>
-            <Link href="/cookies" className="hover:text-garjane-accent transition-colors">Cookies</Link>
-            <Link href="/accessibility" className="hover:text-garjane-accent transition-colors">Accessibility</Link>
           </div>
         </div>
       </div>

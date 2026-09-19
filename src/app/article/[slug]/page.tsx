@@ -1,11 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { BreakingTicker } from '@/components/layout/BreakingTicker';
 import { ArticleDetail } from '@/components/articles/ArticleDetail';
-import { RelatedArticles } from '@/components/articles/RelatedArticles';
-import { getArticleBySlug, getRelatedArticles, getPreviousNextArticle, getAdvertisements, getBreakingNews } from '@/lib/data';
+import { getArticleBySlug, getRelatedArticles, getPreviousNextArticle, getAdvertisements } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,24 +50,18 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
-  const [article, relatedArticles, prevNext, breakingNews, articleTopAds, articleMiddleAds, articleBottomAds] = await Promise.all([
-    getArticleBySlug(slug),
-    getRelatedArticles('', '', 5), // Will be updated with actual categoryId
-    getPreviousNextArticle('', '', new Date()), // Will be updated
-    getBreakingNews(),
-    getAdvertisements('article-top'),
-    getAdvertisements('article-middle'),
-    getAdvertisements('article-bottom'),
-  ]);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();
   }
 
-  // Fetch related articles and prev/next with actual data
-  const [related, prevNextActual] = await Promise.all([
+  const [related, prevNextActual, articleTopAds, articleMiddleAds, articleBottomAds] = await Promise.all([
     getRelatedArticles(article.id, article.categoryId, 5),
     getPreviousNextArticle(article.id, article.categoryId, article.publishedAt || new Date()),
+    getAdvertisements('article-top'),
+    getAdvertisements('article-middle'),
+    getAdvertisements('article-bottom'),
   ]);
 
   const structuredData = {
@@ -110,22 +100,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="min-h-screen flex flex-col">
-        <Header breakingNews={breakingNews} user={null} />
-        <main id="main-content" className="flex-1 pt-16 lg:pt-14" role="main">
-          <ArticleDetail
-            article={article}
-            relatedArticles={related}
-            previousArticle={prevNextActual.previous}
-            nextArticle={prevNextActual.next}
-            advertisements={{
-              top: articleTopAds,
-              middle: articleMiddleAds,
-              bottom: articleBottomAds,
-            }}
-          />
-        </main>
-        <Footer siteSettings={null} />
+      <div className="w-full">
+        <ArticleDetail
+          article={article}
+          relatedArticles={related}
+          previousArticle={prevNextActual.previous}
+          nextArticle={prevNextActual.next}
+          advertisements={{
+            top: articleTopAds,
+            middle: articleMiddleAds,
+            bottom: articleBottomAds,
+          }}
+        />
       </div>
     </>
   );

@@ -79,7 +79,7 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
               {isEditorPick && (
                 <Badge variant="editor-pick" size="sm" dot>
                   <Zap className="w-3 h-3" />
-                  Editor's Pick
+                  Editor&apos;s Pick
                 </Badge>
               )}
             </div>

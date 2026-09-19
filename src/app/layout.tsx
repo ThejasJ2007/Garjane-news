@@ -110,12 +110,17 @@ async function getLayoutData() {
   }
 }
 
+import { getCurrentUser } from '@/lib/auth';
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { siteSettings, menuItems, breakingNews } = await getLayoutData();
+  const [user, { siteSettings, menuItems, breakingNews }] = await Promise.all([
+    getCurrentUser().catch(() => null),
+    getLayoutData(),
+  ]);
   const htmlLang = siteSettings?.defaultLanguage || 'kn';
 
   return (
@@ -123,15 +128,13 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
       </head>
       <body className="font-sans antialiased bg-garjane-background-light dark:bg-garjane-background-dark text-garjane-text-primary dark:text-garjane-text-inverse min-h-screen flex flex-col">
         <Providers>
           <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-garjane-primary text-garjane-primary-foreground rounded-lg">
             Skip to main content
           </a>
-          <Header breakingNews={breakingNews} user={null} menuItems={menuItems} />
+          <Header breakingNews={breakingNews} user={user} menuItems={menuItems} />
           <main id="main-content" className="flex-1 pt-16 lg:pt-14" role="main">
             {children}
           </main>

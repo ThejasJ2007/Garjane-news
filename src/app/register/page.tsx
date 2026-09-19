@@ -1,0 +1,188 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Eye, EyeOff, Lock, Mail, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { registerAction } from '@/actions/auth';
+import { Button } from '@/components/ui/Button';
+
+export default function RegisterPage() {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await registerAction(formData);
+      if (res && res.error) {
+        setError(res.error);
+        setIsLoading(false);
+      }
+    } catch (err: any) {
+      if (err?.message?.includes('NEXT_REDIRECT') || err?.digest?.startsWith('NEXT_REDIRECT')) {
+        return;
+      }
+      setError('ಸಂಪರ್ಕ ದೋಷ ಸಂಭವಿಸಿದೆ. / Connection error occurred.');
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-garjane-background-card dark:bg-garjane-background-cardDark p-8 rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark shadow-card-elevated">
+        <div className="text-center">
+          <div className="w-14 h-14 rounded-2xl bg-garjane-primary flex items-center justify-center mx-auto mb-4 shadow-lg shadow-garjane-primary/20">
+            <span className="text-garjane-primary-foreground font-heading font-bold text-3xl">ಗ</span>
+          </div>
+          <h1 className="font-heading font-bold text-headline-3 text-garjane-text-primary dark:text-garjane-text-inverse">
+            ಹೊಸ ಖಾತೆ ರಚಿಸಿ
+          </h1>
+          <p className="mt-1 text-headline-4 text-garjane-text-secondary dark:text-garjane-text-muted">
+            Create your Garjane News Account
+          </p>
+          <p className="mt-2 text-body-sm text-garjane-text-muted">
+            ಸ್ಥಳೀಯ ಸುದ್ದಿಗಳು ಮತ್ತು ವಿಶೇಷ ಲೇಖನಗಳಿಗೆ ಚಂದಾದಾರರಾಗಿ
+          </p>
+        </div>
+
+        {error && (
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-300 text-body-sm flex items-center gap-2" role="alert">
+            <ShieldCheck className="w-5 h-5 flex-shrink-0 text-red-500" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form action={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="name">
+              ಪೂರ್ಣ ಹೆಸರು / Full Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
+                <User className="w-5 h-5" />
+              </div>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                autoComplete="name"
+                placeholder="ನಿಮ್ಮ ಹೆಸರು / Your name"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="email">
+              ಇಮೇಲ್ ವಿಳಾಸ / Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
+                <Mail className="w-5 h-5" />
+              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="name@example.com"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="password">
+              ಪಾಸ್‌ವರ್ಡ್ / Password (ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳು)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
+                <Lock className="w-5 h-5" />
+              </div>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-garjane-text-muted hover:text-garjane-text-primary"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="confirmPassword">
+              ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ / Confirm Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
+                <Lock className="w-5 h-5" />
+              </div>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showPassword ? 'text' : 'password'}
+                required
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="language">
+              ಆದ್ಯತೆಯ ಭಾಷೆ / Preferred News Language
+            </label>
+            <select
+              id="language"
+              name="language"
+              defaultValue="kn"
+              className="w-full px-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+            >
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full py-3 text-body font-medium flex items-center justify-center gap-2"
+            disabled={isLoading}
+          >
+            {isLoading ? 'ರಚಿಸಲಾಗುತ್ತಿದೆ... / Registering...' : (
+              <>
+                <span>ಖಾತೆ ರಚಿಸಿ / Create Account</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </Button>
+
+          <div className="text-center pt-2 border-t border-garjane-border-light dark:border-garjane-border-dark">
+            <p className="text-body-sm text-garjane-text-muted">
+              ಈಗಾಗಲೇ ಖಾತೆ ಹೊಂದಿದ್ದೀರಾ?{' '}
+              <Link href="/login" className="text-garjane-primary font-medium hover:underline">
+                ಲಾಗಿನ್ ಆಗಿ / Sign In
+              </Link>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
