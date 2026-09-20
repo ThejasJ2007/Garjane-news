@@ -88,22 +88,36 @@ export async function getCurrentUser() {
   const session = await getSession();
   if (!session?.user) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      avatar: true,
-      role: true,
-      isActive: true,
-      bio: true,
-      location: true,
-    },
-  });
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        role: true,
+        isActive: true,
+        bio: true,
+        location: true,
+      },
+    });
 
-  if (!user || !user.isActive) return null;
-  return user;
+    if (!user || !user.isActive) return null;
+    return user;
+  } catch {
+    // Database unavailable - fall back to the verified session claims
+    return {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      avatar: session.user.avatar ?? null,
+      role: session.user.role,
+      isActive: true,
+      bio: null,
+      location: null,
+    };
+  }
 }
 
 export async function requireAuth(): Promise<UserSession['user']> {

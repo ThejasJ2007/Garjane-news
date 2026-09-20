@@ -4,4 +4,7 @@ node_modules
 .env.production
 .env.staging
 .next
+.next-dev
 server.log
+dev-server.log
+tsconfig.tsbuildinfo

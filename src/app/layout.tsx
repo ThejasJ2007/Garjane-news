@@ -125,10 +125,6 @@ export default async function RootLayout({
 
   return (
     <html lang={htmlLang} className={`${inter.variable} ${notoSansKannada.variable} ${lexend.variable} scroll-smooth`} suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
       <body className="font-sans antialiased bg-garjane-background-light dark:bg-garjane-background-dark text-garjane-text-primary dark:text-garjane-text-inverse min-h-screen flex flex-col">
         <Providers>
           <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-garjane-primary text-garjane-primary-foreground rounded-lg">

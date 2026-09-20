@@ -3,15 +3,14 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import React from 'react';
-import { Plus, Search, Filter, ChevronLeft, ChevronRight, Edit, Trash2, Eye, FileText, Calendar } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Edit, Eye, FileText, Calendar } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
-import { getArticlesByAuthor } from '@/lib/data';
 import { getDashboardStats } from '@/actions/articles';
 import { Button } from '@/components/ui/Button';
-import { ArticleCard } from '@/components/articles/ArticleCard';
 import { formatRelativeTimeKn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { ArticleSortSelect } from '@/components/articles/ArticleSortSelect';
+import { ArticleStatusFilter } from '@/components/dashboard/ArticleStatusFilter';
 import { Label } from '@/components/ui/Label';
 import { prisma } from '@/lib/prisma';
 import type { ArticleWithRelations } from '@/types';
@@ -103,27 +102,7 @@ export default async function DashboardArticlesPage({ searchParams }: DashboardA
           <div className="flex flex-col sm:flex-row gap-4 mb-6 p-4 bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark">
             <div className="flex flex-wrap items-center gap-3">
               <Label htmlFor="status-filter">Status:</Label>
-              <select
-                id="status-filter"
-                defaultValue={status || 'ALL'}
-                onChange={(e) => {
-                  const params = new URLSearchParams(window.location.search);
-                  if (e.target.value === 'ALL') {
-                    params.delete('status');
-                  } else {
-                    params.set('status', e.target.value);
-                  }
-                  params.set('page', '1');
-                  window.location.search = params.toString();
-                }}
-                className="px-3 py-2 rounded-lg border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-body-sm focus:outline-none focus:ring-2 focus:ring-garjane-primary/20"
-              >
-                <option value="ALL">All</option>
-                <option value="PUBLISHED">Published</option>
-                <option value="DRAFT">Draft</option>
-                <option value="SCHEDULED">Scheduled</option>
-                <option value="ARCHIVED">Archived</option>
-              </select>
+              <ArticleStatusFilter currentStatus={status || 'ALL'} />
             </div>
             <div className="flex-1" />
             <ArticleSortSelect currentSort={sort} />

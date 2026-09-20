@@ -14,10 +14,11 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : '.next',
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: '/((?!_next/static|_next/image|favicon.ico).*)',
         headers: [
           {
             key: 'X-DNS-Prefetch-Control',

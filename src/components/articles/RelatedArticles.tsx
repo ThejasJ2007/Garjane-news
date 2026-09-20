@@ -180,7 +180,7 @@ function ArticleCardGridItem({
           </div>
         )}
         {(isBreaking || isLive || isFeatured || isEditorPick) && (
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-1.5">
             {isBreaking && (
               <Badge variant="breaking" size="sm" dot>
                 <Flame className="w-3 h-3" />

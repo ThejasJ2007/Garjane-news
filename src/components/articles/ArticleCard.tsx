@@ -76,7 +76,7 @@ export function ArticleCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
             {(isBreaking || isLive || isFeatured || isEditorPick) && (
-              <div className="absolute top-2 left-2 flex flex-col gap-1">
+              <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1">
                 {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-2.5 h-2.5" /> Breaking</Badge>}
                 {isLive && <Badge variant="live" size="sm" dot><Radio className="w-2.5 h-2.5" /> Live</Badge>}
                 {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-2.5 h-2.5" /> Featured</Badge>}
@@ -132,8 +132,8 @@ export function ArticleCard({
 
   return (
     <ArticleCardWrapper variant={variant} priority={priority}>
-      {imageUrl && (
-        <Link href={`/article/${article.slug}`} className="relative overflow-hidden rounded-lg" aria-label={article.headlineKn || article.headline}>
+      <Link href={`/article/${article.slug}`} className={cn('relative overflow-hidden rounded-lg bg-garjane-border-light dark:bg-garjane-border-dark', imageClass[variant])} aria-label={article.headlineKn || article.headline}>
+        {imageUrl && (
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -142,22 +142,27 @@ export function ArticleCard({
             className="object-cover transition-transform duration-500 hover:scale-105"
             sizes={variant === 'featured' ? '(max-width: 1024px) 100vw, 50vw' : '(max-width: 1024px) 100vw, 33vw'}
           />
-          {(isBreaking || isLive || isFeatured || isEditorPick) && (
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-              {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-3 h-3" /> {article.breakingLevel}</Badge>}
-              {isLive && <Badge variant="live" size="sm" dot><Radio className="w-3 h-3" /> Live</Badge>}
-              {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-3 h-3" /> Featured</Badge>}
-              {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> Editor&apos;s Pick</Badge>}
-            </div>
-          )}
-          {article.readTime > 0 && (
-            <div className="absolute bottom-3 right-3 bg-black/70 text-white text-caption px-2 py-1 rounded flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {article.readTime} min
-            </div>
-          )}
-        </Link>
-      )}
+        )}
+        {!imageUrl && (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-caption text-garjane-text-muted">No Image</span>
+          </div>
+        )}
+        {(isBreaking || isLive || isFeatured || isEditorPick) && (
+          <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-1.5">
+            {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-3 h-3" /> {article.breakingLevel}</Badge>}
+            {isLive && <Badge variant="live" size="sm" dot><Radio className="w-3 h-3" /> Live</Badge>}
+            {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-3 h-3" /> Featured</Badge>}
+            {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> Editor&apos;s Pick</Badge>}
+          </div>
+        )}
+        {article.readTime > 0 && (
+          <div className="absolute bottom-3 right-3 bg-black/70 text-white text-caption px-2 py-1 rounded flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {article.readTime} min
+          </div>
+        )}
+      </Link>
 
       <div className={cn('flex flex-col justify-between', contentClass[variant])}>
         <div>
@@ -236,12 +241,12 @@ function ArticleCardWrapper({ children, variant = 'default', priority }: { child
   const baseStyles = 'group relative bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-xl overflow-hidden transition-all duration-350 ease-out-expo hover:shadow-card-hover';
 
   const variantStyles: Record<'default' | 'featured' | 'compact' | 'horizontal' | 'breaking' | 'live', string> = {
-    default: '',
-    featured: 'lg:grid lg:grid-cols-2',
+    default: 'grid grid-cols-1 md:grid-cols-12 gap-4',
+    featured: 'grid grid-cols-1 lg:grid-cols-2 gap-6',
     compact: 'flex flex-row',
     horizontal: 'flex',
-    breaking: 'border-l-4 border-garjane-breaking-text bg-garjane-breaking-bg/50 dark:bg-garjane-breaking-bgDark/50',
-    live: 'border-l-4 border-red-500 bg-red-50/50 dark:bg-red-900/10',
+    breaking: 'grid grid-cols-1 md:grid-cols-12 gap-4 border-l-4 border-garjane-breaking-text bg-garjane-breaking-bg/50 dark:bg-garjane-breaking-bgDark/50',
+    live: 'grid grid-cols-1 md:grid-cols-12 gap-4 border-l-4 border-red-500 bg-red-50/50 dark:bg-red-900/10',
   };
 
   return (
