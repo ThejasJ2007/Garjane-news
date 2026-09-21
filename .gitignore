@@ -7,4 +7,5 @@ node_modules
 .next-dev
 server.log
 dev-server.log
+dev-server-stderr.log
 tsconfig.tsbuildinfo

@@ -375,6 +375,35 @@
     @apply opacity-100 visible;
   }
 
+  /* Social Media Tooltips (Speech Bubbles with Gradient Borders) */
+  .social-tooltip {
+    @apply relative rounded-[18px] px-4 py-2 text-center inline-flex flex-col items-center justify-center;
+  }
+
+  .social-tooltip-instagram {
+    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 22px rgba(220, 39, 67, 0.2), 0 0 14px rgba(188, 24, 136, 0.14);
+  }
+
+  .social-tooltip-facebook {
+    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #1877f2 0%, #00c6ff 100%) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 20px rgba(24, 119, 242, 0.2), 0 0 12px rgba(24, 119, 242, 0.12);
+  }
+
+  .social-tooltip-twitter {
+    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #000000 0%, #475569 100%) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16), 0 0 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .social-tooltip-youtube {
+    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #ff0000 0%, #ff5e3a 100%) border-box;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 20px rgba(255, 0, 0, 0.2), 0 0 12px rgba(255, 0, 0, 0.12);
+  }
+
   /* Dropdown */
   .dropdown-menu {
     @apply absolute right-0 mt-2 w-56 bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-lg border border-garjane-border-light dark:border-garjane-border-dark shadow-card-elevated py-1 z-50;
@@ -459,5 +488,32 @@
 
   .skip-link:focus {
     @apply top-4;
+  }
+
+  /* Skeleton animations */
+  @keyframes skeleton-wave {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-skeleton-wave {
+    animation: skeleton-wave 1.5s ease-in-out infinite;
+  }
+
+  .animate-skeleton-shimmer {
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
   }
 }

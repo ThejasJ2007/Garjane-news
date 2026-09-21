@@ -28,7 +28,7 @@ export const fallbackSiteSettings = {
     instagram: 'https://instagram.com/garjanenews',
     youtube: 'https://www.youtube.com/@GarjaneNews1',
     email: 'v4news@gmail.com',
-    phone: '+91 98450 12345',
+    phone: '9019987639 / 9743519979',
   },
   seoDefaults: {},
   analyticsCode: null,
