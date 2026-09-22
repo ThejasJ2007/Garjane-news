@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react';
 import { getSiteSettings } from '@/lib/data';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { cn } from '@/lib/utils';
 
 function FacebookIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
@@ -109,6 +111,7 @@ interface FooterProps {
 }
 
 export function Footer({ siteSettings }: FooterProps) {
+  const { language, t } = useLanguage();
   const socialLinks = siteSettings?.socialLinks as Record<string, string> | null;
   const FACEBOOK_PAGE_URL = 'https://www.facebook.com/profile.php?id=61563431741881';
   const TWITTER_PAGE_URL = socialLinks?.twitter || 'https://twitter.com/garjanenews';
@@ -147,6 +150,13 @@ export function Footer({ siteSettings }: FooterProps) {
     ],
   };
 
+  const displayTagline = language === 'en'
+    ? (siteSettings?.tagline || t.footer.taglineDefault)
+    : (siteSettings?.taglineKn || t.footer.taglineDefault);
+
+  const followUsText = language === 'kn' ? 'ಫಾಲೋ ಮಾಡಿ' : 'Follow us on';
+  const subscribeOnText = language === 'kn' ? 'ಚಂದಾದಾರರಾಗಿ' : 'Subscribe on';
+
   return (
     <footer className="bg-white text-[#172B4D] subpixel-antialiased border-t border-garjane-border-light" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 lg:py-16">
@@ -159,8 +169,8 @@ export function Footer({ siteSettings }: FooterProps) {
               </div>
               <span className="font-heading font-bold text-headline-3 text-[#172B4D]">Garjane News</span>
             </Link>
-            <p className="text-[#172B4D] text-body-sm font-medium mb-6 leading-relaxed max-w-xs font-kannada">
-              {siteSettings?.taglineKn || 'ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ'}
+            <p className={cn("text-[#172B4D] text-body-sm font-medium mb-6 leading-relaxed max-w-xs", language === 'kn' && 'font-kannada')}>
+              {displayTagline}
             </p>
             <div className="flex items-center gap-4">
               {/* Facebook */}
@@ -180,7 +190,7 @@ export function Footer({ siteSettings }: FooterProps) {
                 >
                   <div className="social-tooltip social-tooltip-facebook">
                     <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
-                      Follow us on
+                      {followUsText}
                     </span>
                     <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
                       Facebook
@@ -223,7 +233,7 @@ export function Footer({ siteSettings }: FooterProps) {
                 >
                   <div className="social-tooltip social-tooltip-twitter">
                     <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
-                      Follow us on
+                      {followUsText}
                     </span>
                     <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
                       X
@@ -266,7 +276,7 @@ export function Footer({ siteSettings }: FooterProps) {
                 >
                   <div className="social-tooltip social-tooltip-instagram">
                     <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
-                      Follow us on
+                      {followUsText}
                     </span>
                     <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
                       Instagram
@@ -309,7 +319,7 @@ export function Footer({ siteSettings }: FooterProps) {
                 >
                   <div className="social-tooltip social-tooltip-youtube">
                     <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
-                      Subscribe on
+                      {subscribeOnText}
                     </span>
                     <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
                       YouTube
@@ -338,16 +348,16 @@ export function Footer({ siteSettings }: FooterProps) {
           </div>
 
           {/* Company Links */}
-          <nav aria-label="Company">
+          <nav aria-label={t.footer.company}>
             <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
-              Company
+              {t.footer.company}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium font-kannada">
-                    {link.labelKn}
+                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                    {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
               ))}
@@ -355,16 +365,16 @@ export function Footer({ siteSettings }: FooterProps) {
           </nav>
 
           {/* Editorial Links */}
-          <nav aria-label="Editorial">
+          <nav aria-label={t.footer.editorial}>
             <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
-              Editorial
+              {t.footer.editorial}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.editorial.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium font-kannada">
-                    {link.labelKn}
+                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                    {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
               ))}
@@ -372,16 +382,16 @@ export function Footer({ siteSettings }: FooterProps) {
           </nav>
 
           {/* Legal Links */}
-          <nav aria-label="Legal">
+          <nav aria-label={t.footer.legal}>
             <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
-              Legal
+              {t.footer.legal}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium font-kannada">
-                    {link.labelKn}
+                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                    {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
               ))}
@@ -389,16 +399,16 @@ export function Footer({ siteSettings }: FooterProps) {
           </nav>
 
           {/* For You Links */}
-          <nav aria-label="For You">
+          <nav aria-label={t.footer.forYou}>
             <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
-              For You
+              {t.footer.forYou}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.audience.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium font-kannada">
-                    {link.labelKn}
+                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                    {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
               ))}
@@ -408,13 +418,17 @@ export function Footer({ siteSettings }: FooterProps) {
           {/* Contact Us */}
           <div>
             <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
-              Contact Us
+              {t.footer.contactUs}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
-            <address className="not-italic text-body-sm text-[#172B4D] space-y-3 font-kannada">
+            <address className={cn("not-italic text-body-sm text-[#172B4D] space-y-3", language === 'kn' && 'font-kannada')}>
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D] font-medium leading-relaxed">{siteSettings?.descriptionKn || 'ನೆಲಮಂಗಲ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ ಹಾಗೂ ಕರ್ನಾಟಕದ ಸಮಗ್ರ, ನಿಖರ ಮತ್ತು ವಸ್ತುನಿಷ್ಠ ಸುದ್ದಿಗಳ ಮುಂಚೂಣಿ ತಾಣ.'}</span>
+                <span className="text-[#172B4D] font-medium leading-relaxed">
+                  {language === 'en'
+                    ? (siteSettings?.description || t.footer.addressDefault)
+                    : (siteSettings?.descriptionKn || t.footer.addressDefault)}
+                </span>
               </div>
               {contactEmail && (
                 <a href={`mailto:${contactEmail}`} className="flex items-center gap-3 text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">
@@ -435,15 +449,15 @@ export function Footer({ siteSettings }: FooterProps) {
         {/* Bottom Bar */}
         <div className="mt-10 lg:mt-12 pt-8 border-t border-garjane-border-light flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <p className="text-[#172B4D] text-body-sm font-medium text-center md:text-left font-kannada">
-              © {currentYear} {siteSettings?.siteNameKn || 'ಗರ್ಜನೆ ನ್ಯೂಸ್'}. All rights reserved.
+            <p className={cn("text-[#172B4D] text-body-sm font-medium text-center md:text-left", language === 'kn' && 'font-kannada')}>
+              © {currentYear} Garjane News. {t.footer.rightsReserved}
             </p>
 
             {/* Developer Credit */}
             <div className="mt-4 pl-4 border-l-2 border-garjane-border-light">
-              <p className="text-body-sm font-heading font-bold text-[#172B4D]">Website Developer</p>
+              <p className="text-body-sm font-heading font-bold text-[#172B4D]">{t.footer.websiteDeveloper}</p>
               <p className="text-body-sm text-[#172B4D] font-medium">
-                <span className="font-semibold text-[#172B4D]">Thejas</span> — Web Developer &amp; Designer
+                <span className="font-semibold text-[#172B4D]">Thejas</span> — {t.footer.webDeveloperTitle}
               </p>
               <a
                 href="mailto:thejasj2007@gmail.com"
@@ -477,15 +491,15 @@ export function Footer({ siteSettings }: FooterProps) {
                 <Github className="w-4 h-4 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
                 <span className="text-[#172B4D]">GitHub</span>
               </a>
-              <p className="mt-3 text-body-sm text-[#172B4D] font-medium">Designed &amp; Developed by Thejas</p>
+              <p className="mt-3 text-body-sm text-[#172B4D] font-medium">{t.footer.designedAndDevelopedBy}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-body-sm text-[#172B4D] font-medium font-kannada">
-            <Link href="/privacy" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">Privacy</Link>
+          <div className="flex items-center gap-4 text-body-sm text-[#172B4D] font-medium">
+            <Link href="/privacy" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.privacy}</Link>
             <span className="text-[#172B4D]" aria-hidden="true">|</span>
-            <Link href="/terms" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">Terms</Link>
+            <Link href="/terms" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.terms}</Link>
             <span className="text-[#172B4D]" aria-hidden="true">|</span>
-            <Link href="/sitemap.xml" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">Sitemap</Link>
+            <Link href="/sitemap.xml" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.sitemap}</Link>
           </div>
         </div>
       </div>

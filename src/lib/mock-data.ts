@@ -683,7 +683,7 @@ export const fallbackGalleries: (PhotoGallery & { images: GalleryImage[] })[] = 
       {
         id: 'img-1-3',
         galleryId: 'gallery-1',
-        url: 'https://images.unsplash.com/photo-1584463699039-50ebac8e3c15?w=1200&auto=format&fit=crop&q=80',
+        url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1200&auto=format&fit=crop&q=80',
         alt: 'Toll Plaza Traffic Flow',
         caption: 'Seamless multi-lane traffic flow near the Nelamangala toll gate.',
         captionKn: 'ನೆಲಮಂಗಲ ಟೋಲ್ ಗೇಟ್ ಬಳಿ ಸುಗಮ ಸಂಚಾರ ವ್ಯವಸ್ಥೆ.',

@@ -4,12 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Eye, MapPin, Tag, Share2, Facebook, Twitter, MessageSquare, Mail, Copy, Bookmark, Flame, Radio, Star, Zap, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, Image as ImageIcon, Video as VideoIcon, MapPin as MapPinIcon, Layers, X, Instagram } from 'lucide-react';
-import { formatRelativeTimeKn, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { Card, CardContent } from '@/components/ui/Card';
 import { CommentSection } from './CommentSection';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { ArticleWithRelations, Advertisement } from '@/types';
 
 interface ArticleDetailProps {
@@ -31,8 +32,7 @@ interface LiveUpdateItem {
   timestamp: Date;
 }
 
-function renderArticleContent(content: string, language: 'kn' | 'en') {
-  // Simple content rendering - in production, you might want to use a markdown parser or sanitize HTML
+function renderArticleContent(content: string) {
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   return (
     <div className="article-content prose prose-lg prose-headings:text-garjane-text-primary dark:prose-headings:text-garjane-text-inverse prose-a:text-garjane-primary dark:prose-a:text-garjane-primary-light prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-card prose-strong:text-garjane-text-primary dark:prose-strong:text-garjane-text-inverse max-w-none">
@@ -72,10 +72,11 @@ function AdvertisementPlaceholder({ ad }: { ad: Advertisement }) {
   );
 }
 
-function ShareButtons({ article, language }: { article: ArticleWithRelations; language: 'kn' | 'en' }) {
+function ShareButtons({ article }: { article: ArticleWithRelations }) {
+  const { language, t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  const title = language === 'kn' ? (article.headlineKn || article.headline) : article.headline;
+  const title = (language === 'en' ? (article.headline || article.headlineKn) : (article.headlineKn || article.headline)) || '';
 
   const handleShare = async (platform: string) => {
     const shareUrl = encodeURIComponent(url);
@@ -105,8 +106,8 @@ function ShareButtons({ article, language }: { article: ArticleWithRelations; la
   };
 
   return (
-    <div className="flex items-center gap-2" role="group" aria-label="Share article">
-      <span className="text-caption text-garjane-text-muted mr-2">{language === 'kn' ? 'ಹಂಚಿಕೊಳ್ಳಿ:' : 'Share:'}</span>
+    <div className="flex items-center gap-2" role="group" aria-label={t.common.share}>
+      <span className="text-caption text-garjane-text-muted mr-2">{t.common.share}</span>
       <Button variant="ghost" size="sm" onClick={() => handleShare('facebook')} className="share-button" aria-label="Share on Facebook">
         <Facebook className="w-5 h-5" />
       </Button>
@@ -119,14 +120,15 @@ function ShareButtons({ article, language }: { article: ArticleWithRelations; la
       <Button variant="ghost" size="sm" onClick={() => handleShare('email')} className="share-button" aria-label="Share via Email">
         <Mail className="w-5 h-5" />
       </Button>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('copy')} className="share-button" aria-label={copied ? (language === 'kn' ? 'ಕಾಪಿ ಮಾಡಲಾಗಿದೆ' : 'Copied') : (language === 'kn' ? 'ಲಿಂಕ್ ಕಾಪಿ ಮಾಡಿ' : 'Copy Link')}>
+      <Button variant="ghost" size="sm" onClick={() => handleShare('copy')} className="share-button" aria-label={copied ? t.common.copied : t.common.copyLink}>
         {copied ? <Copy className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
       </Button>
     </div>
   );
 }
 
-function AuthorBio({ article, language }: { article: ArticleWithRelations; language: 'kn' | 'en' }) {
+function AuthorBio({ article }: { article: ArticleWithRelations }) {
+  const { language, t } = useLanguage();
   if (!article.author) return null;
 
   return (
@@ -138,10 +140,10 @@ function AuthorBio({ article, language }: { article: ArticleWithRelations; langu
             {article.author.name}
           </Link>
           <p className="mt-1 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted">
-            {language === 'kn' ? 'ಗರ್ಜನೆ ನ್ಯೂಸ್ ರಿಪೋರ್ಟರ್' : 'Garjane News Reporter'}
+            {t.article.reporterBioDefault}
           </p>
           <p className="mt-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted line-clamp-3">
-            {language === 'kn' && article.author.bioKn ? article.author.bioKn : article.author.bio || (language === 'kn' ? 'ಅನುಭವಿ ವೃತ್ತಿಪತ್ರಕಾರ' : 'Experienced journalist covering local news.')}
+            {language === 'kn' && article.author.bioKn ? article.author.bioKn : article.author.bio || (language === 'kn' ? 'ಅನುಭವಿ ವೃತ್ತಿಪತ್ರಕಾರರು' : 'Experienced journalist covering local news.')}
           </p>
         </div>
       </CardContent>
@@ -149,28 +151,33 @@ function AuthorBio({ article, language }: { article: ArticleWithRelations; langu
   );
 }
 
-function TagsList({ article, language }: { article: ArticleWithRelations; language: 'kn' | 'en' }) {
+function TagsList({ article }: { article: ArticleWithRelations }) {
+  const { language } = useLanguage();
   if (article.tags.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-2" role="list" aria-label="Tags">
-      {article.tags.map(({ tag }) => (
-        <Link
-          key={tag.id}
-          href={`/tag/${tag.slug}`}
-          className="tag-chip"
-          role="listitem"
-        >
-          <Tag className="w-3 h-3" aria-hidden="true" />
-          {language === 'kn' ? (tag.nameKn || tag.name) : tag.name}
-        </Link>
-      ))}
+      {article.tags.map(({ tag }) => {
+        const tagName = language === 'en' ? (tag.name || tag.nameKn) : (tag.nameKn || tag.name);
+        return (
+          <Link
+            key={tag.id}
+            href={`/tag/${tag.slug}`}
+            className="tag-chip"
+            role="listitem"
+          >
+            <Tag className="w-3 h-3" aria-hidden="true" />
+            {tagName}
+          </Link>
+        );
+      })}
     </div>
   );
 }
 
-function LiveUpdates({ updates, language }: { updates: LiveUpdateItem[]; language: 'kn' | 'en' }) {
-  if (updates.length === 0) return null;
+function LiveUpdates({ updates }: { updates: LiveUpdateItem[] }) {
+  const { language, t, formatTime } = useLanguage();
+  if (!updates || updates.length === 0) return null;
 
   return (
     <section className="mt-12" aria-labelledby="live-updates-heading">
@@ -179,15 +186,15 @@ function LiveUpdates({ updates, language }: { updates: LiveUpdateItem[]; languag
           <Radio className="w-5 h-5 text-red-600 dark:text-red-400 animate-pulse" />
         </div>
         <h2 id="live-updates-heading" className="text-headline-3 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse">
-          {language === 'kn' ? 'ಜೀವಂತ ತाजಾ खबर' : 'Live Updates'}
+          {t.article.liveUpdates}
         </h2>
       </div>
       <div className="space-y-4 border-l-2 border-garjane-primary/30 pl-6 ml-5">
-        {updates.map((update, index) => (
+        {updates.map((update) => (
           <div key={update.id} className="relative pb-6 last:pb-0">
             <div className="absolute left-[-5px] top-1 w-2.5 h-2.5 rounded-full bg-garjane-primary border-2 border-white dark:border-garjane-background-dark" />
             <time className="text-caption text-garjane-text-muted block mb-1">
-              {formatRelativeTimeKn(update.timestamp)}
+              {formatTime(update.timestamp)}
             </time>
             <p className="text-body text-garjane-text-primary dark:text-garjane-text-inverse">
               {language === 'kn' && update.contentKn ? update.contentKn : update.content}
@@ -199,46 +206,53 @@ function LiveUpdates({ updates, language }: { updates: LiveUpdateItem[]; languag
   );
 }
 
-function GallerySection({ galleries, language }: { galleries: ArticleWithRelations['galleries']; language: 'kn' | 'en' }) {
+function GallerySection({ galleries }: { galleries: ArticleWithRelations['galleries'] }) {
+  const { language, t } = useLanguage();
   if (!galleries || galleries.length === 0) return null;
 
   return (
     <section className="mt-12" aria-labelledby="gallery-heading">
       <h2 id="gallery-heading" className="text-headline-3 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-6">
-        {language === 'kn' ? 'ಚಿತ್ರ ವೀಕ್ಷಣ ಶ್ರೇಣಿ' : 'Photo Gallery'}
+        {t.article.photoGallery}
       </h2>
-      {galleries.map((gallery) => (
-        <div key={gallery.id} className="mb-8">
-          {(gallery.titleKn || gallery.title) && (
-            <h3 className="text-headline-4 font-heading font-semibold text-garjane-text-primary dark:text-garjane-text-inverse mb-4">
-              {language === 'kn' ? (gallery.titleKn || gallery.title) : gallery.title}
-            </h3>
-          )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {gallery.images
-              ?.sort((a, b) => a.displayOrder - b.displayOrder)
-              .map((image) => (
-                <figure key={image.id} className="relative aspect-[4/3] overflow-hidden rounded-xl group">
-                  <Image
-                    src={image.url}
-                    alt={image.alt || image.caption || image.captionKn || ''}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-body-sm">
-                    {language === 'kn' ? (image.captionKn || image.caption || '') : (image.caption || image.captionKn || '')}
-                  </figcaption>
-                </figure>
-              ))}
+      {galleries.map((gallery) => {
+        const galleryTitle = language === 'en' ? (gallery.title || gallery.titleKn) : (gallery.titleKn || gallery.title);
+        return (
+          <div key={gallery.id} className="mb-8">
+            {galleryTitle && (
+              <h3 className="text-headline-4 font-heading font-semibold text-garjane-text-primary dark:text-garjane-text-inverse mb-4">
+                {galleryTitle}
+              </h3>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {gallery.images
+                ?.sort((a, b) => a.displayOrder - b.displayOrder)
+                .map((image) => (
+                  <figure key={image.id} className="relative aspect-[4/3] overflow-hidden rounded-xl group">
+                    <Image
+                      src={image.url}
+                      alt={image.alt || image.caption || image.captionKn || ''}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    {(image.caption || image.captionKn) && (
+                      <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-body-sm">
+                        {language === 'en' ? (image.caption || image.captionKn) : (image.captionKn || image.caption)}
+                      </figcaption>
+                    )}
+                  </figure>
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }
 
-function MediaSection({ article, language }: { article: ArticleWithRelations; language: 'kn' | 'en' }) {
+function MediaSection({ article }: { article: ArticleWithRelations }) {
+  const { language, t } = useLanguage();
   const images = article.media.filter(m => m.type === 'IMAGE');
   const videos = article.media.filter(m => m.type === 'VIDEO');
 
@@ -247,13 +261,13 @@ function MediaSection({ article, language }: { article: ArticleWithRelations; la
   return (
     <section className="mt-12" aria-labelledby="media-heading">
       <h2 id="media-heading" className="text-headline-3 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-6">
-        {language === 'kn' ? 'ಬազմಾಧ್ಯಮ' : 'Media'}
+        {t.article.media}
       </h2>
       {images.length > 0 && (
         <div className="mb-8">
           <h3 className="text-headline-4 font-heading font-semibold text-garjane-text-primary dark:text-garjane-text-inverse mb-4 flex items-center gap-2">
             <ImageIcon className="w-5 h-5" />
-            {language === 'kn' ? 'ಚಿತ್ರಗಳು' : 'Images'}
+            {t.article.images}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {images.map((media) => (
@@ -267,7 +281,7 @@ function MediaSection({ article, language }: { article: ArticleWithRelations; la
                 />
                 {(media.caption || media.captionKn) && (
                   <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-body-sm">
-                    {language === 'kn' ? (media.captionKn || media.caption || '') : (media.caption || media.captionKn || '')}
+                    {language === 'en' ? (media.caption || media.captionKn) : (media.captionKn || media.caption)}
                   </figcaption>
                 )}
               </figure>
@@ -279,7 +293,7 @@ function MediaSection({ article, language }: { article: ArticleWithRelations; la
         <div>
           <h3 className="text-headline-4 font-heading font-semibold text-garjane-text-primary dark:text-garjane-text-inverse mb-4 flex items-center gap-2">
             <VideoIcon className="w-5 h-5" />
-            {language === 'kn' ? 'ವಿಡಿಯೋಗಳು' : 'Videos'}
+            {t.article.videos}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {videos.map((media) => (
@@ -300,7 +314,7 @@ function MediaSection({ article, language }: { article: ArticleWithRelations; la
                 </div>
                 {(media.caption || media.captionKn) && (
                   <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-body-sm">
-                    {language === 'kn' ? (media.captionKn || media.caption || '') : (media.caption || media.captionKn || '')}
+                    {language === 'en' ? (media.caption || media.captionKn) : (media.captionKn || media.caption)}
                   </div>
                 )}
               </div>
@@ -312,11 +326,11 @@ function MediaSection({ article, language }: { article: ArticleWithRelations; la
   );
 }
 
-function PreviousNextNavigation({ previousArticle, nextArticle, language }: {
+function PreviousNextNavigation({ previousArticle, nextArticle }: {
   previousArticle?: ArticleWithRelations | null;
   nextArticle?: ArticleWithRelations | null;
-  language: 'kn' | 'en';
 }) {
+  const { language, t } = useLanguage();
   if (!previousArticle && !nextArticle) return null;
 
   return (
@@ -332,10 +346,10 @@ function PreviousNextNavigation({ previousArticle, nextArticle, language }: {
             </div>
             <div className="flex-1 min-w-0">
               <span className="text-caption text-garjane-text-muted block mb-1">
-                {language === 'kn' ? 'ಹಿಂದಿನ ಲೇಖನ' : 'Previous Article'}
+                {t.article.previousArticle}
               </span>
               <h3 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
-                {language === 'kn' ? (previousArticle.headlineKn || previousArticle.headline) : previousArticle.headline}
+                {language === 'en' ? (previousArticle.headline || previousArticle.headlineKn) : (previousArticle.headlineKn || previousArticle.headline)}
               </h3>
             </div>
           </Link>
@@ -347,10 +361,10 @@ function PreviousNextNavigation({ previousArticle, nextArticle, language }: {
           >
             <div className="flex-1 min-w-0 text-right">
               <span className="text-caption text-garjane-text-muted block mb-1">
-                {language === 'kn' ? 'அடுத்த ಲೇಖನ' : 'Next Article'}
+                {t.article.nextArticle}
               </span>
               <h3 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
-                {language === 'kn' ? (nextArticle.headlineKn || nextArticle.headline) : nextArticle.headline}
+                {language === 'en' ? (nextArticle.headline || nextArticle.headlineKn) : (nextArticle.headlineKn || nextArticle.headline)}
               </h3>
             </div>
             <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-garjane-primary/10 flex items-center justify-center text-garjane-primary group-hover:bg-garjane-primary group-hover:text-white transition-colors">
@@ -370,26 +384,44 @@ export function ArticleDetail({
   nextArticle,
   advertisements = {}
 }: ArticleDetailProps) {
-  const [language, setLanguage] = useState<'kn' | 'en'>('kn');
+  const { language, setLanguage, t, formatTime } = useLanguage();
   const [fontSize, setFontSize] = useState(1);
-  const [showShareSheet, setShowShareSheet] = useState(false);
 
   const isBreaking = article.breakingLevel === 'BREAKING' || article.breakingLevel === 'URGENT';
   const isLive = article.isLive;
   const isFeatured = article.isFeatured;
   const isEditorPick = article.isEditorPick;
 
-  const displayHeadline = language === 'kn' ? (article.headlineKn || article.headline) : article.headline;
-  const displaySummary = language === 'kn' ? (article.summaryKn || article.summary) : article.summary;
-  const displayContent = language === 'kn' ? (article.contentKn || article.content) : article.content;
-  const displayExcerpt = language === 'kn' ? (article.excerptKn || article.excerpt) : article.excerpt;
+  const displayHeadline = (language === 'en'
+    ? (article.headline || article.headlineKn)
+    : (article.headlineKn || article.headline)) || '';
+
+  const displaySummary = language === 'en'
+    ? (article.summary || article.summaryKn)
+    : (article.summaryKn || article.summary);
+
+  const displayContent = (language === 'en'
+    ? (article.content || article.contentKn)
+    : (article.contentKn || article.content)) || '';
+
+  const displayExcerpt = language === 'en'
+    ? (article.excerpt || article.excerptKn)
+    : (article.excerptKn || article.excerpt);
+
+  const displayCategory = language === 'en'
+    ? (article.category?.name || article.category?.nameKn)
+    : (article.category?.nameKn || article.category?.name);
+
+  const displayLocation = language === 'en'
+    ? (article.location?.name || article.location?.nameKn)
+    : (article.location?.nameKn || article.location?.name);
 
   return (
     <article className="space-y-8" role="article">
       {/* Top Advertisement */}
       {advertisements.top && advertisements.top.length > 0 && (
         <div className="relative aspect-[728/90] max-w-[728px] mx-auto rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
-          {advertisements.top.map((ad, index) => (
+          {advertisements.top.map((ad) => (
             <AdvertisementPlaceholder key={ad.id} ad={ad} />
           ))}
           <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
@@ -402,7 +434,7 @@ export function ArticleDetail({
           {article.category && (
             <Link href={`/category/${article.category.slug}`} className="inline-block">
               <Badge variant="primary" size="md">
-                {language === 'kn' ? (article.category.nameKn || article.category.name) : article.category.name}
+                {displayCategory}
               </Badge>
             </Link>
           )}
@@ -410,7 +442,7 @@ export function ArticleDetail({
             <Link href={`/location/${article.location.slug}`} className="inline-block">
               <Badge variant="default" size="sm" dot>
                 <MapPin className="w-3 h-3" />
-                {language === 'kn' ? (article.location.nameKn || article.location.name) : article.location.name}
+                {displayLocation}
               </Badge>
             </Link>
           )}
@@ -419,25 +451,25 @@ export function ArticleDetail({
               {isBreaking && (
                 <Badge variant="breaking" size="sm" dot>
                   <Flame className="w-3 h-3" />
-                  {article.breakingLevel}
+                  {t.common.breaking}
                 </Badge>
               )}
               {isLive && (
                 <Badge variant="live" size="sm" dot>
                   <Radio className="w-3 h-3" />
-                  {language === 'kn' ? 'ಜೀವಂತ' : 'Live'}
+                  {t.common.live}
                 </Badge>
               )}
               {isFeatured && (
                 <Badge variant="featured" size="sm" dot>
                   <Star className="w-3 h-3" />
-                  {language === 'kn' ? 'ವಿಶೇಷ' : 'Featured'}
+                  {t.common.featured}
                 </Badge>
               )}
               {isEditorPick && (
                 <Badge variant="editor-pick" size="sm" dot>
                   <Zap className="w-3 h-3" />
-                  {language === 'kn' ? 'ಸಂಪಾದಕದ ಚಯನ' : 'Editor\'s Pick'}
+                  {t.common.editorPick}
                 </Badge>
               )}
             </div>
@@ -464,40 +496,40 @@ export function ArticleDetail({
           {article.reporter && (
             <span className="flex items-center gap-1.5 text-garjane-accent">
               <Badge variant="secondary" size="sm">
-                {language === 'kn' ? 'ವರ್ತಮಾನದಾರ:' : 'Reporter:'} {article.reporter.user.name}
+                {t.common.reporter} {article.reporter.user.name}
               </Badge>
             </span>
           )}
           <span className="flex items-center gap-1.5">
             <Clock className="w-4 h-4" />
             <time dateTime={article.publishedAt?.toISOString() || article.createdAt.toISOString()}>
-              {formatRelativeTimeKn(article.publishedAt || article.createdAt)}
+              {formatTime(article.publishedAt || article.createdAt)}
             </time>
           </span>
           {article.updatedAt !== article.createdAt && (
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
               <time dateTime={article.updatedAt.toISOString()}>
-                {language === 'kn' ? 'ಪರಿಷ್ಕೃತ:' : 'Updated:'} {formatRelativeTimeKn(article.updatedAt)}
+                {t.common.updated} {formatTime(article.updatedAt)}
               </time>
             </span>
           )}
           {article.readTime > 0 && (
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              {article.readTime} {language === 'kn' ? 'ನಿಮಿಷ ಓದುವಿಕೆ' : 'min read'}
+              {article.readTime} {t.common.minRead}
             </span>
           )}
           <span className="flex items-center gap-1.5">
             <Eye className="w-4 h-4" />
-            {article.viewCount.toLocaleString()} {language === 'kn' ? 'ಬಳಕೆದಾರರು' : 'views'}
+            {article.viewCount.toLocaleString()} {t.common.views}
           </span>
         </div>
 
         {/* Language & Font Size Controls */}
         <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-garjane-border-light dark:border-garjane-border-dark">
-          <div className="flex items-center gap-2" role="group" aria-label="Language selection">
-            <span className="text-caption text-garjane-text-muted">{language === 'kn' ? 'ಭಾಷೆ:' : 'Language:'}</span>
+          <div className="flex items-center gap-2" role="group" aria-label={t.article.language}>
+            <span className="text-caption text-garjane-text-muted">{t.article.language}</span>
             <Button
               variant={language === 'kn' ? 'primary' : 'ghost'}
               size="sm"
@@ -515,8 +547,8 @@ export function ArticleDetail({
               English
             </Button>
           </div>
-          <div className="flex items-center gap-2" role="group" aria-label="Font size">
-            <span className="text-caption text-garjane-text-muted">{language === 'kn' ? 'ಆಕಾರ:' : 'Size:'}</span>
+          <div className="flex items-center gap-2" role="group" aria-label={t.article.fontSize}>
+            <span className="text-caption text-garjane-text-muted">{t.article.fontSize}</span>
             <Button variant="ghost" size="sm" onClick={() => setFontSize(Math.max(0.8, fontSize - 0.2))} aria-label="Decrease font size">
               <span className="text-xs">A-</span>
             </Button>
@@ -528,8 +560,8 @@ export function ArticleDetail({
             </Button>
           </div>
           <div className="flex-1" />
-          <ShareButtons article={article} language={language} />
-          <Button variant="ghost" size="sm" className="share-button" aria-label={language === 'kn' ? 'ಬುಕ್‌ಮಾರ್ಕ್' : 'Bookmark'}>
+          <ShareButtons article={article} />
+          <Button variant="ghost" size="sm" className="share-button" aria-label={t.common.bookmark}>
             <Bookmark className="w-5 h-5" />
           </Button>
         </div>
@@ -540,7 +572,7 @@ export function ArticleDetail({
         <figure className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl">
           <Image
             src={article.featuredImage}
-            alt={article.featuredImageAlt || displayHeadline}
+            alt={article.featuredImageAlt || displayHeadline || ''}
             fill
             priority
             className="object-cover"
@@ -549,7 +581,7 @@ export function ArticleDetail({
           />
           {(article.featuredImageCaption || article.featuredImageAlt) && (
             <figcaption className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white text-body-sm">
-              {language === 'kn' ? (article.featuredImageCaption || article.featuredImageAlt || '') : (article.featuredImageCaption || article.featuredImageAlt || '')}
+              {article.featuredImageCaption || article.featuredImageAlt || ''}
             </figcaption>
           )}
         </figure>
@@ -567,13 +599,13 @@ export function ArticleDetail({
           )}
 
           <div className="article-content" style={{ fontSize: `${fontSize}rem` }}>
-            {renderArticleContent(displayContent, language)}
+            {renderArticleContent(displayContent)}
           </div>
 
           {/* Middle Advertisement */}
           {advertisements.middle && advertisements.middle.length > 0 && (
             <div className="relative aspect-[4/1] max-w-full rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
-              {advertisements.middle.map((ad, index) => (
+              {advertisements.middle.map((ad) => (
                 <AdvertisementPlaceholder key={ad.id} ad={ad} />
               ))}
               <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
@@ -581,24 +613,24 @@ export function ArticleDetail({
           )}
 
           {/* Media Section */}
-          <MediaSection article={article} language={language} />
+          <MediaSection article={article} />
 
           {/* Gallery Section */}
-          <GallerySection galleries={article.galleries} language={language} />
+          <GallerySection galleries={article.galleries} />
 
           {/* Live Updates */}
-          <LiveUpdates updates={article.liveUpdates as LiveUpdateItem[]} language={language} />
+          <LiveUpdates updates={article.liveUpdates as LiveUpdateItem[]} />
 
           {/* Tags */}
-          <TagsList article={article} language={language} />
+          <TagsList article={article} />
 
           {/* Author Bio */}
-          <AuthorBio article={article} language={language} />
+          <AuthorBio article={article} />
 
           {/* Bottom Advertisement */}
           {advertisements.bottom && advertisements.bottom.length > 0 && (
             <div className="relative aspect-[728/90] max-w-[728px] mx-auto rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
-              {advertisements.bottom.map((ad, index) => (
+              {advertisements.bottom.map((ad) => (
                 <AdvertisementPlaceholder key={ad.id} ad={ad} />
               ))}
               <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
@@ -608,18 +640,24 @@ export function ArticleDetail({
           {/* Share Section at Bottom */}
           <div className="pt-8 border-t border-garjane-border-light dark:border-garjane-border-dark">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <ShareButtons article={article} language={language} />
+              <ShareButtons article={article} />
               <div className="flex items-center gap-2">
-                <span className="text-caption text-garjane-text-muted">{language === 'kn' ? 'ಅ Highway:' : 'Follow:'}</span>
-                <Button variant="ghost" size="sm" className="share-button" aria-label="Facebook">
-                  <Facebook className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="sm" className="share-button" aria-label="Twitter">
-                  <Twitter className="w-5 h-5" />
-                </Button>
-                <Button variant="ghost" size="sm" className="share-button" aria-label="Instagram">
-                  <Instagram className="w-5 h-5" />
-                </Button>
+                <span className="text-caption text-garjane-text-muted">{t.footer.followUsOn}:</span>
+                <a href="https://www.facebook.com/profile.php?id=61563431741881" target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="share-button" aria-label="Facebook">
+                    <Facebook className="w-5 h-5" />
+                  </Button>
+                </a>
+                <a href="https://twitter.com/garjanenews" target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="share-button" aria-label="Twitter">
+                    <Twitter className="w-5 h-5" />
+                  </Button>
+                </a>
+                <a href="https://www.instagram.com/garjanenews_kannada/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="ghost" size="sm" className="share-button" aria-label="Instagram">
+                    <Instagram className="w-5 h-5" />
+                  </Button>
+                </a>
               </div>
             </div>
           </div>
@@ -629,7 +667,6 @@ export function ArticleDetail({
             articleId={article.id}
             allowComments={article.allowComments}
             comments={article.comments}
-            language={language}
           />
         </div>
 
@@ -639,49 +676,57 @@ export function ArticleDetail({
           <PreviousNextNavigation
             previousArticle={previousArticle}
             nextArticle={nextArticle}
-            language={language}
           />
 
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
             <section aria-labelledby="related-heading">
               <h2 id="related-heading" className="text-headline-4 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-4">
-                {language === 'kn' ? 'ಸಂಬಂಧಿತ ಲೇಖನಗಳು' : 'Related Articles'}
+                {t.article.relatedArticles}
               </h2>
               <div className="space-y-4">
-                {relatedArticles.slice(0, 5).map((relatedArticle) => (
-                  <Link
-                    key={relatedArticle.id}
-                    href={`/article/${relatedArticle.slug}`}
-                    className="group flex gap-3 p-2 rounded-lg hover:bg-garjane-background-light/50 dark:hover:bg-garjane-background-dark/50 transition-colors"
-                  >
-                    {relatedArticle.featuredImage && (
-                      <Image
-                        src={relatedArticle.featuredImage}
-                        alt={relatedArticle.featuredImageAlt || (language === 'kn' ? (relatedArticle.headlineKn || relatedArticle.headline) : relatedArticle.headline)}
-                        width={80}
-                        height={60}
-                        className="w-20 h-15 object-cover rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
-                        {language === 'kn' ? (relatedArticle.headlineKn || relatedArticle.headline) : relatedArticle.headline}
-                      </h4>
-                      <div className="mt-1 flex items-center gap-2 text-caption text-garjane-text-muted">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {formatRelativeTimeKn(relatedArticle.publishedAt || relatedArticle.createdAt)}
-                        </span>
-                        {relatedArticle.category && (
-                          <Badge variant="primary" size="sm" className="text-caption">
-                            {language === 'kn' ? (relatedArticle.category.nameKn || relatedArticle.category.name) : relatedArticle.category.name}
-                          </Badge>
-                        )}
+                {relatedArticles.slice(0, 5).map((relatedArticle) => {
+                  const relHeadline = (language === 'en'
+                    ? (relatedArticle.headline || relatedArticle.headlineKn)
+                    : (relatedArticle.headlineKn || relatedArticle.headline)) || '';
+                  const relCatName = language === 'en'
+                    ? (relatedArticle.category?.name || relatedArticle.category?.nameKn)
+                    : (relatedArticle.category?.nameKn || relatedArticle.category?.name);
+
+                  return (
+                    <Link
+                      key={relatedArticle.id}
+                      href={`/article/${relatedArticle.slug}`}
+                      className="group flex gap-3 p-2 rounded-lg hover:bg-garjane-background-light/50 dark:hover:bg-garjane-background-dark/50 transition-colors"
+                    >
+                      {relatedArticle.featuredImage && (
+                        <Image
+                          src={relatedArticle.featuredImage}
+                          alt={relatedArticle.featuredImageAlt || relHeadline || ''}
+                          width={80}
+                          height={60}
+                          className="w-20 h-15 object-cover rounded-lg flex-shrink-0 group-hover:scale-105 transition-transform"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
+                          {relHeadline}
+                        </h4>
+                        <div className="mt-1 flex items-center gap-2 text-caption text-garjane-text-muted">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {formatTime(relatedArticle.publishedAt || relatedArticle.createdAt)}
+                          </span>
+                          {relCatName && (
+                            <Badge variant="primary" size="sm" className="text-caption">
+                              {relCatName}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           )}

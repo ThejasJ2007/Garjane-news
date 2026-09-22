@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Eye, MapPin, Tag, Flame, Star, Zap, Radio } from 'lucide-react';
-import { formatRelativeTime, formatRelativeTimeKn, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { ArticleWithRelations, ArticleWithRelationsMinimal } from '@/types';
 
 interface ArticleCardProps {
@@ -28,13 +30,31 @@ export function ArticleCard({
   showStats = false,
   priority = false,
 }: ArticleCardProps) {
+  const { language, t, formatTime } = useLanguage();
+
   const isBreaking = article.breakingLevel === 'BREAKING' || article.breakingLevel === 'URGENT';
   const isLive = article.isLive;
   const isFeatured = article.isFeatured;
   const isEditorPick = article.isEditorPick;
 
+  const displayHeadline = (language === 'en'
+    ? (article.headline || article.headlineKn)
+    : (article.headlineKn || article.headline)) || '';
+
+  const displaySummary = language === 'en'
+    ? (article.summary || article.summaryKn)
+    : (article.summaryKn || article.summary);
+
+  const displayCategory = language === 'en'
+    ? (article.category?.name || article.category?.nameKn)
+    : (article.category?.nameKn || article.category?.name);
+
+  const displayLocation = language === 'en'
+    ? (article.location?.name || article.location?.nameKn)
+    : (article.location?.nameKn || article.location?.name);
+
   const imageUrl = article.featuredImage;
-  const imageAlt = article.featuredImageAlt || article.headlineKn || article.headline;
+  const imageAlt = article.featuredImageAlt || displayHeadline || '';
 
   const variants = {
     default: 'grid grid-cols-1 md:grid-cols-12 gap-4',
@@ -77,10 +97,10 @@ export function ArticleCard({
             />
             {(isBreaking || isLive || isFeatured || isEditorPick) && (
               <div className="absolute top-2 left-2 right-2 flex flex-wrap gap-1">
-                {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-2.5 h-2.5" /> Breaking</Badge>}
-                {isLive && <Badge variant="live" size="sm" dot><Radio className="w-2.5 h-2.5" /> Live</Badge>}
-                {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-2.5 h-2.5" /> Featured</Badge>}
-                {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-2.5 h-2.5" /> Editor&apos;s Pick</Badge>}
+                {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-2.5 h-2.5" /> {t.common.breaking}</Badge>}
+                {isLive && <Badge variant="live" size="sm" dot><Radio className="w-2.5 h-2.5" /> {t.common.live}</Badge>}
+                {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-2.5 h-2.5" /> {t.common.featured}</Badge>}
+                {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-2.5 h-2.5" /> {t.common.editorPick}</Badge>}
               </div>
             )}
           </div>
@@ -89,16 +109,16 @@ export function ArticleCard({
           {showCategory && article.category && (
             <Link href={`/category/${article.category.slug}`} className="inline-block mb-1">
               <Badge variant="primary" size="sm" className="text-caption">
-                {article.category.nameKn || article.category.name}
+                {displayCategory}
               </Badge>
             </Link>
           )}
           <h3 className="font-heading font-semibold text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
-            {article.headlineKn || article.headline}
+            {displayHeadline}
           </h3>
-          {(article.summaryKn || article.summary) && (
+          {displaySummary && (
             <p className="mt-1 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted line-clamp-2">
-              {article.summaryKn || article.summary}
+              {displaySummary}
             </p>
           )}
           <div className="mt-2 flex flex-wrap items-center gap-3 text-caption text-garjane-text-muted">
@@ -116,12 +136,12 @@ export function ArticleCard({
             )}
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {formatRelativeTimeKn(article.publishedAt || article.createdAt)}
+              {formatTime(article.publishedAt || article.createdAt)}
             </span>
             {showStats && (
               <span className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
-                {article.viewCount.toLocaleString()}
+                {article.viewCount.toLocaleString()} {t.common.views}
               </span>
             )}
           </div>
@@ -132,7 +152,7 @@ export function ArticleCard({
 
   return (
     <ArticleCardWrapper variant={variant} priority={priority}>
-      <Link href={`/article/${article.slug}`} className={cn('relative overflow-hidden rounded-lg bg-garjane-border-light dark:bg-garjane-border-dark', imageClass[variant])} aria-label={article.headlineKn || article.headline}>
+      <Link href={`/article/${article.slug}`} className={cn('relative overflow-hidden rounded-lg bg-garjane-border-light dark:bg-garjane-border-dark', imageClass[variant])} aria-label={displayHeadline}>
         {imageUrl && (
           <Image
             src={imageUrl}
@@ -145,21 +165,21 @@ export function ArticleCard({
         )}
         {!imageUrl && (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-caption text-garjane-text-muted">No Image</span>
+            <span className="text-caption text-garjane-text-muted">{t.common.noImage}</span>
           </div>
         )}
         {(isBreaking || isLive || isFeatured || isEditorPick) && (
           <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-1.5">
-            {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-3 h-3" /> {article.breakingLevel}</Badge>}
-            {isLive && <Badge variant="live" size="sm" dot><Radio className="w-3 h-3" /> Live</Badge>}
-            {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-3 h-3" /> Featured</Badge>}
-            {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> Editor&apos;s Pick</Badge>}
+            {isBreaking && <Badge variant="breaking" size="sm" dot><Flame className="w-3 h-3" /> {t.common.breaking}</Badge>}
+            {isLive && <Badge variant="live" size="sm" dot><Radio className="w-3 h-3" /> {t.common.live}</Badge>}
+            {isFeatured && <Badge variant="featured" size="sm" dot><Star className="w-3 h-3" /> {t.common.featured}</Badge>}
+            {isEditorPick && <Badge variant="editor-pick" size="sm" dot><Zap className="w-3 h-3" /> {t.common.editorPick}</Badge>}
           </div>
         )}
         {article.readTime > 0 && (
           <div className="absolute bottom-3 right-3 bg-black/70 text-white text-caption px-2 py-1 rounded flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            {article.readTime} min
+            {article.readTime} {t.common.minRead}
           </div>
         )}
       </Link>
@@ -170,7 +190,7 @@ export function ArticleCard({
             {showCategory && article.category && (
               <Link href={`/category/${article.category.slug}`} className="inline-block">
                 <Badge variant="primary" size="sm">
-                  {article.category.nameKn || article.category.name}
+                  {displayCategory}
                 </Badge>
               </Link>
             )}
@@ -178,7 +198,7 @@ export function ArticleCard({
               <Link href={`/location/${article.location.slug}`} className="inline-block">
                 <Badge variant="default" size="sm" dot>
                   <MapPin className="w-2.5 h-2.5" />
-                  {article.location.nameKn || article.location.name}
+                  {displayLocation}
                 </Badge>
               </Link>
             )}
@@ -186,7 +206,7 @@ export function ArticleCard({
               <div className="flex items-center gap-1">
                 <Tag className="w-3 h-3 text-garjane-text-muted" />
                 <span className="text-caption text-garjane-text-muted">
-                  {article.tags.slice(0, 2).map(t => t.tag.nameKn || t.tag.name).join(', ')}
+                  {article.tags.slice(0, 2).map(tItem => language === 'en' ? (tItem.tag.name || tItem.tag.nameKn) : (tItem.tag.nameKn || tItem.tag.name)).join(', ')}
                   {article.tags.length > 2 && ` +${article.tags.length - 2}`}
                 </span>
               </div>
@@ -198,13 +218,13 @@ export function ArticleCard({
               'font-heading font-semibold line-clamp-2 transition-colors group-hover:text-garjane-primary',
               variant === 'featured' ? 'text-headline-2' : 'text-headline-3'
             )}>
-              {article.headlineKn || article.headline}
+              {displayHeadline}
             </h3>
           </Link>
 
-          {(article.summaryKn || article.summary) && (
+          {displaySummary && (
             <p className={cn('mt-3 line-clamp-3 text-garjane-text-secondary dark:text-garjane-text-muted', variant === 'featured' ? 'text-body' : 'text-body-sm')}>
-              {article.summaryKn || article.summary}
+              {displaySummary}
             </p>
           )}
         </div>
@@ -218,17 +238,17 @@ export function ArticleCard({
           )}
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            {formatRelativeTimeKn(article.publishedAt || article.createdAt)}
+            {formatTime(article.publishedAt || article.createdAt)}
           </span>
           {showStats && (
             <span className="flex items-center gap-1">
               <Eye className="w-3 h-3" />
-              {article.viewCount.toLocaleString()}
+              {article.viewCount.toLocaleString()} {t.common.views}
             </span>
           )}
           {article.reporter && (
             <span className="flex items-center gap-1 text-garjane-accent">
-              <Badge variant="secondary" size="sm">Reporter: {article.reporter.user.name}</Badge>
+              <Badge variant="secondary" size="sm">{t.common.reporter} {article.reporter.user.name}</Badge>
             </span>
           )}
         </div>
@@ -257,11 +277,15 @@ function ArticleCardWrapper({ children, variant = 'default', priority }: { child
 }
 
 export function ArticleGrid({ articles, variant = 'default', ...props }: { articles: (ArticleWithRelations | ArticleWithRelationsMinimal)[]; variant?: ArticleCardProps['variant'] } & Omit<ArticleCardProps, 'article'>) {
+  const { language } = useLanguage();
+
   if (articles.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-garjane-text-muted text-body">No articles found.</p>
-      </div>
+      <EmptyState
+        variant="articles"
+        language={language}
+        compact
+      />
     );
   }
 

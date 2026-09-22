@@ -8,4 +8,6 @@ node_modules
 server.log
 dev-server.log
 dev-server-stderr.log
+*.log
+runtime-server.log
 tsconfig.tsbuildinfo

@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Eye, MapPin, Tag, Flame, Star, Zap, Radio } from 'lucide-react';
-import { formatRelativeTimeKn, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { ArticleWithRelations, ArticleWithRelationsMinimal } from '@/types';
 
 interface HeroStoryProps {
@@ -14,19 +15,38 @@ interface HeroStoryProps {
   priority?: boolean;
 }
 
-export function HeroStory({ article, language = 'kn', priority = true }: HeroStoryProps) {
+export function HeroStory({ article, language, priority = true }: HeroStoryProps) {
+  const { language: globalLang, t, formatTime } = useLanguage();
+  const activeLang = language || globalLang;
+
   const isBreaking = article.breakingLevel === 'BREAKING' || article.breakingLevel === 'URGENT';
   const isLive = article.isLive;
   const isFeatured = article.isFeatured;
   const isEditorPick = article.isEditorPick;
 
+  const displayHeadline = (activeLang === 'en'
+    ? (article.headline || article.headlineKn)
+    : (article.headlineKn || article.headline)) || '';
+
+  const displaySummary = activeLang === 'en'
+    ? (article.summary || article.summaryKn)
+    : (article.summaryKn || article.summary);
+
+  const displayCategory = activeLang === 'en'
+    ? (article.category?.name || article.category?.nameKn)
+    : (article.category?.nameKn || article.category?.name);
+
+  const displayLocation = activeLang === 'en'
+    ? (article.location?.name || article.location?.nameKn)
+    : (article.location?.nameKn || article.location?.name);
+
   const imageUrl = article.featuredImage;
-  const imageAlt = article.featuredImageAlt || article.headlineKn || article.headline;
+  const imageAlt = article.featuredImageAlt || displayHeadline || '';
 
   return (
     <article className="relative group hero-story card-elevated overflow-hidden">
       {imageUrl && (
-        <Link href={`/article/${article.slug}`} className="hero-story-image" aria-label={language === 'kn' ? (article.headlineKn || article.headline) : article.headline}>
+        <Link href={`/article/${article.slug}`} className="hero-story-image" aria-label={displayHeadline}>
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -44,7 +64,7 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
           {article.category && (
             <Link href={`/category/${article.category.slug}`} className="inline-block">
               <Badge variant="primary" size="md">
-                {language === 'kn' ? (article.category.nameKn || article.category.name) : article.category.name}
+                {displayCategory}
               </Badge>
             </Link>
           )}
@@ -52,7 +72,7 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
             <Link href={`/location/${article.location.slug}`} className="inline-block">
               <Badge variant="default" size="sm" dot>
                 <MapPin className="w-3 h-3" />
-                {language === 'kn' ? (article.location.nameKn || article.location.name) : article.location.name}
+                {displayLocation}
               </Badge>
             </Link>
           )}
@@ -61,25 +81,25 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
               {isBreaking && (
                 <Badge variant="breaking" size="sm" dot>
                   <Flame className="w-3 h-3" />
-                  {article.breakingLevel}
+                  {t.common.breaking}
                 </Badge>
               )}
               {isLive && (
                 <Badge variant="live" size="sm" dot>
                   <Radio className="w-3 h-3" />
-                  Live
+                  {t.common.live}
                 </Badge>
               )}
               {isFeatured && (
                 <Badge variant="featured" size="sm" dot>
                   <Star className="w-3 h-3" />
-                  Featured
+                  {t.common.featured}
                 </Badge>
               )}
               {isEditorPick && (
                 <Badge variant="editor-pick" size="sm" dot>
                   <Zap className="w-3 h-3" />
-                  Editor&apos;s Pick
+                  {t.common.editorPick}
                 </Badge>
               )}
             </div>
@@ -88,13 +108,13 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
 
         <Link href={`/article/${article.slug}`}>
           <h1 className="text-headline-1 text-garjane-text-inverse font-heading font-bold leading-tight mb-4 group-hover:text-garjane-accent transition-colors duration-300">
-            {language === 'kn' ? (article.headlineKn || article.headline) : article.headline}
+            {displayHeadline}
           </h1>
         </Link>
 
-        {(article.summaryKn || article.summary) && (
+        {displaySummary && (
           <p className="text-body-lg text-garjane-secondary-light/90 leading-relaxed mb-6 max-w-3xl">
-            {language === 'kn' ? (article.summaryKn || article.summary) : article.summary}
+            {displaySummary}
           </p>
         )}
 
@@ -107,23 +127,23 @@ export function HeroStory({ article, language = 'kn', priority = true }: HeroSto
           )}
           <span className="flex items-center gap-1.5">
             <Clock className="w-4 h-4" />
-            {formatRelativeTimeKn(article.publishedAt || article.createdAt)}
+            {formatTime(article.publishedAt || article.createdAt)}
           </span>
           {article.readTime > 0 && (
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              {article.readTime} min read
+              {article.readTime} {t.common.minRead}
             </span>
           )}
           {article.viewCount > 0 && (
             <span className="flex items-center gap-1.5">
               <Eye className="w-4 h-4" />
-              {article.viewCount.toLocaleString()} views
+              {article.viewCount.toLocaleString()} {t.common.views}
             </span>
           )}
           {article.reporter && (
             <span className="flex items-center gap-1.5 text-garjane-accent">
-              <Badge variant="secondary" size="sm">Reporter: {article.reporter.user.name}</Badge>
+              <Badge variant="secondary" size="sm">{t.common.reporter} {article.reporter.user.name}</Badge>
             </span>
           )}
         </div>

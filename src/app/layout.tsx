@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from './providers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
 import { getSiteSettings, getMenuItems, getBreakingNews } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
@@ -44,6 +45,11 @@ export const metadata: Metadata = {
   title: {
     default: 'Garjane News - Your Local News, Your Voice',
     template: '%s | Garjane News',
+  },
+  alternates: {
+    types: {
+      'application/rss+xml': '/feed.xml',
+    },
   },
   description: 'Garjane News brings you the latest breaking news, local updates, and in-depth coverage from Karnataka and beyond. Available in Kannada and English.',
   keywords: ['news', 'Karnataka', 'breaking news', 'local news', 'Kannada news', 'Indian news'],
@@ -89,9 +95,13 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
     shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
 };
@@ -127,6 +137,7 @@ export default async function RootLayout({
     <html lang={htmlLang} className={`${inter.variable} ${notoSansKannada.variable} ${lexend.variable} scroll-smooth`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-garjane-background-light dark:bg-garjane-background-dark text-garjane-text-primary dark:text-garjane-text-inverse min-h-screen flex flex-col">
         <Providers>
+          <ServiceWorkerRegister />
           <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-4 py-2 bg-garjane-primary text-garjane-primary-foreground rounded-lg">
             Skip to main content
           </a>

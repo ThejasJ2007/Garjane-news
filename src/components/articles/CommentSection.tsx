@@ -5,7 +5,7 @@ import { MessageSquare, Send, CheckCircle2, AlertCircle, Loader2, Lock } from 'l
 import { createCommentAction, type CommentActionResult } from '@/actions/comments';
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/ui/Avatar';
-import { formatRelativeTimeKn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { Comment, User } from '@/types';
 
 interface CommentWithUser extends Comment {
@@ -23,8 +23,11 @@ export function CommentSection({
   articleId,
   allowComments = true,
   comments = [],
-  language = 'kn',
+  language: propLanguage,
 }: CommentSectionProps) {
+  const { language: contextLang, t, formatTime } = useLanguage();
+  const currentLang = propLanguage || contextLang;
+
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<CommentActionResult | null>(null);
@@ -36,11 +39,7 @@ export function CommentSection({
       <section aria-labelledby="comments-heading" className="mt-12 pt-8 border-t border-garjane-border-light dark:border-garjane-border-dark">
         <div className="p-6 rounded-2xl bg-garjane-background-light/40 dark:bg-garjane-background-dark/40 border border-garjane-border-light dark:border-garjane-border-dark flex items-center gap-3 text-garjane-text-muted text-body-sm">
           <Lock className="w-5 h-5 flex-shrink-0 text-garjane-text-muted" />
-          <span>
-            {language === 'kn'
-              ? 'ಈ ಲೇಖನಕ್ಕೆ ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಮುಚ್ಚಲಾಗಿದೆ / Comments are disabled for this article.'
-              : 'Comments are disabled for this article.'}
-          </span>
+          <span>{t.article.commentsClosed}</span>
         </div>
       </section>
     );
@@ -50,7 +49,7 @@ export function CommentSection({
     e.preventDefault();
     if (!content.trim() || content.trim().length < 3) {
       setResult({
-        error: language === 'kn' ? 'ಪ್ರತಿಕ್ರಿಯೆ ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು' : 'Comment must be at least 3 characters',
+        error: currentLang === 'kn' ? 'ಪ್ರತಿಕ್ರಿಯೆ ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು' : 'Comment must be at least 3 characters',
       });
       return;
     }
@@ -69,7 +68,7 @@ export function CommentSection({
       }
     } catch {
       setResult({
-        error: language === 'kn' ? 'ದೋಷ ಸಂಭವಿಸಿದೆ. ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.' : 'Network error. Please try again.',
+        error: t.article.commentError,
       });
     } finally {
       setIsSubmitting(false);
@@ -81,7 +80,7 @@ export function CommentSection({
       <div className="flex items-center gap-2 mb-6">
         <MessageSquare className="w-5 h-5 text-garjane-primary" />
         <h2 id="comments-heading" className="text-headline-4 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse">
-          {language === 'kn' ? 'ಪ್ರತಿಕ್ರಿಯೆಗಳು' : 'Comments'} ({approvedComments.length})
+          {t.article.comments} ({approvedComments.length})
         </h2>
       </div>
 
@@ -104,7 +103,7 @@ export function CommentSection({
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div>
           <label htmlFor="comment-input" className="sr-only">
-            {language === 'kn' ? 'ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಬರೆಯಿರಿ' : 'Write your comment'}
+            {t.article.leaveComment}
           </label>
           <textarea
             id="comment-input"
@@ -113,9 +112,9 @@ export function CommentSection({
             onChange={(e) => setContent(e.target.value)}
             disabled={isSubmitting}
             placeholder={
-              language === 'kn'
+              currentLang === 'kn'
                 ? 'ನಿಮ್ಮ ಅನಿಸಿಕೆ ಅಥವಾ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಇಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ (ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳು)...'
-                : 'Share your thoughts or comment on this story...'
+                : 'Share your thoughts or comment on this story (min 3 characters)...'
             }
             className="w-full px-4 py-3 rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body resize-y"
           />
@@ -123,7 +122,7 @@ export function CommentSection({
 
         <div className="flex items-center justify-between flex-wrap gap-3">
           <span className="text-caption text-garjane-text-muted">
-            {content.length} / 2000 {language === 'kn' ? 'ಅಕ್ಷರಗಳು' : 'characters'}
+            {content.length} / 2000 {currentLang === 'kn' ? 'ಅಕ್ಷರಗಳು' : 'characters'}
           </span>
           <Button
             type="submit"
@@ -134,12 +133,12 @@ export function CommentSection({
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>{language === 'kn' ? 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...' : 'Submitting...'}</span>
+                <span>{t.article.submitting}</span>
               </>
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                <span>{language === 'kn' ? 'ಪ್ರತಿಕ್ರಿಯೆ ಸಲ್ಲಿಸಿ' : 'Post Comment'}</span>
+                <span>{t.article.submitComment}</span>
               </>
             )}
           </Button>
@@ -157,15 +156,15 @@ export function CommentSection({
               <div className="flex items-center gap-3 mb-2">
                 <Avatar
                   src={comment.user?.avatar || null}
-                  name={comment.user?.name || (language === 'kn' ? 'ಓದುಗರು' : 'Reader')}
+                  name={comment.user?.name || (currentLang === 'kn' ? 'ಓದುಗರು' : 'Reader')}
                   size="sm"
                 />
                 <div>
                   <h4 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse">
-                    {comment.user?.name || (language === 'kn' ? 'ಗರ್ಜನೆ ಓದುಗರು' : 'Garjane Reader')}
+                    {comment.user?.name || (currentLang === 'kn' ? 'ಗರ್ಜನೆ ಓದುಗರು' : 'Garjane Reader')}
                   </h4>
                   <span className="text-caption text-garjane-text-muted">
-                    {formatRelativeTimeKn(comment.createdAt)}
+                    {formatTime(comment.createdAt)}
                   </span>
                 </div>
               </div>
@@ -177,7 +176,7 @@ export function CommentSection({
         ) : (
           <div className="text-center py-8 px-4 rounded-2xl bg-garjane-background-light/30 dark:bg-garjane-background-dark/30 text-garjane-text-muted">
             <p className="text-body-sm">
-              {language === 'kn'
+              {currentLang === 'kn'
                 ? 'ಇನ್ನೂ ಯಾವುದೇ ಪ್ರತಿಕ್ರಿಯೆಗಳಿಲ್ಲ. ನಿಮ್ಮ ಅನಿಸಿಕೆಯನ್ನು ಮೊದಲಾಗಿ ಹಂಚಿಕೊಳ್ಳಿ!'
                 : 'No comments yet. Be the first to share your thoughts!'}
             </p>

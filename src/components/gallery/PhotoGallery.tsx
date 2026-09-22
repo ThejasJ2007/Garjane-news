@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { Expand, ChevronLeft, ChevronRight, X, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { PhotoGallery, GalleryImage } from '@/types';
 
 interface PhotoGalleryCardProps {
@@ -18,11 +20,23 @@ interface PhotoGalleryCardProps {
 export function PhotoGalleryCard({
   gallery,
   variant = 'default',
-  language = 'kn',
+  language: propLanguage,
   priority = false,
 }: PhotoGalleryCardProps) {
-  const displayTitle = language === 'kn' && gallery.titleKn ? gallery.titleKn : gallery.title;
-  const displayDescription = language === 'kn' && gallery.descriptionKn ? gallery.descriptionKn : gallery.description;
+  const { language: contextLang } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
+  const displayTitle = (activeLang === 'kn'
+    ? (gallery.titleKn || gallery.title)
+    : (gallery.title || gallery.titleKn)) || '';
+
+  const displayDescription = activeLang === 'kn'
+    ? (gallery.descriptionKn || gallery.description)
+    : (gallery.description || gallery.descriptionKn);
+
+  const photosLabel = activeLang === 'kn'
+    ? `${gallery.imageCount} ಚಿತ್ರಗಳು`
+    : `${gallery.imageCount} photos`;
 
   if (variant === 'compact') {
     return (
@@ -41,7 +55,7 @@ export function PhotoGalleryCard({
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="secondary" size="sm" className="text-caption">
                   <Camera className="w-2.5 h-2.5" />
-                  {gallery.imageCount} photos
+                  {photosLabel}
                 </Badge>
               </div>
               <h4 className="font-semibold text-body-sm text-white line-clamp-1 group-hover:text-garjane-accent transition-colors">
@@ -75,11 +89,11 @@ export function PhotoGalleryCard({
           <div className="absolute top-3 left-3 flex flex-col gap-1.5">
             <Badge variant="secondary" size="sm" className="text-caption">
               <Camera className="w-3 h-3 mr-1" />
-              {gallery.imageCount} photos
+              {photosLabel}
             </Badge>
           </div>
           <div className="absolute bottom-3 right-3 flex items-center gap-2">
-            {gallery.images.slice(0, 3).map((img, i) => (
+            {gallery.images.slice(0, 3).map((img) => (
               <div
                 key={img.id}
                 className="w-10 h-10 rounded-lg overflow-hidden border-2 border-white/50 bg-garjane-border-light dark:bg-garjane-border-dark"
@@ -113,7 +127,7 @@ export function PhotoGalleryCard({
           <div className="flex items-center gap-3 text-caption text-garjane-text-muted">
             <Badge variant="secondary" size="sm" className="text-caption">
               <Camera className="w-3 h-3 mr-1" />
-              {gallery.imageCount} photos
+              {photosLabel}
             </Badge>
           </div>
         </div>
@@ -141,11 +155,11 @@ export function PhotoGalleryCard({
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           <Badge variant="secondary" size="sm" className="text-caption">
             <Camera className="w-2.5 h-2.5 mr-1" />
-            {gallery.imageCount} photos
+            {photosLabel}
           </Badge>
         </div>
         <div className="absolute bottom-2 right-2 flex items-center gap-1">
-          {gallery.images.slice(0, 3).map((img, i) => (
+          {gallery.images.slice(0, 3).map((img) => (
             <div
               key={img.id}
               className="w-8 h-8 rounded-lg overflow-hidden border-2 border-white/50 bg-garjane-border-light dark:bg-garjane-border-dark"
@@ -179,7 +193,7 @@ export function PhotoGalleryCard({
         <div className="flex items-center gap-2 text-caption text-garjane-text-muted">
           <Badge variant="secondary" size="sm" className="text-caption">
             <Camera className="w-3 h-3 mr-1" />
-            {gallery.imageCount} photos
+            {photosLabel}
           </Badge>
         </div>
       </div>
@@ -196,7 +210,9 @@ interface LightboxProps {
   language?: 'kn' | 'en';
 }
 
-export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTitle, language = 'kn' }: LightboxProps) {
+export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTitle, language: propLanguage }: LightboxProps) {
+  const { language: contextLang } = useLanguage();
+  const activeLang = propLanguage || contextLang;
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
   useEffect(() => {
@@ -281,7 +297,7 @@ export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTit
             {(currentImage.caption || currentImage.captionKn) && (
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
                 <p className="text-body text-center">
-                  {language === 'kn' && currentImage.captionKn ? currentImage.captionKn : currentImage.caption}
+                  {activeLang === 'kn' && currentImage.captionKn ? currentImage.captionKn : currentImage.caption}
                 </p>
               </div>
             )}
@@ -330,19 +346,26 @@ export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTit
   );
 }
 
-export function PhotoGalleryGrid({ galleries, variant = 'default', ...props }: { galleries: (PhotoGallery & { images: GalleryImage[] })[]; variant?: PhotoGalleryCardProps['variant'] } & Omit<PhotoGalleryCardProps, 'gallery'>) {
+export function PhotoGalleryGrid({ galleries, variant = 'default', language: propLanguage, ...props }: { galleries: (PhotoGallery & { images: GalleryImage[] })[]; variant?: PhotoGalleryCardProps['variant'] } & Omit<PhotoGalleryCardProps, 'gallery'>) {
+  const { language: contextLang } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
   if (galleries.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-garjane-text-muted text-body">No photo galleries found.</p>
-      </div>
+      <EmptyState
+        variant="gallery"
+        language={activeLang}
+        compact
+        title={activeLang === 'kn' ? 'ಯಾವುದೇ ಫೋಟೋ ಗ್ಯಾಲರಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ' : 'No photo galleries found'}
+        description={activeLang === 'kn' ? 'ಹೊಸ ಫೋಟೋ ಗ್ಯಾಲರಿಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.' : 'New photo galleries will appear here once published.'}
+      />
     );
   }
 
   return (
     <div className="grid gap-6">
       {galleries.map((gallery, index) => (
-        <PhotoGalleryCard key={gallery.id} gallery={gallery} variant={variant} priority={index < 4} {...props} />
+        <PhotoGalleryCard key={gallery.id} gallery={gallery} variant={variant} priority={index < 4} language={activeLang} {...props} />
       ))}
     </div>
   );

@@ -15,6 +15,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { getDashboardStats, getRecentArticles } from '@/actions/articles';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { formatRelativeTimeKn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -170,11 +171,14 @@ export default async function DashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="p-12 text-center text-garjane-text-muted">
-                <FileText className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                <p className="text-body font-medium">ಇನ್ನೂ ಯಾವುದೇ ಲೇಖನಗಳನ್ನು ಪ್ರಕಟಿಸಿಲ್ಲ.</p>
-                <p className="text-body-sm mt-1">ಹೊಸ ಲೇಖನವನ್ನು ಪ್ರಕಟಿಸಲು ಮೇಲಿನ ಬಟನ್ ಒತ್ತಿ.</p>
-              </div>
+              <EmptyState
+                variant="articles"
+                language="kn"
+                compact
+                title="ಇನ್ನೂ ಯಾವುದೇ ಲೇಖನಗಳನ್ನು ಪ್ರಕಟಿಸಿಲ್ಲ."
+                description="ಹೊಸ ಲೇಖನವನ್ನು ಪ್ರಕಟಿಸಲು ಮೇಲಿನ ಬಟನ್ ಒತ್ತಿ."
+                secondaryDescription="No articles published yet."
+              />
             )}
           </div>
         </div>

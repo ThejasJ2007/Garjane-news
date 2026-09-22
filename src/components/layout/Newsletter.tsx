@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface NewsletterProps {
   title?: string;
@@ -23,32 +24,35 @@ interface NewsletterProps {
 }
 
 export function Newsletter({
-  title = 'Stay Updated',
-  titleKn = 'ಅಪ್‌ಡೇಟ್ ಆಗಿ ರಹಿಸಿ',
-  description = 'Get the latest news delivered straight to your inbox.',
-  descriptionKn = 'ಅತೀಹೊಸ ಸುದ್ದಿಗಳನ್ನು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ನೇರವಾಗಿ ಪಡೆಯಿರಿ.',
-  buttonText = 'Subscribe',
-  buttonTextKn = 'ಚಂದಾದಾರರಾಗು',
-  placeholder = 'Enter your email',
-  placeholderKn = 'ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ',
-  language = 'kn',
+  title,
+  titleKn,
+  description,
+  descriptionKn,
+  buttonText,
+  buttonTextKn,
+  placeholder,
+  placeholderKn,
+  language,
   className,
   variant = 'default',
 }: NewsletterProps) {
+  const { language: globalLang, t } = useLanguage();
+  const activeLang = language || globalLang;
+
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
 
-  const displayTitle = language === 'kn' ? titleKn : title;
-  const displayDescription = language === 'kn' ? descriptionKn : description;
-  const displayButtonText = language === 'kn' ? buttonTextKn : buttonText;
-  const displayPlaceholder = language === 'kn' ? placeholderKn : placeholder;
+  const displayTitle = activeLang === 'kn' ? (titleKn || t.home.stayUpdated) : (title || t.home.stayUpdated);
+  const displayDescription = activeLang === 'kn' ? (descriptionKn || t.home.newsletterDesc) : (description || t.home.newsletterDesc);
+  const displayButtonText = activeLang === 'kn' ? (buttonTextKn || t.home.subscribe) : (buttonText || t.home.subscribe);
+  const displayPlaceholder = activeLang === 'kn' ? (placeholderKn || t.home.emailPlaceholder) : (placeholder || t.home.emailPlaceholder);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
       setStatus('error');
-      setMessage(language === 'kn' ? 'ದಯವಿಟ್ಟು சரியಾದ ಇಮೇಲ್ ঠিকানা ನಮೂದಿಸಿ' : 'Please enter a valid email address');
+      setMessage(t.home.invalidEmail);
       return;
     }
 
@@ -57,21 +61,21 @@ export function Newsletter({
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, language }),
+        body: JSON.stringify({ email, language: activeLang }),
       });
 
       const data = await res.json();
       if (res.ok) {
         setStatus('success');
-        setMessage(data.message || (language === 'kn' ? 'ಯಶಸ್ವಿಯಾಗಿ ಚಂದಾದಾರರಾಗಿ connus!' : 'Successfully subscribed!'));
+        setMessage(data.message || t.home.subscribedSuccess);
         setEmail('');
       } else {
         setStatus('error');
-        setMessage(data.error || (language === 'kn' ? 'ಕ್ಷಮಿಸಿ,ftar ಇ슈 ಆಗಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.' : 'Something went wrong. Please try again.'));
+        setMessage(data.error || (activeLang === 'kn' ? 'ಕ್ಷಮಿಸಿ, ದೋಷ ಸಂಭವಿಸಿದೆ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.' : 'Something went wrong. Please try again.'));
       }
     } catch {
       setStatus('error');
-      setMessage(language === 'kn' ? 'ನೇಟ್ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.' : 'Network error. Please try again.');
+      setMessage(activeLang === 'kn' ? 'ನೆಟ್‌ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.' : 'Network error. Please try again.');
     }
   };
 

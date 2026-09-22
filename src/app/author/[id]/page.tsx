@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, User, MapPin, FileText } from 'lucide-react';
+import { ArrowLeft, MapPin, FileText } from 'lucide-react';
 import { getAuthorById, getArticlesByAuthor } from '@/lib/data';
 import { ArticleGrid } from '@/components/articles/ArticleCard';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export const revalidate = 60;
 
@@ -104,11 +105,14 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           {articles.length > 0 ? (
             <ArticleGrid articles={articles} variant="default" showLocation showStats />
           ) : (
-            <div className="text-center py-16 bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark p-8">
-              <User className="w-12 h-12 mx-auto mb-3 text-garjane-text-muted opacity-40" />
-              <p className="text-body font-medium">ಈ ಲೇಖಕರಿಂದ ಯಾವುದೇ ಲೇಖನಗಳು ಪ್ರಕಟವಾಗಿಲ್ಲ.</p>
-              <p className="text-body-sm text-garjane-text-muted mt-1">No articles found by this author.</p>
-            </div>
+            <EmptyState
+              variant="articles"
+              language="kn"
+              title="ಈ ಲೇಖಕರಿಂದ ಯಾವುದೇ ಲೇಖನಗಳು ಪ್ರಕಟವಾಗಿಲ್ಲ."
+              description="ಈ ಲೇಖಕರ ಹೊಸ ವರದಿಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
+              secondaryDescription="No articles found by this author."
+              className="bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark"
+            />
           )}
         </div>
       </div>

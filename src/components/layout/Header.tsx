@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/Input';
 import { Avatar } from '@/components/ui/Avatar';
 import { Badge } from '@/components/ui/Badge';
 import { logoutAction } from '@/actions/auth';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 
 interface MenuItem {
   id: string;
@@ -49,6 +51,7 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -85,34 +88,39 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
         <div className="bg-garjane-breaking-bgDark text-garjane-breaking-textDark px-4 py-1.5 overflow-hidden">
           <div className="flex items-center gap-2 animate-ticker whitespace-nowrap">
             <Badge variant="breaking" size="sm" className="flex-shrink-0">
-              <span className="font-mono">◉</span> BREAKING
+              <span className="font-mono">◉</span> {t.common.breaking}
             </Badge>
-            {breakingNews.map((news) => (
-              <span key={news.id} className="flex items-center gap-2 text-sm font-medium flex-shrink-0">
-                {news.article ? (
-                  <Link href={`/article/${news.article.slug}`} className="hover:underline">
-                    {news.headlineKn || news.headline}
-                  </Link>
-                ) : (
-                  news.headlineKn || news.headline
-                )}
-                <span className="text-garjane-breaking-textDark/60">•</span>
-              </span>
-            ))}
+            {breakingNews.map((news) => {
+              const headline = language === 'en'
+                ? (news.headline || news.headlineKn)
+                : (news.headlineKn || news.headline);
+              return (
+                <span key={news.id} className="flex items-center gap-2 text-sm font-medium flex-shrink-0">
+                  {news.article ? (
+                    <Link href={`/article/${news.article.slug}`} className="hover:underline">
+                      {headline}
+                    </Link>
+                  ) : (
+                    headline
+                  )}
+                  <span className="text-garjane-breaking-textDark/60">•</span>
+                </span>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Main Header */}
-      <nav className="relative" aria-label="Main navigation">
+      <nav className="relative" aria-label={language === 'kn' ? 'ಮುಖ್ಯ ಸಂಚರಣೆ' : 'Main navigation'}>
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 lg:h-14 gap-4">
+          <div className="flex items-center justify-between h-16 lg:h-14 gap-3">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Garjane News Home">
               <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-garjane-primary flex items-center justify-center">
                 <span className="text-garjane-primary-foreground font-heading font-bold text-xl lg:text-2xl">ಗ</span>
               </div>
-              <span className="hidden lg:block font-heading font-bold text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse">
+              <span className="hidden sm:block font-heading font-bold text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse">
                 Garjane News
               </span>
             </Link>
@@ -124,23 +132,26 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
               ))}
             </div>
 
-            {/* Search & Actions */}
+            {/* Search, Language & Actions */}
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSearchToggle}
                 className="lg:hidden"
-                aria-label="Search"
+                aria-label={t.nav.search}
               >
                 <Search className="w-5 h-5" />
               </Button>
+
+              {/* Language Switcher on Header */}
+              <LanguageSwitcher className="hidden sm:inline-flex" />
 
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleDarkMode}
-                aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                aria-label={isDark ? t.nav.lightMode : t.nav.darkMode}
               >
                 {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </Button>
@@ -150,10 +161,10 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
               ) : (
                 <div className="hidden lg:flex items-center gap-2">
                   <Link href="/login">
-                    <Button variant="ghost" size="sm">Sign In</Button>
+                    <Button variant="ghost" size="sm">{t.nav.signIn}</Button>
                   </Link>
                   <Link href="/register">
-                    <Button size="sm">Get Started</Button>
+                    <Button size="sm">{t.nav.getStarted}</Button>
                   </Link>
                 </div>
               )}
@@ -163,7 +174,7 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
                 size="sm"
                 onClick={handleMenuToggle}
                 className="lg:hidden"
-                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-label={isMenuOpen ? t.nav.close : t.nav.menu}
                 aria-expanded={isMenuOpen}
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -175,13 +186,21 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden bg-garjane-background-card dark:bg-garjane-background-cardDark border-t border-garjane-border-light dark:border-garjane-border-dark animate-slide-down">
-            <div className="container mx-auto px-4 py-4 space-y-2">
+            <div className="container mx-auto px-4 py-4 space-y-3">
+              {/* Mobile Language Switcher */}
+              <div className="flex items-center justify-between pb-3 border-b border-garjane-border-light dark:border-garjane-border-dark">
+                <span className="text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted">
+                  {t.article.language}
+                </span>
+                <LanguageSwitcher />
+              </div>
+
               {menuItems?.map((item) => (
                 <MobileNavItem key={item.id} item={item} setIsMenuOpen={handleMenuToggle} />
               ))}
               <div className="pt-4 border-t border-garjane-border-light dark:border-garjane-border-dark flex items-center gap-2">
                 <Button variant="outline" className="flex-1" onClick={handleSearchToggle}>
-                  <Search className="w-4 h-4 mr-2" /> Search
+                  <Search className="w-4 h-4 mr-2" /> {t.nav.search}
                 </Button>
                 <Button variant="ghost" onClick={toggleDarkMode}>
                   {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -189,8 +208,8 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
               </div>
               {!user && (
                 <div className="flex flex-col gap-2">
-                  <Link href="/login"><Button variant="outline" className="w-full">Sign In</Button></Link>
-                  <Link href="/register"><Button className="w-full">Get Started</Button></Link>
+                  <Link href="/login"><Button variant="outline" className="w-full">{t.nav.signIn}</Button></Link>
+                  <Link href="/register"><Button className="w-full">{t.nav.getStarted}</Button></Link>
                 </div>
               )}
             </div>
@@ -213,7 +232,12 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
 function NavItem({ item }: { item: MenuItem }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { language } = useLanguage();
   const hasChildren = item.children && item.children.length > 0;
+
+  const displayLabel = language === 'en'
+    ? (item.label || item.labelKn)
+    : (item.labelKn || item.label);
 
   if (hasChildren) {
     return (
@@ -231,20 +255,25 @@ function NavItem({ item }: { item: MenuItem }) {
           aria-haspopup="true"
         >
           {item.icon && <span className="w-4 h-4">{item.icon}</span>}
-          <span>{item.labelKn || item.label}</span>
+          <span>{displayLabel}</span>
           <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
         </button>
         {isOpen && (
           <div className="absolute top-full left-0 mt-2 w-56 bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-lg shadow-card-elevated border border-garjane-border-light dark:border-garjane-border-dark py-2 animate-slide-down z-50">
-            {item.children!.map((child: any) => (
-              <Link
-                key={child.id}
-                href={child.href}
-                className="block px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5"
-              >
-                {child.labelKn || child.label}
-              </Link>
-            ))}
+            {item.children!.map((child: any) => {
+              const childLabel = language === 'en'
+                ? (child.label || child.labelKn)
+                : (child.labelKn || child.label);
+              return (
+                <Link
+                  key={child.id}
+                  href={child.href}
+                  className="block px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5"
+                >
+                  {childLabel}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
@@ -262,14 +291,19 @@ function NavItem({ item }: { item: MenuItem }) {
         pathname === item.href && 'text-garjane-primary dark:text-garjane-primary-light bg-garjane-primary/5'
       )}
     >
-      {item.labelKn || item.label}
+      {displayLabel}
     </Link>
   );
 }
 
 function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { language } = useLanguage();
   const hasChildren = item.children && item.children.length > 0;
+
+  const displayLabel = language === 'en'
+    ? (item.label || item.labelKn)
+    : (item.labelKn || item.label);
 
   if (hasChildren) {
     return (
@@ -286,21 +320,27 @@ function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen:
         >
           <span className="flex items-center gap-2">
             {item.icon && <span className="w-4 h-4">{item.icon}</span>}
-            {item.labelKn || item.label}
+            {displayLabel}
           </span>
           <ChevronDown className={cn('w-4 h-4 transition-transform', isOpen && 'rotate-180')} />
         </button>
         {isOpen && (
           <div className="ml-4 mt-1 space-y-1 animate-slide-down">
-            {item.children!.map((child: any) => (
-              <Link
-                key={child.id}
-                href={child.href || '#'}
-                className="block px-3 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light rounded-lg"
-              >
-                {child.labelKn || child.label}
-              </Link>
-            ))}
+            {item.children!.map((child: any) => {
+              const childLabel = language === 'en'
+                ? (child.label || child.labelKn)
+                : (child.labelKn || child.label);
+              return (
+                <Link
+                  key={child.id}
+                  href={child.href || '#'}
+                  className="block px-3 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light rounded-lg"
+                  onClick={setIsMenuOpen}
+                >
+                  {childLabel}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
@@ -318,13 +358,14 @@ function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen:
       )}
       onClick={setIsMenuOpen}
     >
-      {item.labelKn || item.label}
+      {displayLabel}
     </Link>
   );
 }
 
 function UserMenu({ user }: { user: any }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div className="relative">
@@ -351,15 +392,15 @@ function UserMenu({ user }: { user: any }) {
             </Badge>
           </div>
           <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
-            <LayoutDashboard className="w-4 h-4" /> Dashboard
+            <LayoutDashboard className="w-4 h-4" /> {t.nav.dashboard}
           </Link>
           <Link href="/dashboard/profile" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
-            <User className="w-4 h-4" /> Profile
+            <User className="w-4 h-4" /> {t.nav.profile}
           </Link>
           <hr className="my-2 border-garjane-border-light dark:border-garjane-border-dark" />
           <form action={logoutAction}>
             <button type="submit" className="flex items-center gap-2 w-full px-4 py-2 text-body-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">
-              <LogOut className="w-4 h-4" /> Sign Out
+              <LogOut className="w-4 h-4" /> {t.nav.signOut}
             </button>
           </form>
         </div>
@@ -369,13 +410,15 @@ function UserMenu({ user }: { user: any }) {
 }
 
 function SearchForm({ onClose }: { onClose: () => void }) {
+  const { t } = useLanguage();
+
   return (
     <form action="/search" className="relative" onSubmit={(e) => { onClose(); }}>
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-garjane-text-muted" aria-hidden="true" />
       <input
         type="search"
         name="q"
-        placeholder="Search articles, categories, locations..."
+        placeholder={t.search.placeholder}
         className="w-full pl-12 pr-4 py-3 text-body bg-garjane-background-card dark:bg-garjane-background-cardDark border border-garjane-border-light dark:border-garjane-border-dark rounded-xl focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary"
         autoFocus
         autoComplete="off"

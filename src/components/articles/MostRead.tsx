@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { Trophy, TrendingUp, Clock, Eye, ArrowRight } from 'lucide-react';
-import { formatRelativeTimeKn, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { ArticleWithRelations, ArticleWithRelationsMinimal } from '@/types';
 
 interface MostReadItemProps {
@@ -12,8 +14,13 @@ interface MostReadItemProps {
   language?: 'kn' | 'en';
 }
 
-function MostReadItem({ article, rank, language = 'kn' }: MostReadItemProps) {
-  const displayHeadline = language === 'kn' && article.headlineKn ? article.headlineKn : article.headline;
+function MostReadItem({ article, rank, language }: MostReadItemProps) {
+  const { language: contextLang } = useLanguage();
+  const activeLang = language || contextLang;
+
+  const displayHeadline = activeLang === 'kn'
+    ? (article.headlineKn || article.headline)
+    : (article.headline || article.headlineKn);
 
   const rankStyles = {
     1: 'bg-gradient-to-r from-amber-400 to-amber-600 text-white',
@@ -43,7 +50,9 @@ function MostReadItem({ article, rank, language = 'kn' }: MostReadItemProps) {
           </span>
           {article.category && (
             <Badge variant="primary" size="sm" className="text-caption">
-              {language === 'kn' ? (article.category.nameKn || article.category.name) : article.category.name}
+              {activeLang === 'kn'
+                ? (article.category.nameKn || article.category.name)
+                : (article.category.name || article.category.nameKn)}
             </Badge>
           )}
         </div>
@@ -66,23 +75,35 @@ interface MostReadProps {
 
 export function MostRead({
   articles,
-  title = 'Most Read',
-  titleKn = 'ಹೆಚ್ಚು ಓದಲಾಗಿದೆ',
+  title,
+  titleKn,
   subtitle,
   subtitleKn,
-  language = 'kn',
+  language: propLanguage,
   className,
   limit = 10,
 }: MostReadProps) {
-  const displayTitle = language === 'kn' ? titleKn : title;
-  const displaySubtitle = language === 'kn' && subtitleKn ? subtitleKn : subtitle;
+  const { language: contextLang, t } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
+  const displayTitle = activeLang === 'kn'
+    ? (titleKn || title || t.home.mostRead)
+    : (title || titleKn || t.home.mostRead);
+
+  const displaySubtitle = activeLang === 'kn'
+    ? (subtitleKn || subtitle)
+    : (subtitle || subtitleKn);
 
   if (articles.length === 0) {
     return (
-      <div className="card p-8 text-center">
-        <Trophy className="w-12 h-12 text-garjane-text-muted mx-auto mb-4" />
-        <p className="text-garjane-text-muted text-body">No articles to display.</p>
-      </div>
+      <EmptyState
+        variant="articles"
+        language={activeLang}
+        compact
+        title={activeLang === 'kn' ? 'ಓದಲು ಯಾವುದೇ ಲೇಖನಗಳಿಲ್ಲ' : 'No articles to display'}
+        description={activeLang === 'kn' ? 'ಹೆಚ್ಚು ಓದಿದ ಲೇಖನಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.' : 'Popular articles will appear here.'}
+        className="card"
+      />
     );
   }
 
@@ -106,7 +127,7 @@ export function MostRead({
 
       <div className="space-y-1" role="list">
         {limitedArticles.map((article, index) => (
-          <MostReadItem key={article.id} article={article} rank={index + 1} language={language} />
+          <MostReadItem key={article.id} article={article} rank={index + 1} language={activeLang} />
         ))}
       </div>
     </section>
@@ -130,19 +151,28 @@ interface TrendingNowProps {
 
 export function TrendingNow({
   topics,
-  title = 'Trending Now',
-  titleKn = 'ಪ್ರಚಲಿತ ಇನ್ನ',
-  language = 'kn',
+  title,
+  titleKn,
+  language: propLanguage,
   className,
 }: TrendingNowProps) {
-  const displayTitle = language === 'kn' ? titleKn : title;
+  const { language: contextLang, t } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
+  const displayTitle = activeLang === 'kn'
+    ? (titleKn || title || t.home.trendingNow)
+    : (title || titleKn || t.home.trendingNow);
 
   if (topics.length === 0) {
     return (
-      <div className="card p-8 text-center">
-        <TrendingUp className="w-12 h-12 text-garjane-text-muted mx-auto mb-4" />
-        <p className="text-garjane-text-muted text-body">No trending topics.</p>
-      </div>
+      <EmptyState
+        variant="dashboard"
+        language={activeLang}
+        compact
+        title={activeLang === 'kn' ? 'ಪ್ರಚಲಿತ ವಿಷಯಗಳಿಲ್ಲ' : 'No trending topics'}
+        description={activeLang === 'kn' ? 'ಜನಪ್ರಿಯ ವಿಷಯಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.' : 'Trending topics will appear here.'}
+        className="card"
+      />
     );
   }
 
@@ -159,7 +189,9 @@ export function TrendingNow({
 
       <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide" role="list">
         {topics.map((topic, index) => {
-          const displayTopic = language === 'kn' && topic.topicKn ? topic.topicKn : topic.topic;
+          const displayTopic = activeLang === 'kn'
+            ? (topic.topicKn || topic.topic)
+            : (topic.topic || topic.topicKn);
           return (
             <Link
               key={topic.topic}
@@ -199,13 +231,19 @@ interface BreakingNowProps {
 
 export function BreakingNow({
   articles,
-  title = 'Breaking News',
-  titleKn = 'ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್',
-  language = 'kn',
+  title,
+  titleKn,
+  language: propLanguage,
   className,
   limit = 5,
 }: BreakingNowProps) {
-  const displayTitle = language === 'kn' ? titleKn : title;
+  const { language: contextLang, t, formatTime } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
+  const displayTitle = activeLang === 'kn'
+    ? (titleKn || title || t.home.breakingNews)
+    : (title || titleKn || t.home.breakingNews);
+
   const breakingArticles = articles.filter(
     (a) => a.breakingLevel === 'BREAKING' || a.breakingLevel === 'URGENT'
   ).slice(0, limit);
@@ -241,16 +279,20 @@ export function BreakingNow({
             </span>
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse line-clamp-2 group-hover:text-garjane-primary transition-colors">
-                {language === 'kn' ? (article.headlineKn || article.headline) : article.headline}
+                {activeLang === 'kn'
+                  ? (article.headlineKn || article.headline)
+                  : (article.headline || article.headlineKn)}
               </h4>
               <div className="mt-1 flex items-center gap-2 text-caption text-garjane-text-muted">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  {formatRelativeTimeKn(article.publishedAt || article.createdAt)}
+                  {formatTime(article.publishedAt || article.createdAt)}
                 </span>
                 {article.category && (
                   <Badge variant="primary" size="sm" className="text-caption">
-                    {language === 'kn' ? (article.category.nameKn || article.category.name) : article.category.name}
+                    {activeLang === 'kn'
+                      ? (article.category.nameKn || article.category.name)
+                      : (article.category.name || article.category.nameKn)}
                   </Badge>
                 )}
               </div>

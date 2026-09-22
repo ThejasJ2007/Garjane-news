@@ -8,6 +8,7 @@ import { VideoGrid } from '@/components/video/VideoCard';
 import { MostRead, TrendingNow, BreakingNow } from '@/components/articles/MostRead';
 import { Newsletter } from '@/components/layout/Newsletter';
 import { PhotoGalleryCard } from '@/components/gallery/PhotoGallery';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { getFeaturedArticle, getEditorPicks, getLatestArticles, getCategories, getBreakingNews, getVideos, getAdvertisements, getGalleries, getArticlesByCategory } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
@@ -102,7 +103,7 @@ export default async function HomePage() {
 
         {/* Breaking News Ticker */}
         {breakingNews.length > 0 && (
-          <BreakingTicker items={breakingNews} language="kn" />
+          <BreakingTicker items={breakingNews} />
         )}
 
         <div className="container mx-auto px-4 py-8">
@@ -112,7 +113,7 @@ export default async function HomePage() {
               {/* Hero Story */}
               {featuredArticle && (
                 <section aria-labelledby="hero-heading">
-                  <HeroStory article={featuredArticle} language="kn" priority />
+                  <HeroStory article={featuredArticle} priority />
                 </section>
               )}
 
@@ -123,7 +124,6 @@ export default async function HomePage() {
                     title="Editor's Picks"
                     titleKn="ಸಂಪಾದಕರ ಆಯ್ಕೆ"
                     href="/category/karnataka"
-                    language="kn"
                   />
                   <ArticleGrid articles={editorPicks} variant="default" showLocation showStats />
                 </section>
@@ -132,7 +132,7 @@ export default async function HomePage() {
               {/* Breaking Now */}
               {breakingNowArticles.length > 0 && (
                 <section aria-labelledby="breaking-heading">
-                  <BreakingNow articles={breakingNowArticles} language="kn" limit={5} />
+                  <BreakingNow articles={breakingNowArticles} limit={5} />
                 </section>
               )}
 
@@ -144,7 +144,6 @@ export default async function HomePage() {
                   href="/category/nelamangala"
                   description="Stay updated with the latest happenings"
                   descriptionKn="ತಾಜಾ ಘಟನೆಗಳೊಂದಿಗೆ ಅಪ್‌ಡೇಟ್ ಆಗಿ ಇರಿ"
-                  language="kn"
                 />
                 <ArticleGrid articles={latestArticles} variant="default" showLocation showStats />
               </section>
@@ -167,7 +166,6 @@ export default async function HomePage() {
                   key={category.id}
                   category={category}
                   articles={articles}
-                  language="kn"
                 />
               ))}
 
@@ -178,9 +176,8 @@ export default async function HomePage() {
                     title="Videos"
                     titleKn="ವೀಡಿಯೋಗಳು"
                     href="/video"
-                    language="kn"
                   />
-                  <VideoGrid videos={videos.data} variant="default" language="kn" />
+                  <VideoGrid videos={videos.data} variant="default" />
                 </section>
               )}
 
@@ -191,7 +188,6 @@ export default async function HomePage() {
                     title="Photo Galleries"
                     titleKn="ಚಿತ್ರಾವಳಿ"
                     href="/gallery"
-                    language="kn"
                   />
                   <div className="grid sm:grid-cols-2 gap-6">
                     {galleriesRes.data.slice(0, 2).map((gallery) => (
@@ -199,7 +195,6 @@ export default async function HomePage() {
                         key={gallery.id}
                         gallery={gallery}
                         variant="default"
-                        language="kn"
                       />
                     ))}
                   </div>
@@ -224,9 +219,6 @@ export default async function HomePage() {
               {/* Most Read */}
               <MostRead
                 articles={latestArticles}
-                title="Most Read"
-                titleKn="ಹೆಚ್ಚು ಓದಲಾಗಿದೆ"
-                language="kn"
                 limit={10}
               />
 
@@ -242,42 +234,42 @@ export default async function HomePage() {
                   { topic: '#Traffic', topicKn: '#ಟ್ರ್ಯಾಫಿಕ್', count: 1567 },
                   { topic: '#Weather', topicKn: '#ಹವಾಮಾನ', count: 987 },
                 ]}
-                language="kn"
               />
 
               {/* Newsletter Inline */}
-              <Newsletter variant="inline" language="kn" />
+              <Newsletter variant="inline" />
             </aside>
           </div>
         </div>
 
         {/* Newsletter Section */}
         <div className="container mx-auto px-4 py-8 lg:py-16">
-          <Newsletter language="kn" />
+          <Newsletter />
         </div>
       </div>
     </>
   );
 }
 
-function CategorySection({ category, articles, language }: { category: any; articles: any[]; language: 'kn' | 'en' }) {
-  const displayName = language === 'kn' && category.nameKn ? category.nameKn : category.name;
-
+function CategorySection({ category, articles }: { category: any; articles: any[] }) {
   return (
     <section aria-labelledby={`category-${category.slug}-heading`} className="border-t border-garjane-border-light dark:border-garjane-border-dark pt-8">
       <SectionHeader
-        title={displayName}
+        title={category.name}
         titleKn={category.nameKn}
         href={`/category/${category.slug}`}
-        language={language}
       />
       <div className="grid gap-4 md:gap-6">
         {articles.length > 0 ? (
           <ArticleGrid articles={articles} variant="default" showLocation showStats />
         ) : (
-          <div className="text-center py-8 text-garjane-text-muted">
-            <p className="text-body-sm">No articles in this category yet</p>
-          </div>
+          <EmptyState
+            variant="news"
+            compact
+            title="ಈ ವರ್ಗದಲ್ಲಿ ಇನ್ನೂ ಲೇಖನಗಳಿಲ್ಲ"
+            description="ಹೊಸ ಲೇಖನಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
+            secondaryDescription="No articles in this category yet"
+          />
         )}
       </div>
     </section>

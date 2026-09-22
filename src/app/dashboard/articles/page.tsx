@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ArticleSortSelect } from '@/components/articles/ArticleSortSelect';
 import { ArticleStatusFilter } from '@/components/dashboard/ArticleStatusFilter';
 import { Label } from '@/components/ui/Label';
+import { EmptyState } from '@/components/ui/EmptyState';
 import { prisma } from '@/lib/prisma';
 import type { ArticleWithRelations } from '@/types';
 
@@ -121,11 +122,13 @@ export default async function DashboardArticlesPage({ searchParams }: DashboardA
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-garjane-text-muted opacity-40" />
-                <p className="text-body font-medium">ಯಾವುದೇ ಲೇಖನಗಳು ಕಂಡುಬಂದಿಲ್ಲ</p>
-                <p className="text-body-sm text-garjane-text-muted mt-1">No articles found matching your criteria.</p>
-              </div>
+              <EmptyState
+                variant="dashboard"
+                language="kn"
+                title="ಯಾವುದೇ ಲೇಖನಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+                description="ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಸರಿಹೊಂದುವ ಯಾವುದೇ ಲೇಖನಗಳಿಲ್ಲ. ಫಿಲ್ಟರ್ ಬದಲಾಯಿಸಿ."
+                secondaryDescription="No articles found matching your criteria."
+              />
             )}
           </div>
 

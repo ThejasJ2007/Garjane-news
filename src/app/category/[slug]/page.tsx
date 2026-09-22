@@ -6,6 +6,8 @@ import { ArticleGrid } from '@/components/articles/ArticleCard';
 import { MostRead, TrendingNow } from '@/components/articles/MostRead';
 import { Newsletter } from '@/components/layout/Newsletter';
 import { ArticleSortSelect } from '@/components/articles/ArticleSortSelect';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { CategoryHeader, CategoryBreadcrumbs } from '@/components/category/CategoryHeader';
 import { getCategoryBySlug, getCategoryBreadcrumbs, getArticlesByCategory, getAdvertisements } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
@@ -54,168 +56,141 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   }
 
   const displayName = category.nameKn || category.name;
-  const displayDescription = category.descriptionKn || category.description;
 
   return (
     <div className="w-full">
       {/* Category Header */}
-          <div className="bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 border-b border-garjane-border-light dark:border-garjane-border-dark">
-            <div className="container mx-auto px-4 py-8 lg:py-12">
-              {/* Breadcrumbs */}
-              {breadcrumbs.length > 0 && (
-                <nav className="mb-6" aria-label="Breadcrumb">
-                  <ol className="flex items-center gap-2 text-body-sm text-garjane-text-muted flex-wrap">
-                    <li>
-                      <a href="/" className="hover:text-garjane-primary transition-colors">Home</a>
-                    </li>
-                    {breadcrumbs.map((crumb, index) => (
-                      <li key={crumb.id} className="flex items-center gap-2">
-                        <span aria-hidden="true">/</span>
-                        {index === breadcrumbs.length - 1 ? (
-                          <span className="text-garjane-text-primary dark:text-garjane-text-inverse font-medium">
-                            {crumb.nameKn || crumb.name}
-                          </span>
-                        ) : (
-                          <a href={`/category/${crumb.slug}`} className="hover:text-garjane-primary transition-colors">
-                            {crumb.nameKn || crumb.name}
-                          </a>
-                        )}
-                      </li>
-                    ))}
-                  </ol>
-                </nav>
-              )}
+      <div className="bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 border-b border-garjane-border-light dark:border-garjane-border-dark">
+        <div className="container mx-auto px-4 py-8 lg:py-12">
+          {/* Breadcrumbs */}
+          <CategoryBreadcrumbs breadcrumbs={breadcrumbs} />
 
-              <header className="max-w-3xl">
-                <h1 className="text-headline-2 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-3">
-                  {displayName}
-                </h1>
-                {displayDescription && (
-                  <p className="text-body-lg text-garjane-text-secondary dark:text-garjane-text-muted">
-                    {displayDescription}
-                  </p>
-                )}
-              </header>
-            </div>
-          </div>
-
-          <div className="container mx-auto px-4 py-8">
-            <div className="grid lg:grid-cols-12 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-8 space-y-10">
-                {/* Category Navigation */}
-                <CategoryNav categories={category.children || []} activeCategory={category.slug} language="kn" />
-
-                {/* Articles */}
-                <SectionHeader
-                  title="Latest Articles"
-                  titleKn="ತಾಜಾ ಲೇಖನಗಳು"
-                  language="kn"
-                />
-
-                {articlesData.data.length > 0 ? (
-                  <>
-                    {/* Sort Options */}
-                    <ArticleSortSelect currentSort={sort} />
-
-                    {/* Article Grid */}
-                    <ArticleGrid
-                      articles={articlesData.data}
-                      variant="default"
-                      showLocation
-                      showStats
-                    />
-
-                    {/* Pagination */}
-                    {articlesData.pagination.totalPages > 1 && (
-                      <nav className="mt-10" aria-label="Pagination">
-                        <div className="pagination justify-center">
-                          {page > 1 && (
-                            <a
-                              href={`/category/${slug}?page=${page - 1}&sort=${sort}`}
-                              className="pagination-item"
-                              aria-label="Previous page"
-                            >
-                              ← Prev
-                            </a>
-                          )}
-                          {Array.from({ length: articlesData.pagination.totalPages }, (_, i) => i + 1)
-                            .filter(p => p === 1 || p === articlesData.pagination.totalPages || (p >= page - 2 && p <= page + 2))
-                            .map((p, index, arr) => (
-                              <React.Fragment key={p}>
-                                {index > 0 && p !== arr[index - 1] + 1 && (
-                                  <span className="pagination-ellipsis" aria-hidden="true">…</span>
-                                )}
-                                {p === page ? (
-                                  <span className="pagination-item pagination-item-active" aria-current="page">
-                                    {p}
-                                  </span>
-                                ) : (
-                                  <a href={`/category/${slug}?page=${p}&sort=${sort}`} className="pagination-item">
-                                    {p}
-                                  </a>
-                                )}
-                              </React.Fragment>
-                            ))}
-                          {page < articlesData.pagination.totalPages && (
-                            <a
-                              href={`/category/${slug}?page=${page + 1}&sort=${sort}`}
-                              className="pagination-item"
-                              aria-label="Next page"
-                            >
-                              Next →
-                            </a>
-                          )}
-                        </div>
-                      </nav>
-                    )}
-                  </>
-                ) : (
-                  <div className="text-center py-16">
-                    <p className="text-garjane-text-muted text-body-lg mb-4">No articles found in this category.</p>
-                    <p className="text-garjane-text-muted text-body-sm">Check back later for updates.</p>
-                  </div>
-                )}
-
-                {/* In-feed Ad */}
-                <div className="relative aspect-[4/1] max-w-full rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
-                  <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
-                </div>
-              </div>
-
-              {/* Sidebar */}
-              <aside className="lg:col-span-4 space-y-8" role="complementary" aria-label="Sidebar">
-                {/* Sidebar Ad */}
-                {sidebarAds.length > 0 && (
-                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
-                    <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
-                  </div>
-                )}
-
-                {/* Most Read */}
-                <MostRead
-                  articles={articlesData.data}
-                  title="Most Read in this Category"
-                  titleKn="ಈ ವರ್ಗದಲ್ಲಿ ಹೆಚ್ಚಾಗಿ ಓದಲಾಗಿದೆ"
-                  language="kn"
-                  limit={10}
-                />
-
-                {/* Trending Now */}
-                <TrendingNow
-                  topics={[
-                    { topic: `#${displayName}`, topicKn: `#${displayName}`, count: Math.floor(Math.random() * 5000) + 1000 },
-                    { topic: '#BreakingNews', topicKn: '#ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್', count: Math.floor(Math.random() * 3000) + 500 },
-                    { topic: '#Karnataka', topicKn: '#ಕರ್ನಾಟಕ', count: Math.floor(Math.random() * 10000) + 5000 },
-                  ]}
-                  language="kn"
-                />
-
-                {/* Newsletter */}
-                <Newsletter variant="inline" language="kn" />
-              </aside>
-            </div>
-          </div>
+          <CategoryHeader
+            name={category.name}
+            nameKn={category.nameKn}
+            description={category.description}
+            descriptionKn={category.descriptionKn}
+          />
         </div>
-      );
-    }
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-12 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-8 space-y-10">
+            {/* Category Navigation */}
+            <CategoryNav categories={category.children || []} activeCategory={category.slug} />
+
+            {/* Articles */}
+            <SectionHeader
+              title="Latest Articles"
+              titleKn="ತಾಜಾ ಲೇಖನಗಳು"
+            />
+
+            {articlesData.data.length > 0 ? (
+              <>
+                {/* Sort Options */}
+                <ArticleSortSelect currentSort={sort} />
+
+                {/* Article Grid */}
+                <ArticleGrid
+                  articles={articlesData.data}
+                  variant="default"
+                  showLocation
+                  showStats
+                />
+
+                {/* Pagination */}
+                {articlesData.pagination.totalPages > 1 && (
+                  <nav className="mt-10" aria-label="Pagination">
+                    <div className="pagination justify-center">
+                      {page > 1 && (
+                        <a
+                          href={`/category/${slug}?page=${page - 1}&sort=${sort}`}
+                          className="pagination-item"
+                          aria-label="Previous page"
+                        >
+                          ← Prev
+                        </a>
+                      )}
+                      {Array.from({ length: articlesData.pagination.totalPages }, (_, i) => i + 1)
+                        .filter(p => p === 1 || p === articlesData.pagination.totalPages || (p >= page - 2 && p <= page + 2))
+                        .map((p, index, arr) => (
+                          <React.Fragment key={p}>
+                            {index > 0 && p !== arr[index - 1] + 1 && (
+                              <span className="pagination-ellipsis" aria-hidden="true">…</span>
+                            )}
+                            {p === page ? (
+                              <span className="pagination-item pagination-item-active" aria-current="page">
+                                {p}
+                              </span>
+                            ) : (
+                              <a href={`/category/${slug}?page=${p}&sort=${sort}`} className="pagination-item">
+                                {p}
+                              </a>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      {page < articlesData.pagination.totalPages && (
+                        <a
+                          href={`/category/${slug}?page=${page + 1}&sort=${sort}`}
+                          className="pagination-item"
+                          aria-label="Next page"
+                        >
+                          Next →
+                        </a>
+                      )}
+                    </div>
+                  </nav>
+                )}
+              </>
+            ) : (
+              <EmptyState
+                variant="news"
+                title="ಈ ವರ್ಗದಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳಿಲ್ಲ"
+                description="ಹೊಸ ಲೇಖನಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ."
+                secondaryDescription="No articles found in this category. Check back later for updates."
+                className="bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark"
+              />
+            )}
+
+            {/* In-feed Ad */}
+            <div className="relative aspect-[4/1] max-w-full rounded-xl overflow-hidden bg-garjane-border-light dark:border-garjane-border-dark" role="complementary" aria-label="Advertisement">
+              <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="lg:col-span-4 space-y-8" role="complementary" aria-label="Sidebar">
+            {/* Sidebar Ad */}
+            {sidebarAds.length > 0 && (
+              <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-garjane-border-light dark:bg-garjane-border-dark" role="complementary" aria-label="Advertisement">
+                <span className="absolute top-1 right-1 text-xs bg-black/50 text-white px-1.5 py-0.5 rounded">Ad</span>
+              </div>
+            )}
+
+            {/* Most Read */}
+            <MostRead
+              articles={articlesData.data}
+              title="Most Read in this Category"
+              titleKn="ಈ ವರ್ಗದಲ್ಲಿ ಹೆಚ್ಚಾಗಿ ಓದಲಾಗಿದೆ"
+              limit={10}
+            />
+
+            {/* Trending Now */}
+            <TrendingNow
+              topics={[
+                { topic: `#${displayName}`, topicKn: `#${displayName}`, count: Math.floor(Math.random() * 5000) + 1000 },
+                { topic: '#BreakingNews', topicKn: '#ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್', count: Math.floor(Math.random() * 3000) + 500 },
+                { topic: '#Karnataka', topicKn: '#ಕರ್ನಾಟಕ', count: Math.floor(Math.random() * 10000) + 5000 },
+              ]}
+            />
+
+            {/* Newsletter */}
+            <Newsletter variant="inline" />
+          </aside>
+        </div>
+      </div>
+    </div>
+  );
+}

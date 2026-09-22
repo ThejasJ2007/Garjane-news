@@ -1,21 +1,23 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Tag as TagIcon, Hash } from 'lucide-react';
+import { ArrowLeft, Hash } from 'lucide-react';
 import { getTagBySlug, getArticlesByTag } from '@/lib/data';
 import { ArticleGrid } from '@/components/articles/ArticleCard';
 import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 export const revalidate = 60;
 
 interface TagPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
-  const tag = await getTagBySlug(params.slug);
+  const { slug } = await params;
+  const tag = await getTagBySlug(slug);
   if (!tag) {
     return {
       title: 'ಟ್ಯಾಗ್ ಕಂಡುಬಂದಿಲ್ಲ | Tag Not Found - Garjane News',
@@ -30,13 +32,14 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 }
 
 export default async function TagPage({ params }: TagPageProps) {
-  const tag = await getTagBySlug(params.slug);
+  const { slug } = await params;
+  const tag = await getTagBySlug(slug);
 
   if (!tag) {
     notFound();
   }
 
-  const articlesRes = await getArticlesByTag(params.slug, { page: 1, limit: 12 });
+  const articlesRes = await getArticlesByTag(slug, { page: 1, limit: 12 });
   const articles = articlesRes.data;
   const displayName = tag.nameKn ? `${tag.nameKn} (${tag.name})` : tag.name;
 
@@ -79,11 +82,13 @@ export default async function TagPage({ params }: TagPageProps) {
           {articles.length > 0 ? (
             <ArticleGrid articles={articles} variant="default" showLocation showStats />
           ) : (
-            <div className="text-center py-16 bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark p-8">
-              <TagIcon className="w-12 h-12 mx-auto mb-3 text-garjane-text-muted opacity-40" />
-              <p className="text-body font-medium">ಈ ಟ್ಯಾಗ್‌ನಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಕಂಡುಬಂದಿಲ್ಲ.</p>
-              <p className="text-body-sm text-garjane-text-muted mt-1">No articles found under this tag.</p>
-            </div>
+            <EmptyState
+              variant="articles"
+              title="ಈ ಟ್ಯಾಗ್‌ನಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಕಂಡುಬಂದಿಲ್ಲ."
+              description="ಈ ವಿಷಯಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಹೊಸ ಲೇಖನಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತವೆ."
+              secondaryDescription="No articles found under this tag."
+              className="bg-garjane-background-card dark:bg-garjane-background-cardDark rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark"
+            />
           )}
         </div>
       </div>

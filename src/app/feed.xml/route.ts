@@ -1,41 +1,68 @@
 import { NextResponse } from 'next/server';
-import { getLatestArticles, getCategories } from '@/lib/data';
+import { getLatestArticles } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 3600; // Revalidate every hour
+
+function escapeCdata(text: string): string {
+  return text.replace(/]]>/g, ']]&gt;');
+}
+
+function imageMimeType(url: string): string {
+  const ext = url.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'png':
+      return 'image/png';
+    case 'webp':
+      return 'image/webp';
+    case 'gif':
+      return 'image/gif';
+    case 'svg':
+      return 'image/svg+xml';
+    default:
+      return 'image/jpeg';
+  }
+}
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://garjanenews.com';
 
-  const [articles, categories] = await Promise.all([
-    getLatestArticles(50).catch(() => ({ data: [] })),
-    getCategories().catch(() => []),
-  ]);
+  let articles = [] as Awaited<ReturnType<typeof getLatestArticles>>;
+  try {
+    articles = await getLatestArticles(50);
+  } catch {
+    // Fallback data is already applied inside getLatestArticles; keep a safe default
+    articles = [];
+  }
 
   const siteTitle = 'Garjane News Nelamangala';
-  const siteDescription = 'Your trusted source for local news in Nelamangala and surrounding areas. Breaking news, politics, sports, entertainment, and more in Kannada and English.';
+  const siteDescription =
+    'Your trusted source for local news in Nelamangala and surrounding areas. Breaking news, politics, sports, entertainment, and more in Kannada and English.';
   const siteLanguage = 'kn-IN';
 
-  const rssItems = articles.data.map((article) => {
-    const articleUrl = `${baseUrl}/article/${article.slug}`;
-    const pubDate = article.publishedAt
-      ? new Date(article.publishedAt).toUTCString()
-      : new Date().toUTCString();
+  const rssItems = articles
+    .map((article) => {
+      const articleUrl = `${baseUrl}/article/${article.slug}`;
+      const pubDate = article.publishedAt
+        ? new Date(article.publishedAt).toUTCString()
+        : new Date().toUTCString();
 
-    const categories = article.tags.map(t => t.tag.name).join(', ');
+      const description =
+        article.summaryKn || article.summary || article.excerptKn || article.excerpt || '';
+      const tagNames = (article.tags || []).map((t) => t.tag.name).join(', ');
 
-    return `
-    <item>
-      <title><![CDATA[${article.headlineKn || article.headline}]]></title>
+      return `<item>
+      <title><![CDATA[${escapeCdata(article.headlineKn || article.headline)}]]></title>
       <link>${articleUrl}</link>
       <guid isPermaLink="true">${articleUrl}</guid>
-      <description><![CDATA[${article.summaryKn || article.summary || article.excerptKn || article.excerpt || ''}]]></description>
+      <description><![CDATA[${escapeCdata(description)}]]></description>
       <pubDate>${pubDate}</pubDate>
-      <category><![CDATA[${article.category?.name || ''}]]></category>
-      ${article.featuredImage ? `<enclosure url="${article.featuredImage}" type="image/jpeg" />` : ''}
+      ${article.category ? `<category><![CDATA[${escapeCdata(article.category.name)}]]></category>` : ''}
+      ${tagNames ? `<category><![CDATA[${escapeCdata(tagNames)}]]></category>` : ''}
+      ${article.featuredImage ? `<enclosure url="${article.featuredImage}" type="${imageMimeType(article.featuredImage)}" />` : ''}
       ${article.author ? `<author>${article.author.name}</author>` : ''}
     </item>`;
-  }).join('');
+    })
+    .join('');
 
   const rssFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"

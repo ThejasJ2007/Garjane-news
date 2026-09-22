@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Clock, Play, Eye, MapPin } from 'lucide-react';
-import { formatRelativeTimeKn, cn } from '@/lib/utils';
+import { Clock, Play, Eye } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useLanguage } from '@/contexts/LanguageContext';
 import type { VideoWithRelations } from '@/types';
 
 interface VideoCardProps {
@@ -14,15 +16,27 @@ interface VideoCardProps {
   priority?: boolean;
 }
 
-export function VideoCard({ video, variant = 'default', language = 'kn', priority = false }: VideoCardProps) {
-  const displayTitle = language === 'kn' && video.titleKn ? video.titleKn : video.title;
-  const displayDescription = language === 'kn' && video.descriptionKn ? video.descriptionKn : video.description;
+export function VideoCard({ video, variant = 'default', language: propLanguage, priority = false }: VideoCardProps) {
+  const { language: contextLang, formatTime } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
+  const displayTitle = (activeLang === 'kn'
+    ? (video.titleKn || video.title)
+    : (video.title || video.titleKn)) || '';
+
+  const displayDescription = activeLang === 'kn'
+    ? (video.descriptionKn || video.description)
+    : (video.description || video.descriptionKn);
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  const categoryName = video.category
+    ? (activeLang === 'kn' ? (video.category.nameKn || video.category.name) : (video.category.name || video.category.nameKn))
+    : null;
 
   if (variant === 'compact') {
     return (
@@ -48,16 +62,16 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
             {displayTitle}
           </h4>
           <div className="mt-1 flex items-center gap-2 text-caption text-garjane-text-muted">
-            {video.category && (
+            {categoryName && (
               <span className="flex items-center gap-0.5">
                 <Badge variant="secondary" size="sm" className="text-caption">
-                  {language === 'kn' ? (video.category!.nameKn || video.category!.name) : video.category!.name}
+                  {categoryName}
                 </Badge>
               </span>
             )}
             <span className="flex items-center gap-0.5">
               <Clock className="w-3 h-3" />
-              {formatRelativeTimeKn(video.publishedAt || video.createdAt)}
+              {formatTime(video.publishedAt || video.createdAt)}
             </span>
             {video.viewCount > 0 && (
               <span className="flex items-center gap-0.5">
@@ -95,11 +109,11 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
           <div className="absolute top-3 left-3 flex flex-col gap-1.5">
             <Badge variant="video" size="sm">
               <Play className="w-3 h-3 mr-1" />
-              Video
+              {activeLang === 'kn' ? 'ವೀಡಿಯೋ' : 'Video'}
             </Badge>
-            {video.category && (
+            {categoryName && (
               <Badge variant="primary" size="sm">
-                {language === 'kn' ? (video.category!.nameKn || video.category!.name) : video.category!.name}
+                {categoryName}
               </Badge>
             )}
           </div>
@@ -119,16 +133,16 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
           )}
 
           <div className="flex flex-wrap items-center gap-3 text-caption text-garjane-text-muted">
-            {video.category && (
+            {categoryName && video.category && (
               <Link href={`/category/${video.category.slug}`} className="flex items-center gap-1 hover:text-garjane-primary transition-colors">
                 <Badge variant="secondary" size="sm" className="text-caption">
-                  {language === 'kn' ? (video.category!.nameKn || video.category!.name) : video.category!.name}
+                  {categoryName}
                 </Badge>
               </Link>
             )}
             <span className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {formatRelativeTimeKn(video.publishedAt || video.createdAt)}
+              {formatTime(video.publishedAt || video.createdAt)}
             </span>
             {video.viewCount > 0 && (
               <span className="flex items-center gap-1">
@@ -138,7 +152,9 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
             )}
             {video.reporter && (
               <span className="flex items-center gap-1 text-garjane-accent">
-                <Badge variant="secondary" size="sm">By {video.reporter.user.name}</Badge>
+                <Badge variant="secondary" size="sm">
+                  {activeLang === 'kn' ? `${video.reporter.user.name} ಅವರಿಂದ` : `By ${video.reporter.user.name}`}
+                </Badge>
               </span>
             )}
           </div>
@@ -170,11 +186,11 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
         <div className="absolute top-2 left-2 flex flex-col gap-1">
           <Badge variant="video" size="sm">
             <Play className="w-2.5 h-2.5 mr-1" />
-            Video
+            {activeLang === 'kn' ? 'ವೀಡಿಯೋ' : 'Video'}
           </Badge>
-          {video.category && (
+          {categoryName && (
             <Badge variant="primary" size="sm">
-              {language === 'kn' ? (video.category!.nameKn || video.category!.name) : video.category!.name}
+              {categoryName}
             </Badge>
           )}
         </div>
@@ -194,16 +210,16 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
         )}
 
         <div className="flex flex-wrap items-center gap-2 text-caption text-garjane-text-muted">
-          {video.category && (
+          {categoryName && video.category && (
             <Link href={`/category/${video.category.slug}`} className="flex items-center gap-1 hover:text-garjane-primary transition-colors">
               <Badge variant="secondary" size="sm" className="text-caption">
-                {language === 'kn' ? (video.category!.nameKn || video.category!.name) : video.category!.name}
+                {categoryName}
               </Badge>
             </Link>
           )}
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            {formatRelativeTimeKn(video.publishedAt || video.createdAt)}
+            {formatTime(video.publishedAt || video.createdAt)}
           </span>
           {video.viewCount > 0 && (
             <span className="flex items-center gap-1">
@@ -217,29 +233,39 @@ export function VideoCard({ video, variant = 'default', language = 'kn', priorit
   );
 }
 
-export function VideoGrid({ videos, variant = 'default', ...props }: { videos: VideoWithRelations[]; variant?: VideoCardProps['variant'] } & Omit<VideoCardProps, 'video'>) {
+export function VideoGrid({ videos, variant = 'default', language: propLanguage, ...props }: { videos: VideoWithRelations[]; variant?: VideoCardProps['variant'] } & Omit<VideoCardProps, 'video'>) {
+  const { language: contextLang } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
   if (videos.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-garjane-text-muted text-body">No videos found.</p>
-      </div>
+      <EmptyState
+        variant="video"
+        language={activeLang}
+        compact
+        title={activeLang === 'kn' ? 'ಯಾವುದೇ ವೀಡಿಯೊಗಳು ಕಂಡುಬಂದಿಲ್ಲ' : 'No videos found'}
+        description={activeLang === 'kn' ? 'ಹೊಸ ವೀಡಿಯೊಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.' : 'New videos will appear here once published.'}
+      />
     );
   }
 
   return (
     <div className="grid gap-6">
       {videos.map((video, index) => (
-        <VideoCard key={video.id} video={video} variant={variant} priority={index < 4} {...props} />
+        <VideoCard key={video.id} video={video} variant={variant} priority={index < 4} language={activeLang} {...props} />
       ))}
     </div>
   );
 }
 
-export function VideoList({ videos, ...props }: { videos: VideoWithRelations[] } & Omit<VideoCardProps, 'video' | 'variant'>) {
+export function VideoList({ videos, language: propLanguage, ...props }: { videos: VideoWithRelations[] } & Omit<VideoCardProps, 'video' | 'variant'>) {
+  const { language: contextLang } = useLanguage();
+  const activeLang = propLanguage || contextLang;
+
   return (
     <div className="space-y-4">
       {videos.map((video) => (
-        <VideoCard key={video.id} video={video} variant="compact" {...props} />
+        <VideoCard key={video.id} video={video} variant="compact" language={activeLang} {...props} />
       ))}
     </div>
   );

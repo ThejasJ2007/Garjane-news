@@ -33,10 +33,10 @@ export function formatRelativeTime(date: Date | string): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'ಏನೀ';
-  if (diffMins < 60) return `${diffMins} ನಿಮಿ Нем`;
-  if (diffHours < 24) return `${diffHours} ಗಂಟೆ henne`;
-  if (diffDays < 7) return `${diffDays} ದಿನ dina`;
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
   return formatDate(d);
 }
 
@@ -48,10 +48,10 @@ export function formatRelativeTimeKn(date: Date | string): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'ಏನೀ';
-  if (diffMins < 60) return `${diffMins} ನಿಮಿಷಗಳು`;
-  if (diffHours < 24) return `${diffHours} ಗಂಟೆಗಳು`;
-  if (diffDays < 7) return `${diffDays} ದಿನಗಳು`;
+  if (diffMins < 1) return 'ಈಗಷ್ಟೇ';
+  if (diffMins < 60) return `${diffMins} ನಿಮಿಷಗಳ ಹಿಂದೆ`;
+  if (diffHours < 24) return `${diffHours} ಗಂಟೆಗಳ ಹಿಂದೆ`;
+  if (diffDays < 7) return `${diffDays} ದಿನಗಳ ಹಿಂದೆ`;
   return formatDateKn(d);
 }
 

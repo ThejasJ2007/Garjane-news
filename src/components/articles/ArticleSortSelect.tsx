@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface ArticleSortSelectProps {
   currentSort?: string;
@@ -8,6 +9,7 @@ interface ArticleSortSelectProps {
 
 export function ArticleSortSelect({ currentSort = 'publishedAt' }: ArticleSortSelectProps) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const url = new URL(window.location.href);
@@ -20,7 +22,7 @@ export function ArticleSortSelect({ currentSort = 'publishedAt' }: ArticleSortSe
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-2">
         <label htmlFor="sort-select" className="text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted">
-          Sort by:
+          {t.sort.sortBy}
         </label>
         <select
           id="sort-select"
@@ -28,9 +30,9 @@ export function ArticleSortSelect({ currentSort = 'publishedAt' }: ArticleSortSe
           onChange={handleChange}
           className="input w-auto text-body-sm"
         >
-          <option value="publishedAt">Latest First</option>
-          <option value="viewCount">Most Viewed</option>
-          <option value="readTime">Shortest Read</option>
+          <option value="publishedAt">{t.sort.latestFirst}</option>
+          <option value="viewCount">{t.sort.mostViewed}</option>
+          <option value="readTime">{t.sort.shortestRead}</option>
         </select>
       </div>
     </div>

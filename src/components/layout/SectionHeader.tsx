@@ -5,6 +5,7 @@ import { ChevronRight, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface SectionHeaderProps {
   title: string;
@@ -32,14 +33,17 @@ export function SectionHeader({
   badgeVariant = 'primary',
   showViewAll = true,
   viewAllText = 'View all',
-  viewAllTextKn = 'ಎಲ್ಲವನ್ನು ನೋಡಿ',
+  viewAllTextKn = 'ಎಲ್ಲವನ್ನೂ ನೋಡಿ',
   action,
   className,
-  language = 'kn',
+  language,
 }: SectionHeaderProps) {
-  const displayTitle = language === 'kn' && titleKn ? titleKn : title;
-  const displayDescription = language === 'kn' && descriptionKn ? descriptionKn : description;
-  const displayViewAll = language === 'kn' ? viewAllTextKn : viewAllText;
+  const { language: globalLang, t } = useLanguage();
+  const activeLang = language || globalLang;
+
+  const displayTitle = activeLang === 'kn' && titleKn ? titleKn : title;
+  const displayDescription = activeLang === 'kn' && descriptionKn ? descriptionKn : description;
+  const displayViewAll = activeLang === 'kn' ? (viewAllTextKn || t.common.viewAll) : (viewAllText || t.common.viewAll);
 
   return (
     <header className={cn('flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6', className)}>
@@ -94,14 +98,19 @@ interface CategoryNavProps {
 export function CategoryNav({
   categories,
   activeCategory,
-  language = 'kn',
+  language,
   className,
 }: CategoryNavProps) {
+  const { language: globalLang } = useLanguage();
+  const activeLang = language || globalLang;
+
   return (
     <nav className={cn('flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide', className)} aria-label="Category navigation">
       {categories.map((category) => {
         const isActive = activeCategory === category.slug;
-        const displayName = language === 'kn' && category.nameKn ? category.nameKn : category.name;
+        const displayName = activeLang === 'en'
+          ? (category.name || category.nameKn)
+          : (category.nameKn || category.name);
 
         return (
           <Link
