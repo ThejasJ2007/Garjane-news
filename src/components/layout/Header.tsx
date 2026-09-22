@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Sun, Moon, Search, ChevronDown, Bell, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Search, ChevronDown, Bell, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { logoutAction } from '@/actions/auth';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
+import { ThemeSwitcher } from '@/components/layout/ThemeSwitcher';
 
 interface MenuItem {
   id: string;
@@ -49,7 +50,6 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const { language, t } = useLanguage();
 
@@ -58,18 +58,6 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const darkMode = document.documentElement.classList.contains('dark');
-    setIsDark(darkMode);
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newDark = !isDark;
-    setIsDark(newDark);
-    document.documentElement.classList.toggle('dark', newDark);
-    localStorage.setItem('theme', newDark ? 'dark' : 'light');
-  };
 
   const handleMenuToggle = () => setIsMenuOpen(!isMenuOpen);
   const handleSearchToggle = () => setIsSearchOpen(!isSearchOpen);
@@ -116,12 +104,15 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 lg:h-14 gap-3">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Garjane News Home">
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label={t.common.brandName}>
               <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-garjane-primary flex items-center justify-center">
                 <span className="text-garjane-primary-foreground font-heading font-bold text-xl lg:text-2xl">ಗ</span>
               </div>
-              <span className="hidden sm:block font-heading font-bold text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse">
-                Garjane News
+              <span className={cn(
+                "font-heading font-bold text-xl sm:text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse tracking-tight",
+                language === 'kn' && "font-kannada"
+              )}>
+                {t.common.brandName}
               </span>
             </Link>
 
@@ -147,14 +138,8 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
               {/* Language Switcher on Header */}
               <LanguageSwitcher className="hidden sm:inline-flex" />
 
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleDarkMode}
-                aria-label={isDark ? t.nav.lightMode : t.nav.darkMode}
-              >
-                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </Button>
+              {/* Theme Switcher on Header */}
+              <ThemeSwitcher className="hidden sm:inline-flex" />
 
               {user ? (
                 <UserMenu user={user} />
@@ -189,21 +174,26 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
             <div className="container mx-auto px-4 py-4 space-y-3">
               {/* Mobile Language Switcher */}
               <div className="flex items-center justify-between pb-3 border-b border-garjane-border-light dark:border-garjane-border-dark">
-                <span className="text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted">
+                <span className="text-body-sm font-medium text-garjane-text-secondary dark:text-slate-300">
                   {t.article.language}
                 </span>
                 <LanguageSwitcher />
               </div>
 
+              {/* Mobile Theme Switcher */}
+              <div className="flex items-center justify-between pb-3 border-b border-garjane-border-light dark:border-garjane-border-dark">
+                <span className="text-body-sm font-medium text-garjane-text-secondary dark:text-slate-300">
+                  {t.theme.theme}
+                </span>
+                <ThemeSwitcher showLabels />
+              </div>
+
               {menuItems?.map((item) => (
                 <MobileNavItem key={item.id} item={item} setIsMenuOpen={handleMenuToggle} />
               ))}
-              <div className="pt-4 border-t border-garjane-border-light dark:border-garjane-border-dark flex items-center gap-2">
-                <Button variant="outline" className="flex-1" onClick={handleSearchToggle}>
+              <div className="pt-4 border-t border-garjane-border-light dark:border-garjane-border-dark">
+                <Button variant="outline" className="w-full" onClick={handleSearchToggle}>
                   <Search className="w-4 h-4 mr-2" /> {t.nav.search}
-                </Button>
-                <Button variant="ghost" onClick={toggleDarkMode}>
-                  {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                 </Button>
               </div>
               {!user && (
@@ -245,7 +235,7 @@ function NavItem({ item }: { item: MenuItem }) {
         <button
           className={cn(
             'flex items-center gap-1.5 px-3 py-2 text-body-sm font-medium rounded-lg transition-colors',
-            'text-garjane-text-secondary dark:text-garjane-text-muted',
+            'text-garjane-text-secondary dark:text-slate-200',
             'hover:text-garjane-primary dark:hover:text-garjane-primary-light',
             'hover:bg-garjane-primary/5 dark:hover:bg-garjane-primary/10'
           )}
@@ -268,7 +258,7 @@ function NavItem({ item }: { item: MenuItem }) {
                 <Link
                   key={child.id}
                   href={child.href}
-                  className="block px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5"
+                  className="block px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-slate-200 hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5"
                 >
                   {childLabel}
                 </Link>
@@ -285,7 +275,7 @@ function NavItem({ item }: { item: MenuItem }) {
       href={item.href || '#'}
       className={cn(
         'px-3 py-2 text-body-sm font-medium rounded-lg transition-colors',
-        'text-garjane-text-secondary dark:text-garjane-text-muted',
+        'text-garjane-text-secondary dark:text-slate-200',
         'hover:text-garjane-primary dark:hover:text-garjane-primary-light',
         'hover:bg-garjane-primary/5 dark:hover:bg-garjane-primary/10',
         pathname === item.href && 'text-garjane-primary dark:text-garjane-primary-light bg-garjane-primary/5'
@@ -311,7 +301,7 @@ function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen:
         <button
           className={cn(
             'flex items-center justify-between w-full px-3 py-2 text-body-sm font-medium rounded-lg transition-colors',
-            'text-garjane-text-secondary dark:text-garjane-text-muted',
+            'text-garjane-text-secondary dark:text-slate-200',
             'hover:text-garjane-primary dark:hover:text-garjane-primary-light',
             'hover:bg-garjane-primary/5 dark:hover:bg-garjane-primary/10'
           )}
@@ -334,7 +324,7 @@ function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen:
                 <Link
                   key={child.id}
                   href={child.href || '#'}
-                  className="block px-3 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light rounded-lg"
+                  className="block px-3 py-2 text-body-sm text-garjane-text-secondary dark:text-slate-200 hover:text-garjane-primary dark:hover:text-garjane-primary-light rounded-lg"
                   onClick={setIsMenuOpen}
                 >
                   {childLabel}
@@ -352,7 +342,7 @@ function MobileNavItem({ item, setIsMenuOpen }: { item: MenuItem; setIsMenuOpen:
       href={item.href || '#'}
       className={cn(
         'block px-3 py-2 text-body-sm font-medium rounded-lg transition-colors',
-        'text-garjane-text-secondary dark:text-garjane-text-muted',
+        'text-garjane-text-secondary dark:text-slate-200',
         'hover:text-garjane-primary dark:hover:text-garjane-primary-light',
         'hover:bg-garjane-primary/5 dark:hover:bg-garjane-primary/10'
       )}
@@ -391,10 +381,10 @@ function UserMenu({ user }: { user: any }) {
               {user.role}
             </Badge>
           </div>
-          <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
+          <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-slate-200 hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
             <LayoutDashboard className="w-4 h-4" /> {t.nav.dashboard}
           </Link>
-          <Link href="/dashboard/profile" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
+          <Link href="/dashboard/profile" className="flex items-center gap-2 px-4 py-2 text-body-sm text-garjane-text-secondary dark:text-slate-200 hover:text-garjane-primary dark:hover:text-garjane-primary-light hover:bg-garjane-primary/5" onClick={() => setIsOpen(false)}>
             <User className="w-4 h-4" /> {t.nav.profile}
           </Link>
           <hr className="my-2 border-garjane-border-light dark:border-garjane-border-dark" />

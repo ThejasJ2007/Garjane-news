@@ -19,7 +19,7 @@ export default function ContactPage() {
             ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ / Contact Us
           </h1>
           <p className="text-body-lg text-garjane-text-secondary dark:text-garjane-text-muted">
-            ನಿಮ್ಮ ಪ್ರದೇಶದ ಸುದ್ದಿ, ಸಮಸ್ಯೆ ಅಥವಾ ಸಲಹೆಗಳನ್ನು ಗರ್ಜನೆ ನ್ಯೂಸ್ ಸಂಪಾದಕೀಯ ಮಂಡಳಿಗೆ ತಲುಪಿಸಿ
+            ನಿಮ್ಮ ಪ್ರದೇಶದ ಸುದ್ದಿ, ಸಮಸ್ಯೆ ಅಥವಾ ಸಲಹೆಗಳನ್ನು Garjane News ಸಂಪಾದಕೀಯ ಮಂಡಳಿಗೆ ತಲುಪಿಸಿ
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-body">ಮುಖ್ಯ ಕಚೇರಿ / Head Office</h3>
                   <address className="not-italic text-body-sm text-garjane-text-muted mt-1 leading-relaxed">
-                    ಗರ್ಜನೆ ನ್ಯೂಸ್ ಮೀಡಿಯಾ ಹೌಸ್,<br />
+                    Garjane News ಮೀಡಿಯಾ ಹೌಸ್,<br />
                     ಬೆಂಗಳೂರು-ತುಮಕೂರು ಮುಖ್ಯ ರಸ್ತೆ,<br />
                     ನೆಲಮಂಗಲ ಟೌನ್, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ - 562123<br />
                     ಕರ್ನಾಟಕ, ಭಾರತ.

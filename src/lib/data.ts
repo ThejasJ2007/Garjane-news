@@ -825,7 +825,13 @@ export const getAdvertisements = cache(async (position: string) => {
 export const getSiteSettings = cache(async () => {
   try {
     const settings = await prisma.siteSettings.findUnique({ where: { id: 'singleton' } });
-    if (settings) return settings;
+    if (settings) {
+      return {
+        ...settings,
+        siteName: settings.siteName || 'Garjane News',
+        siteNameKn: settings.siteNameKn || 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
+      };
+    }
   } catch {
     // Fallback
   }

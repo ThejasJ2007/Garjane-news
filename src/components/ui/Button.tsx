@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary: 'bg-garjane-primary text-garjane-primary-foreground hover:bg-garjane-primary-dark active:bg-garjane-primary-dark focus-visible:ring-garjane-primary',
       secondary: 'bg-garjane-secondary text-garjane-secondary-foreground hover:bg-garjane-secondary-dark active:bg-garjane-secondary-dark focus-visible:ring-garjane-secondary',
       outline: 'border-2 border-garjane-primary text-garjane-primary hover:bg-garjane-primary hover:text-garjane-primary-foreground focus-visible:ring-garjane-primary',
-      ghost: 'text-garjane-text-primary hover:bg-garjane-background-cardDark dark:hover:bg-garjane-background-card focus-visible:ring-garjane-text-muted',
+      ghost: 'text-garjane-text-primary dark:text-garjane-text-inverse hover:bg-black/5 dark:hover:bg-white/10 focus-visible:ring-garjane-primary',
       destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
       breaking: 'bg-garjane-breaking-bgDark text-garjane-breaking-textDark hover:bg-garjane-breaking-bgDark/90 focus-visible:ring-garjane-breaking-textDark animate-pulse-soft',
     };

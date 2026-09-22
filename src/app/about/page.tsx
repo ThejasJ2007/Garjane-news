@@ -17,7 +17,7 @@ export default function AboutPage() {
             <Newspaper className="w-4 h-4" /> ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ
           </span>
           <h1 className="text-headline-2 lg:text-headline-1 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-6">
-            ಗರ್ಜನೆ ನ್ಯೂಸ್ ಬಗ್ಗೆ / About Garjane News
+            Garjane News ಬಗ್ಗೆ / About Garjane News
           </h1>
           <p className="text-body-lg text-garjane-text-secondary dark:text-garjane-text-muted leading-relaxed">
             ನೆಲಮಂಗಲ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ ಹಾಗೂ ಕರ್ನಾಟಕದ ಜನಸಾಮಾನ್ಯರ ದನಿಯಾಗಿ, ನೈಜ, ನಿಷ್ಪಕ್ಷಪಾತ ಹಾಗೂ ಜವಾಬ್ದಾರಿಯುತ ಸ್ಥಳೀಯ ಪತ್ರಿಕೋದ್ಯಮವನ್ನು ನಿಮ್ಮ ಮನೆಬಾಗಿಲಿಗೆ ತಲುಪಿಸುವ ಡಿಜಿಟಲ್ ಸುದ್ದಿ ಸಂಸ್ಥೆ.
@@ -34,7 +34,7 @@ export default function AboutPage() {
               ನಮ್ಮ ಧ್ಯೇಯ / Our Mission
             </h2>
             <p className="text-body text-garjane-text-secondary dark:text-garjane-text-muted leading-relaxed">
-              ಸ್ಥಳೀಯ ಸಮಸ್ಯೆಗಳು, ಗ್ರಾಮೀಣ ರೈತರ ಸಂಕಷ್ಟಗಳು, ನಾಗರಿಕ ಸೌಲಭ್ಯಗಳು ಹಾಗೂ ಆಡಳಿತಾತ್ಮಕ ಪಾರದರ್ಶಕತೆಯ ಕುರಿತು ಯಾವುದೇ ರಾಜಕೀಯ ಅಥವಾ ವಾಣಿಜ್ಯ ಪ್ರಭಾವಕ್ಕೆ ಒಳಗಾಗದೆ ಸತ್ಯನಿಷ್ಠ ವರದಿಗಾರಿಕೆಯನ್ನು ನೀಡುವುದು ಗರ್ಜನೆ ನ್ಯೂಸ್‌ನ ಪ್ರಮುಖ ಗುರಿ.
+              ಸ್ಥಳೀಯ ಸಮಸ್ಯೆಗಳು, ಗ್ರಾಮೀಣ ರೈತರ ಸಂಕಷ್ಟಗಳು, ನಾಗರಿಕ ಸೌಲಭ್ಯಗಳು ಹಾಗೂ ಆಡಳಿತಾತ್ಮಕ ಪಾರದರ್ಶಕತೆಯ ಕುರಿತು ಯಾವುದೇ ರಾಜಕೀಯ ಅಥವಾ ವಾಣಿಜ್ಯ ಪ್ರಭಾವಕ್ಕೆ ಒಳಗಾಗದೆ ಸತ್ಯನಿಷ್ಠ ವರದಿಗಾರಿಕೆಯನ್ನು ನೀಡುವುದು Garjane News‌ನ ಪ್ರಮುಖ ಗುರಿ.
             </p>
           </div>
 
@@ -69,7 +69,7 @@ export default function AboutPage() {
               ಸುದ್ದಿ ವ್ಯಾಪ್ತಿ / Coverage Footprint
             </h2>
             <p className="text-body text-garjane-text-muted">
-              ಗರ್ಜನೆ ನ್ಯೂಸ್ ವರದಿಗಾರರ ಜಾಲವು ಈ ಕೆಳಗಿನ ಪ್ರಮುಖ ಪ್ರದೇಶಗಳಲ್ಲಿ ನಿರಂತರವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿದೆ
+              Garjane News ವರದಿಗಾರರ ಜಾಲವು ಈ ಕೆಳಗಿನ ಪ್ರಮುಖ ಪ್ರದೇಶಗಳಲ್ಲಿ ನಿರಂತರವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿದೆ
             </p>
           </div>
 

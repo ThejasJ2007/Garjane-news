@@ -158,18 +158,23 @@ export function Footer({ siteSettings }: FooterProps) {
   const subscribeOnText = language === 'kn' ? 'ಚಂದಾದಾರರಾಗಿ' : 'Subscribe on';
 
   return (
-    <footer className="bg-white text-[#172B4D] subpixel-antialiased border-t border-garjane-border-light" role="contentinfo">
+    <footer className="bg-white dark:bg-garjane-background-dark/95 text-[#172B4D] dark:text-slate-200 subpixel-antialiased border-t border-garjane-border-light dark:border-garjane-border-dark transition-colors" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-10">
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-5" aria-label="Garjane News Home">
+            <Link href="/" className="flex items-center gap-3 mb-5" aria-label={t.common.brandName}>
               <div className="w-12 h-12 rounded-xl bg-garjane-primary flex items-center justify-center flex-shrink-0">
                 <span className="text-garjane-primary-foreground font-heading font-bold text-2xl">ಗ</span>
               </div>
-              <span className="font-heading font-bold text-headline-3 text-[#172B4D]">Garjane News</span>
+              <span className={cn(
+                "font-heading font-bold text-headline-3 text-[#172B4D] dark:text-white",
+                language === 'kn' && 'font-kannada'
+              )}>
+                {t.common.brandName}
+              </span>
             </Link>
-            <p className={cn("text-[#172B4D] text-body-sm font-medium mb-6 leading-relaxed max-w-xs", language === 'kn' && 'font-kannada')}>
+            <p className={cn("text-[#172B4D] dark:text-slate-300 text-body-sm font-medium mb-6 leading-relaxed max-w-xs", language === 'kn' && 'font-kannada')}>
               {displayTagline}
             </p>
             <div className="flex items-center gap-4">
@@ -349,14 +354,14 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Company Links */}
           <nav aria-label={t.footer.company}>
-            <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
+            <h3 className="font-heading font-semibold text-lg text-[#172B4D] dark:text-white mb-4 relative pb-2">
               {t.footer.company}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                  <Link href={link.href} className={cn("text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
                     {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
@@ -366,14 +371,14 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Editorial Links */}
           <nav aria-label={t.footer.editorial}>
-            <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
+            <h3 className="font-heading font-semibold text-lg text-[#172B4D] dark:text-white mb-4 relative pb-2">
               {t.footer.editorial}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.editorial.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                  <Link href={link.href} className={cn("text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
                     {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
@@ -383,14 +388,14 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Legal Links */}
           <nav aria-label={t.footer.legal}>
-            <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
+            <h3 className="font-heading font-semibold text-lg text-[#172B4D] dark:text-white mb-4 relative pb-2">
               {t.footer.legal}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                  <Link href={link.href} className={cn("text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
                     {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
@@ -400,14 +405,14 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* For You Links */}
           <nav aria-label={t.footer.forYou}>
-            <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
+            <h3 className="font-heading font-semibold text-lg text-[#172B4D] dark:text-white mb-4 relative pb-2">
               {t.footer.forYou}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
             <ul className="space-y-3" role="list">
               {footerLinks.audience.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className={cn("text-[#172B4D] hover:text-garjane-primary transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
+                  <Link href={link.href} className={cn("text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200 text-body-sm font-medium", language === 'kn' && 'font-kannada')}>
                     {language === 'en' ? link.label : link.labelKn}
                   </Link>
                 </li>
@@ -417,29 +422,29 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Contact Us */}
           <div>
-            <h3 className="font-heading font-semibold text-lg text-[#172B4D] mb-4 relative pb-2">
+            <h3 className="font-heading font-semibold text-lg text-[#172B4D] dark:text-white mb-4 relative pb-2">
               {t.footer.contactUs}
               <span className="absolute bottom-0 left-0 w-6 h-0.5 bg-garjane-primary rounded-full" aria-hidden="true" />
             </h3>
-            <address className={cn("not-italic text-body-sm text-[#172B4D] space-y-3", language === 'kn' && 'font-kannada')}>
+            <address className={cn("not-italic text-body-sm text-[#172B4D] dark:text-slate-300 space-y-3", language === 'kn' && 'font-kannada')}>
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D] font-medium leading-relaxed">
+                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                <span className="text-[#172B4D] dark:text-slate-300 font-medium leading-relaxed">
                   {language === 'en'
                     ? (siteSettings?.description || t.footer.addressDefault)
                     : (siteSettings?.descriptionKn || t.footer.addressDefault)}
                 </span>
               </div>
               {contactEmail && (
-                <a href={`mailto:${contactEmail}`} className="flex items-center gap-3 text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">
-                  <Mail className="w-5 h-5 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                  <span className="text-[#172B4D] font-medium">{contactEmail}</span>
+                <a href={`mailto:${contactEmail}`} className="flex items-center gap-3 text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">
+                  <Mail className="w-5 h-5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                  <span className="text-[#172B4D] dark:text-slate-300 font-medium">{contactEmail}</span>
                 </a>
               )}
               {contactPhone && (
-                <a href={contactPhoneHref} className="flex items-center gap-3 text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">
-                  <Phone className="w-5 h-5 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                  <span className="whitespace-nowrap text-[#172B4D] font-medium">{contactPhone}</span>
+                <a href={contactPhoneHref} className="flex items-center gap-3 text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">
+                  <Phone className="w-5 h-5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                  <span className="whitespace-nowrap text-[#172B4D] dark:text-slate-300 font-medium">{contactPhone}</span>
                 </a>
               )}
             </address>
@@ -447,59 +452,59 @@ export function Footer({ siteSettings }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-10 lg:mt-12 pt-8 border-t border-garjane-border-light flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mt-10 lg:mt-12 pt-8 border-t border-garjane-border-light dark:border-garjane-border-dark flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
-            <p className={cn("text-[#172B4D] text-body-sm font-medium text-center md:text-left", language === 'kn' && 'font-kannada')}>
-              © {currentYear} Garjane News. {t.footer.rightsReserved}
+            <p className={cn("text-[#172B4D] dark:text-slate-400 text-body-sm font-medium text-center md:text-left", language === 'kn' && 'font-kannada')}>
+              © {currentYear} {t.common.brandName}. {t.footer.rightsReserved}
             </p>
 
             {/* Developer Credit */}
-            <div className="mt-4 pl-4 border-l-2 border-garjane-border-light">
-              <p className="text-body-sm font-heading font-bold text-[#172B4D]">{t.footer.websiteDeveloper}</p>
-              <p className="text-body-sm text-[#172B4D] font-medium">
-                <span className="font-semibold text-[#172B4D]">Thejas</span> — {t.footer.webDeveloperTitle}
+            <div className="mt-4 pl-4 border-l-2 border-garjane-border-light dark:border-garjane-border-dark">
+              <p className="text-body-sm font-heading font-bold text-[#172B4D] dark:text-white">{t.footer.websiteDeveloper}</p>
+              <p className="text-body-sm text-[#172B4D] dark:text-slate-300 font-medium">
+                <span className="font-semibold text-[#172B4D] dark:text-white">Thejas</span> — {t.footer.webDeveloperTitle}
               </p>
               <a
                 href="mailto:thejasj2007@gmail.com"
-                className="mt-2 flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] font-medium hover:text-garjane-primary transition-colors duration-200"
+                className="mt-2 flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] dark:text-slate-300 font-medium hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200"
               >
-                <Mail className="w-4 h-4 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D]">thejasj2007@gmail.com</span>
+                <Mail className="w-4 h-4 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                <span>thejasj2007@gmail.com</span>
               </a>
               <a
                 href="tel:9343388333"
-                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] font-medium hover:text-garjane-primary transition-colors duration-200"
+                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] dark:text-slate-300 font-medium hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200"
               >
-                <Phone className="w-4 h-4 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D]">9343388333</span>
+                <Phone className="w-4 h-4 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                <span>9343388333</span>
               </a>
               <a
                 href="https://www.linkedin.com/in/thejas-j-176855381/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] font-medium hover:text-garjane-primary transition-colors duration-200"
+                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] dark:text-slate-300 font-medium hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200"
               >
-                <Linkedin className="w-4 h-4 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D]">LinkedIn</span>
+                <Linkedin className="w-4 h-4 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                <span>LinkedIn</span>
               </a>
               <a
                 href="https://github.com/ThejasJ2007"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] font-medium hover:text-garjane-primary transition-colors duration-200"
+                className="flex items-center justify-center md:justify-start gap-2 text-body-sm text-[#172B4D] dark:text-slate-300 font-medium hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200"
               >
-                <Github className="w-4 h-4 flex-shrink-0 text-[#172B4D]" aria-hidden="true" />
-                <span className="text-[#172B4D]">GitHub</span>
+                <Github className="w-4 h-4 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
+                <span>GitHub</span>
               </a>
-              <p className="mt-3 text-body-sm text-[#172B4D] font-medium">{t.footer.designedAndDevelopedBy}</p>
+              <p className="mt-3 text-body-sm text-[#172B4D] dark:text-slate-400 font-medium">{t.footer.designedAndDevelopedBy}</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 text-body-sm text-[#172B4D] font-medium">
-            <Link href="/privacy" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.privacy}</Link>
-            <span className="text-[#172B4D]" aria-hidden="true">|</span>
-            <Link href="/terms" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.terms}</Link>
-            <span className="text-[#172B4D]" aria-hidden="true">|</span>
-            <Link href="/sitemap.xml" className="text-[#172B4D] hover:text-garjane-primary transition-colors duration-200">{t.footer.sitemap}</Link>
+          <div className="flex items-center gap-4 text-body-sm text-[#172B4D] dark:text-slate-400 font-medium">
+            <Link href="/privacy" className="text-[#172B4D] dark:text-slate-400 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">{t.footer.privacy}</Link>
+            <span className="text-[#172B4D] dark:text-slate-600" aria-hidden="true">|</span>
+            <Link href="/terms" className="text-[#172B4D] dark:text-slate-400 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">{t.footer.terms}</Link>
+            <span className="text-[#172B4D] dark:text-slate-600" aria-hidden="true">|</span>
+            <Link href="/sitemap.xml" className="text-[#172B4D] dark:text-slate-400 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">{t.footer.sitemap}</Link>
           </div>
         </div>
       </div>

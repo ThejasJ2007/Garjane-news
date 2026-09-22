@@ -402,7 +402,7 @@ export const fallbackArticles: ArticleWithRelations[] = [
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6),
     updatedAt: new Date(),
     category: fallbackCategories[7],
-    author: { id: 'usr-editor', email: 'editor@garjanenews.com', passwordHash: '', name: 'ಗರ್ಜನೆ ಮಾರುಕಟ್ಟೆ ಡೆಸ್ಕ್', avatar: null, role: 'EDITOR', bio: null, bioKn: null, location: null, phone: null, isActive: true, lastLoginAt: null, createdAt: new Date(), updatedAt: new Date() },
+    author: { id: 'usr-editor', email: 'editor@garjanenews.com', passwordHash: '', name: 'ಗರ್ಜನೆ ನ್ಯೂಸ್ ಮಾರುಕಟ್ಟೆ ಡೆಸ್ಕ್', avatar: null, role: 'EDITOR', bio: null, bioKn: null, location: null, phone: null, isActive: true, lastLoginAt: null, createdAt: new Date(), updatedAt: new Date() },
     reporter: null,
     location: fallbackLocations[0],
     tags: [],

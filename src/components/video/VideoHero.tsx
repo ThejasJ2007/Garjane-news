@@ -18,7 +18,7 @@ export function VideoHero() {
           </span>
         </div>
         <h1 className="text-headline-2 lg:text-headline-1 font-heading font-bold text-white mb-2">
-          {language === 'kn' ? 'ಗರ್ಜನೆ ವೀಡಿಯೋಗಳು' : 'Video Reports'}
+          {language === 'kn' ? 'ಗರ್ಜನೆ ನ್ಯೂಸ್ ವೀಡಿಯೋಗಳು' : 'Video Reports'}
         </h1>
         <p className="text-body-lg text-white/80 max-w-2xl">
           {language === 'kn'

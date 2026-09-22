@@ -37,7 +37,7 @@ export default function NewsletterPage({
             <Sparkles className="w-4 h-4" /> ದಿನದ ಪ್ರಮುಖ ಸುದ್ದಿಗಳು ನೇರವಾಗಿ ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್‌ಗೆ
           </div>
           <h1 className="text-headline-2 lg:text-headline-1 font-heading font-bold text-garjane-text-primary dark:text-garjane-text-inverse mb-4">
-            ಗರ್ಜನೆ ನ್ಯೂಸ್‌ಲೆಟರ್ / Daily Newsletter
+            ಗರ್ಜನೆ ನ್ಯೂಸ್ ನ್ಯೂಸ್‌ಲೆಟರ್ / Daily Newsletter
           </h1>
           <p className="text-body-lg text-garjane-text-secondary dark:text-garjane-text-muted leading-relaxed">
             ನೆಲಮಂಗಲದ ತಾಜಾ ವಿದ್ಯಮಾನಗಳು, ಕರ್ನಾಟಕದ ರಾಜಕೀಯ ಮತ್ತು ಪ್ರಮುಖ ವಿಶ್ಲೇಷಣೆಗಳ ಬೆಳಗಿನ ಸಂಕ್ಷಿಪ್ತ ವರದಿ

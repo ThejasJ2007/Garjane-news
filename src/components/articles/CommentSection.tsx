@@ -161,7 +161,7 @@ export function CommentSection({
                 />
                 <div>
                   <h4 className="font-semibold text-body-sm text-garjane-text-primary dark:text-garjane-text-inverse">
-                    {comment.user?.name || (currentLang === 'kn' ? 'ಗರ್ಜನೆ ಓದುಗರು' : 'Garjane Reader')}
+                    {comment.user?.name || (currentLang === 'kn' ? 'ಗರ್ಜನೆ ನ್ಯೂಸ್ ಓದುಗರು' : 'Garjane Reader')}
                   </h4>
                   <span className="text-caption text-garjane-text-muted">
                     {formatTime(comment.createdAt)}

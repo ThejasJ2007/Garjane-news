@@ -90,19 +90,19 @@
 
   /* Body text */
   .body-lg {
-    @apply text-body-lg text-garjane-text-secondary dark:text-garjane-text-secondary leading-relaxed;
+    @apply text-body-lg text-garjane-text-secondary dark:text-slate-200 leading-relaxed;
   }
 
   .body {
-    @apply text-body text-garjane-text-secondary dark:text-garjane-text-secondary leading-relaxed;
+    @apply text-body text-garjane-text-secondary dark:text-slate-300 leading-relaxed;
   }
 
   .body-sm {
-    @apply text-body-sm text-garjane-text-muted dark:text-garjane-text-muted leading-normal;
+    @apply text-body-sm text-garjane-text-muted dark:text-slate-400 leading-normal;
   }
 
   .caption {
-    @apply text-caption text-garjane-text-muted dark:text-garjane-text-muted;
+    @apply text-caption text-garjane-text-muted dark:text-slate-400;
   }
 
   .overline {
@@ -115,7 +115,7 @@
   }
 
   .link-muted {
-    @apply text-garjane-text-muted dark:text-garjane-text-muted hover:text-garjane-text-primary dark:hover:text-garjane-text-inverse transition-colors duration-200;
+    @apply text-garjane-text-muted dark:text-slate-400 hover:text-garjane-text-primary dark:hover:text-white transition-colors duration-200;
   }
 
   /* Buttons */
@@ -136,7 +136,7 @@
   }
 
   .btn-ghost {
-    @apply btn text-garjane-text-secondary dark:text-garjane-text-secondary hover:bg-garjane-background-light dark:hover:bg-garjane-background-dark focus-visible:ring-garjane-border-light dark:focus-visible:ring-garjane-border-dark;
+    @apply btn text-garjane-text-primary dark:text-slate-200 hover:bg-black/5 dark:hover:bg-white/10 focus-visible:ring-garjane-primary;
   }
 
   .btn-breaking {

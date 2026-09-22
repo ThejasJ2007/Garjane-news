@@ -35,7 +35,7 @@ interface LiveUpdateItem {
 function renderArticleContent(content: string) {
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   return (
-    <div className="article-content prose prose-lg prose-headings:text-garjane-text-primary dark:prose-headings:text-garjane-text-inverse prose-a:text-garjane-primary dark:prose-a:text-garjane-primary-light prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-card prose-strong:text-garjane-text-primary dark:prose-strong:text-garjane-text-inverse max-w-none">
+    <div className="article-content prose prose-lg dark:prose-invert prose-headings:text-garjane-text-primary dark:prose-headings:text-garjane-text-inverse prose-a:text-garjane-primary dark:prose-a:text-garjane-primary-light prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl prose-img:shadow-card prose-strong:text-garjane-text-primary dark:prose-strong:text-garjane-text-inverse text-garjane-text-primary dark:text-slate-200 max-w-none">
       {paragraphs.map((paragraph, index) => (
         <p key={index} className="mb-6 leading-relaxed">
           {paragraph}

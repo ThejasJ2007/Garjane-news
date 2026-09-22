@@ -229,7 +229,7 @@ export default async function HomePage() {
                   { topic: '#Bengaluru', topicKn: '#ಬೆಂಗಳೂರು', count: 3421, category: { slug: 'bengaluru', name: 'Bengaluru', nameKn: 'ಬೆಂಗಳೂರು' } },
                   { topic: '#Karnataka', topicKn: '#ಕರ್ನಾಟಕ', count: 5672, category: { slug: 'karnataka', name: 'Karnataka', nameKn: 'ಕರ್ನಾಟಕ' } },
                   { topic: '#BreakingNews', topicKn: '#ಬ್ರೇಕಿಂಗ್ ನ್ಯೂಸ್', count: 892 },
-                  { topic: '#GarjaneNews', topicKn: '#ಗರ್ಜನೆ ನ್ಯೂಸ್', count: 445 },
+                  { topic: '#GarjaneNews', topicKn: '#GarjaneNews', count: 445 },
                   { topic: '#Politics', topicKn: '#ರಾಜಕೀಯ', count: 2103, category: { slug: 'politics', name: 'Politics', nameKn: 'ರಾಜಕೀಯ' } },
                   { topic: '#Traffic', topicKn: '#ಟ್ರ್ಯಾಫಿಕ್', count: 1567 },
                   { topic: '#Weather', topicKn: '#ಹವಾಮಾನ', count: 987 },

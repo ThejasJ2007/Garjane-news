@@ -18,7 +18,7 @@ export default function EditorialPolicyPage() {
             ಸಂಪಾದಕೀಯ ನೀತಿ / Editorial Policy
           </h1>
           <p className="text-body-lg text-garjane-text-secondary dark:text-garjane-text-muted">
-            ಗರ್ಜನೆ ನ್ಯೂಸ್ ಸತ್ಯನಿಷ್ಠ, ನಿಷ್ಪಕ್ಷಪಾತ ಹಾಗೂ ಜವಾಬ್ದಾರಿಯುತ ಪತ್ರಿಕೋದ್ಯಮ ಬದ್ಧತೆಯ ವಿವರ
+            Garjane News ಸತ್ಯನಿಷ್ಠ, ನಿಷ್ಪಕ್ಷಪಾತ ಹಾಗೂ ಜವಾಬ್ದಾರಿಯುತ ಪತ್ರಿಕೋದ್ಯಮ ಬದ್ಧತೆಯ ವಿವರ
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function EditorialPolicyPage() {
               <CheckCircle2 className="w-6 h-6 text-garjane-primary" /> 1. ಸತ್ಯಾಸತ್ಯತೆ ಮತ್ತು ಪರಿಶೀಲನೆ (Verification)
             </h2>
             <p className="text-body leading-relaxed">
-              ಗರ್ಜನೆ ನ್ಯೂಸ್‌ನಲ್ಲಿ ಪ್ರಕಟವಾಗುವ ಪ್ರತಿಯೊಂದು ಸುದ್ದಿಯನ್ನೂ ಕನಿಷ್ಠ ಎರಡು ಸ್ವತಂತ್ರ ಮೂಲಗಳಿಂದ ಅಥವಾ ಅಧಿಕೃತ ದಾಖಲೆಗಳಿಂದ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ. ಯಾವುದೇ ಊಹಾಪೋಹ, ಗಾಳಿ ಸುದ್ದಿ ಅಥವಾ ದೃಢೀಕರಿಸದ ಮಾಹಿತಿಗಳಿಗೆ ನಮ್ಮ ವೇದಿಕೆಯಲ್ಲಿ ಅವಕಾಶವಿಲ್ಲ.
+              Garjane News‌ನಲ್ಲಿ ಪ್ರಕಟವಾಗುವ ಪ್ರತಿಯೊಂದು ಸುದ್ದಿಯನ್ನೂ ಕನಿಷ್ಠ ಎರಡು ಸ್ವತಂತ್ರ ಮೂಲಗಳಿಂದ ಅಥವಾ ಅಧಿಕೃತ ದಾಖಲೆಗಳಿಂದ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ. ಯಾವುದೇ ಊಹಾಪೋಹ, ಗಾಳಿ ಸುದ್ದಿ ಅಥವಾ ದೃಢೀಕರಿಸದ ಮಾಹಿತಿಗಳಿಗೆ ನಮ್ಮ ವೇದಿಕೆಯಲ್ಲಿ ಅವಕಾಶವಿಲ್ಲ.
             </p>
           </section>
 

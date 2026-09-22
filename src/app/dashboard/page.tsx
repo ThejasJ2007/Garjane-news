@@ -53,7 +53,7 @@ export default async function DashboardPage() {
               </Badge>
             </div>
             <p className="text-body text-garjane-text-secondary dark:text-garjane-text-muted">
-              ಗರ್ಜನೆ ನ್ಯೂಸ್ ಸಂಪಾದಕೀಯ ನಿರ್ವಹಣಾ ಫಲಕ
+              Garjane News ಸಂಪಾದಕೀಯ ನಿರ್ವಹಣಾ ಫಲಕ
             </p>
           </div>
 

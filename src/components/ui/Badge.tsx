@@ -12,9 +12,9 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', size = 'md', dot, children, ...props }, ref) => {
     const variants = {
-      default: 'bg-garjane-background-light dark:bg-garjane-background-dark text-garjane-text-secondary dark:text-garjane-text-muted border border-garjane-border-light dark:border-garjane-border-dark',
-      primary: 'bg-garjane-primary/10 text-garjane-primary border-garjane-primary/20',
-      secondary: 'bg-garjane-secondary/10 text-garjane-secondary border-garjane-secondary/20',
+      default: 'bg-garjane-background-light dark:bg-garjane-background-dark text-garjane-text-secondary dark:text-slate-300 border border-garjane-border-light dark:border-garjane-border-dark',
+      primary: 'bg-garjane-primary/10 dark:bg-garjane-primary/20 text-garjane-primary dark:text-garjane-primary-light border-garjane-primary/20 dark:border-garjane-primary/30',
+      secondary: 'bg-garjane-secondary/10 dark:bg-garjane-secondary-light/30 text-garjane-secondary dark:text-slate-200 border-garjane-secondary/20 dark:border-garjane-secondary-light/40',
       success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800',
       warning: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800',
       danger: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800',

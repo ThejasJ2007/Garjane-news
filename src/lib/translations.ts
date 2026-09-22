@@ -29,6 +29,7 @@ export interface Translations {
     daysAgo: string;
   };
   nav: {
+    brandName: string;
     home: string;
     nelamangala: string;
     karnataka: string;
@@ -152,12 +153,19 @@ export interface Translations {
     noDataTitle: string;
     noDataDesc: string;
   };
+  theme: {
+    theme: string;
+    light: string;
+    dark: string;
+    system: string;
+    selectTheme: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
   kn: {
     common: {
-      brandName: 'Garjane News',
+      brandName: 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
       readMore: 'ಮತ್ತಷ್ಟು ಓದಿ',
       viewAll: 'ಎಲ್ಲವನ್ನೂ ನೋಡಿ',
       share: 'ಹಂಚಿಕೊಳ್ಳಿ:',
@@ -184,6 +192,7 @@ export const translations: Record<Language, Translations> = {
       daysAgo: 'ದಿನಗಳ ಹಿಂದೆ',
     },
     nav: {
+      brandName: 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
       home: 'ಮುಖಪುಟ',
       nelamangala: 'ನೆಲಮಂಗಲ',
       karnataka: 'ಕರ್ನಾಟಕ',
@@ -307,6 +316,13 @@ export const translations: Record<Language, Translations> = {
       noDataTitle: 'ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ',
       noDataDesc: 'ವಿವರಗಳು ಲಭ್ಯವಾದಾಗ ಇಲ್ಲಿ ಪ್ರಕಟಿಸಲಾಗುತ್ತದೆ.',
     },
+    theme: {
+      theme: 'ಥೀಮ್',
+      light: 'ಲೈಟ್',
+      dark: 'ಡಾರ್ಕ್',
+      system: 'ಸಿಸ್ಟಮ್',
+      selectTheme: 'ಥೀಮ್ ಆಯ್ಕೆಮಾಡಿ',
+    },
   },
 
   en: {
@@ -338,6 +354,7 @@ export const translations: Record<Language, Translations> = {
       daysAgo: 'd ago',
     },
     nav: {
+      brandName: 'Garjane News',
       home: 'Home',
       nelamangala: 'Nelamangala',
       karnataka: 'Karnataka',
@@ -460,6 +477,13 @@ export const translations: Record<Language, Translations> = {
       noVideosDesc: 'New video reports will be uploaded soon.',
       noDataTitle: 'Nothing to show',
       noDataDesc: 'Information will appear here once available.',
+    },
+    theme: {
+      theme: 'Theme',
+      light: 'Light',
+      dark: 'Dark',
+      system: 'System',
+      selectTheme: 'Select theme',
     },
   },
 };

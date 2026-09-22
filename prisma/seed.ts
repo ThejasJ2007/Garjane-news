@@ -13,7 +13,8 @@ async function main() {
     create: {
       id: 'singleton',
       siteName: 'Garjane News',
-      siteNameKn: 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
+      // BRAND RULE: "Garjane News" is never translated — the Kannada field intentionally stores the same Latin-script brand name.
+      siteNameKn: 'Garjane News',
       tagline: 'Your Local News, Your Voice',
       taglineKn: 'ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ',
       description: 'Garjane News brings the latest breaking news, local updates, and investigative reporting from Nelamangala and Karnataka.',

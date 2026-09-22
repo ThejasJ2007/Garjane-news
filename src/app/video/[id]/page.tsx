@@ -45,7 +45,7 @@ export default async function VideoDetailPage({ params }: VideoPageProps) {
             href="/video"
             className="inline-flex items-center gap-2 text-body-sm font-medium text-garjane-text-secondary hover:text-garjane-primary transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" /> ಗರ್ಜನೆ ವೀಡಿಯೋಗಳು / Back to Videos
+            <ArrowLeft className="w-4 h-4" /> ಗರ್ಜನೆ ನ್ಯೂಸ್ ವೀಡಿಯೋಗಳು / Back to Videos
           </Link>
         </div>
 
