@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const withPWA = require('next-pwa')({
   dest: 'public',
-  register: true,
+  register: false,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
   runtimeCaching: [
@@ -79,7 +79,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : '.next',
+  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : (process.env.NEXT_DIST_DIR || '.next'),
   async headers() {
     return [
       {

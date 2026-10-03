@@ -49,6 +49,7 @@ export const metadata: Metadata = {
   alternates: {
     types: {
       'application/rss+xml': '/feed.xml',
+      'application/atom+xml': '/atom.xml',
     },
   },
   description: 'Garjane News brings you the latest breaking news, local updates, and in-depth coverage from Karnataka and beyond. Available in Kannada and English.',

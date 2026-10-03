@@ -59,7 +59,7 @@ export async function GET() {
       ${article.category ? `<category><![CDATA[${escapeCdata(article.category.name)}]]></category>` : ''}
       ${tagNames ? `<category><![CDATA[${escapeCdata(tagNames)}]]></category>` : ''}
       ${article.featuredImage ? `<enclosure url="${article.featuredImage}" type="${imageMimeType(article.featuredImage)}" />` : ''}
-      ${article.author ? `<author>${article.author.name}</author>` : ''}
+      ${article.author ? `<dc:creator><![CDATA[${escapeCdata(article.author.name)}]]></dc:creator>` : ''}
     </item>`;
     })
     .join('');

@@ -58,6 +58,14 @@ export default async function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3 flex-wrap">
+            <Link href="/dashboard/articles">
+              <Button variant="outline">ಲೇಖನಗಳು / Articles</Button>
+            </Link>
+            {['ADMIN', 'EDITOR'].includes(user.role) && (
+              <Link href="/dashboard/contacts">
+                <Button variant="outline">ಸಂದೇಶಗಳು / Tips</Button>
+              </Link>
+            )}
             {canPublish && (
               <Link href="/dashboard/articles/new">
                 <Button className="flex items-center gap-2 shadow-md">

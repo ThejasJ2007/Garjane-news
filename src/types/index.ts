@@ -1,6 +1,6 @@
-import { Article, Category, Location, Tag, User, Reporter, Media, Video, Advertisement, BreakingNews, MenuItem, SiteSettings, PhotoGallery, LiveUpdate, Comment, NewsletterSubscriber } from '@prisma/client';
+import { Article, Category, Location, Tag, User, Reporter, Media, Video, Advertisement, BreakingNews, MenuItem, SiteSettings, PhotoGallery, LiveUpdate, Comment, NewsletterSubscriber, ContactSubmission } from '@prisma/client';
 
-export type { Advertisement, PhotoGallery, Video, Category, Location, Article, Tag, User, BreakingNews, MenuItem, SiteSettings, Media, LiveUpdate, Comment, NewsletterSubscriber, Reporter };
+export type { Advertisement, PhotoGallery, Video, Category, Location, Article, Tag, User, BreakingNews, MenuItem, SiteSettings, Media, LiveUpdate, Comment, NewsletterSubscriber, Reporter, ContactSubmission };
 
 export type VideoWithRelations = Video & {
   category?: Category | null;

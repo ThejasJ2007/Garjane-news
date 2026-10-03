@@ -5,6 +5,7 @@ node_modules
 .env.staging
 .next
 .next-dev
+.next-build
 server.log
 dev-server.log
 dev-server-stderr.log

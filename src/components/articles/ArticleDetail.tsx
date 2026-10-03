@@ -11,6 +11,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Card, CardContent } from '@/components/ui/Card';
 import { CommentSection } from './CommentSection';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { ShareButtons as SocialShareButtons } from '@/components/common/ShareButtons';
 import type { ArticleWithRelations, Advertisement } from '@/types';
 
 interface ArticleDetailProps {
@@ -73,58 +74,11 @@ function AdvertisementPlaceholder({ ad }: { ad: Advertisement }) {
 }
 
 function ShareButtons({ article }: { article: ArticleWithRelations }) {
-  const { language, t } = useLanguage();
-  const [copied, setCopied] = useState(false);
-  const url = typeof window !== 'undefined' ? window.location.href : '';
+  const { language } = useLanguage();
   const title = (language === 'en' ? (article.headline || article.headlineKn) : (article.headlineKn || article.headline)) || '';
+  const description = (language === 'en' ? (article.summary || article.excerpt) : (article.summaryKn || article.excerptKn)) || '';
 
-  const handleShare = async (platform: string) => {
-    const shareUrl = encodeURIComponent(url);
-    const shareTitle = encodeURIComponent(title);
-
-    let shareLink = '';
-    switch (platform) {
-      case 'facebook':
-        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-        break;
-      case 'twitter':
-        shareLink = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`;
-        break;
-      case 'whatsapp':
-        shareLink = `https://wa.me/?text=${shareTitle}%20${shareUrl}`;
-        break;
-      case 'email':
-        shareLink = `mailto:?subject=${shareTitle}&body=${shareUrl}`;
-        break;
-      case 'copy':
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-        return;
-    }
-    window.open(shareLink, '_blank', 'width=600,height=400');
-  };
-
-  return (
-    <div className="flex items-center gap-2" role="group" aria-label={t.common.share}>
-      <span className="text-caption text-garjane-text-muted mr-2">{t.common.share}</span>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('facebook')} className="share-button" aria-label="Share on Facebook">
-        <Facebook className="w-5 h-5" />
-      </Button>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('twitter')} className="share-button" aria-label="Share on Twitter">
-        <Twitter className="w-5 h-5" />
-      </Button>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('whatsapp')} className="share-button" aria-label="Share on WhatsApp">
-        <MessageSquare className="w-5 h-5" />
-      </Button>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('email')} className="share-button" aria-label="Share via Email">
-        <Mail className="w-5 h-5" />
-      </Button>
-      <Button variant="ghost" size="sm" onClick={() => handleShare('copy')} className="share-button" aria-label={copied ? t.common.copied : t.common.copyLink}>
-        {copied ? <Copy className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
-      </Button>
-    </div>
-  );
+  return <SocialShareButtons title={title} description={description} />;
 }
 
 function AuthorBio({ article }: { article: ArticleWithRelations }) {

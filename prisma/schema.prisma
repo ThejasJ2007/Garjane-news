@@ -466,3 +466,17 @@ model MenuItem {
   @@index([parentId])
   @@index([isActive, displayOrder])
 }
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  topic     String   @default("tip")
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
+  @@index([createdAt])
+}

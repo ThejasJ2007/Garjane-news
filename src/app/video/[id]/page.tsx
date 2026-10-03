@@ -6,6 +6,7 @@ import { getVideoBySlug, getVideos } from '@/lib/data';
 import { VideoCard } from '@/components/video/VideoCard';
 import { formatRelativeTimeKn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { ShareButtons } from '@/components/common/ShareButtons';
 
 export const dynamic = 'force-dynamic';
 
@@ -113,6 +114,13 @@ export default async function VideoDetailPage({ params }: VideoPageProps) {
                     </span>
                   </div>
                 )}
+
+                <div className="w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-garjane-border-light dark:border-garjane-border-dark">
+                  <ShareButtons
+                    title={video.titleKn || video.title}
+                    description={video.descriptionKn || video.description || ''}
+                  />
+                </div>
               </div>
 
               {/* Description */}

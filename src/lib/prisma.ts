@@ -39,7 +39,25 @@ if (hasDatabaseUrl && databaseUrl) {
 }
 
 // Circuit-breaker to avoid multi-second TCP timeouts when database is offline
-const DB_CHECK_INTERVAL_MS = 15_000;
+const DB_CHECK_INTERVAL_MS = 60_000;
+const DB_OPERATION_TIMEOUT_MS = 2_000;
+
+function withTimeout<T>(promise: Promise<T>, ms = DB_OPERATION_TIMEOUT_MS): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Database operation timed out after ${ms}ms`));
+    }, ms);
+    promise
+      .then((res) => {
+        clearTimeout(timer);
+        resolve(res);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
 
 function isDbCircuitOpen(): boolean {
   if (!hasDatabaseUrl || !rawPrisma) {
@@ -98,7 +116,8 @@ export const prisma = new Proxy({} as PrismaClient, {
                 throw new Error('Database server is unreachable. Operating in fallback mode.');
               }
               try {
-                const result = await (modelFn as (...a: unknown[]) => Promise<unknown>).apply(modelTarget, args);
+                const queryPromise = (modelFn as (...a: unknown[]) => Promise<unknown>).apply(modelTarget, args);
+                const result = await withTimeout(queryPromise);
                 markDbSuccess();
                 return result;
               } catch (err) {
@@ -118,7 +137,8 @@ export const prisma = new Proxy({} as PrismaClient, {
           throw new Error('Database server is unreachable. Operating in fallback mode.');
         }
         try {
-          const result = await (orig as (...a: unknown[]) => Promise<unknown>).apply(rawPrisma, args);
+          const queryPromise = (orig as (...a: unknown[]) => Promise<unknown>).apply(rawPrisma, args);
+          const result = await withTimeout(queryPromise);
           markDbSuccess();
           return result;
         } catch (err) {
@@ -147,7 +167,7 @@ export async function isDatabaseConnected(): Promise<boolean> {
   }
 
   try {
-    await rawPrisma.$queryRaw`SELECT 1`;
+    await withTimeout(rawPrisma.$queryRaw`SELECT 1`, 1500);
     markDbSuccess();
     return true;
   } catch {
