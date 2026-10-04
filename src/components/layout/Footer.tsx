@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react';
 import { getSiteSettings } from '@/lib/data';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -164,9 +165,14 @@ export function Footer({ siteSettings }: FooterProps) {
           {/* Brand Column */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-5" aria-label={t.common.brandName}>
-              <div className="w-12 h-12 rounded-xl bg-garjane-primary flex items-center justify-center flex-shrink-0">
-                <span className="text-garjane-primary-foreground font-heading font-bold text-2xl">ಗ</span>
-              </div>
+              <Image
+                src="/images/Garjane-news-logo.png"
+                alt={t.common.brandName}
+                width={48}
+                height={48}
+                className="w-10 h-10 lg:w-12 lg:h-12 object-contain flex-shrink-0"
+                priority
+              />
               <span className={cn(
                 "font-heading font-bold text-headline-3 text-[#172B4D] dark:text-white",
                 language === 'kn' && 'font-kannada'

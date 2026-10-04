@@ -143,7 +143,7 @@ export default async function RootLayout({
             Skip to main content
           </a>
           <Header breakingNews={breakingNews} user={user} menuItems={menuItems} />
-          <main id="main-content" className="flex-1 pt-16 lg:pt-14" role="main">
+          <main id="main-content" className="flex-1 pt-16 sm:pt-[72px] lg:pt-[76px]" role="main">
             {children}
           </main>
           <Footer siteSettings={siteSettings} />
@@ -157,7 +157,7 @@ export default async function RootLayout({
               name: siteSettings?.siteName || 'Garjane News',
               alternateName: siteSettings?.siteNameKn || 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
               url: process.env.NEXT_PUBLIC_APP_URL,
-              logo: `${process.env.NEXT_PUBLIC_APP_URL}/logo.png`,
+              logo: `${process.env.NEXT_PUBLIC_APP_URL}/images/Garjane-news-logo.png`,
               sameAs: siteSettings?.socialLinks ? Object.values(siteSettings.socialLinks as Record<string, string>).filter(Boolean) : [],
               description: siteSettings?.description || 'Your Local News, Your Voice',
             }),

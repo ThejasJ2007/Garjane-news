@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Search, ChevronDown, Bell, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -50,8 +51,16 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLogoLightboxOpen, setIsLogoLightboxOpen] = useState(false);
   const pathname = usePathname();
   const { language, t } = useLanguage();
+
+  const brandDisplayName =
+    language === 'kn'
+      ? 'ಗರ್ಜನೆ ನ್ಯೂಸ್'
+      : (language as string) === 'hi'
+        ? 'गर्जने न्यूज़'
+        : 'Garjane News';
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -66,10 +75,27 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
     setIsMenuOpen(false);
   }, [pathname]);
 
+  // Handle escape key and body scroll lock for logo modal
+  useEffect(() => {
+    if (!isLogoLightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsLogoLightboxOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isLogoLightboxOpen]);
+
   return (
     <header className={cn(
       'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-      isScrolled ? 'bg-garjane-background-card/95 dark:bg-garjane-background-cardDark/95 backdrop-blur-sm shadow-card' : 'bg-transparent'
+      'bg-white dark:bg-garjane-background-cardDark border-b border-gray-100 dark:border-garjane-border-dark',
+      isScrolled ? 'shadow-md bg-white/98 dark:bg-garjane-background-cardDark/98 backdrop-blur-sm' : 'shadow-sm'
     )}>
       {/* Breaking News Ticker */}
       {breakingNews.length > 0 && (
@@ -102,19 +128,43 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
       {/* Main Header */}
       <nav className="relative" aria-label={language === 'kn' ? 'ಮುಖ್ಯ ಸಂಚರಣೆ' : 'Main navigation'}>
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 lg:h-14 gap-3">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label={t.common.brandName}>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg bg-garjane-primary flex items-center justify-center">
-                <span className="text-garjane-primary-foreground font-heading font-bold text-xl lg:text-2xl">ಗ</span>
-              </div>
-              <span className={cn(
-                "font-heading font-bold text-xl sm:text-headline-4 text-garjane-text-primary dark:text-garjane-text-inverse tracking-tight",
-                language === 'kn' && "font-kannada"
-              )}>
-                {t.common.brandName}
-              </span>
-            </Link>
+          <div className="flex items-center justify-between h-[60px] sm:h-[64px] lg:h-[68px] gap-3 sm:gap-4">
+            {/* Logo & Brand Presentation (matches reference image) */}
+            <div className="flex items-center gap-2.5 sm:gap-3.5 lg:gap-4 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsLogoLightboxOpen(true)}
+                className="relative flex-shrink-0 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-garjane-primary/30 rounded-[10px] sm:rounded-[12px]"
+                title="ಕ್ಲಿಕ್ ಮಾಡಿ: ಲಾಂಛನವನ್ನು ಪೂರ್ಣ ಗಾತ್ರದಲ್ಲಿ ವೀಕ್ಷಿಸಿ / Click to view full logo"
+                aria-label="View full Garjane News logo"
+              >
+                <div className="relative flex items-center justify-center overflow-hidden rounded-[10px] sm:rounded-[12px] shadow-sm transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] h-10 sm:h-11 lg:h-12 aspect-[1.08/1] bg-transparent">
+                  <Image
+                    src="/images/Garjane-news-logo.png"
+                    alt={brandDisplayName}
+                    fill
+                    sizes="(max-width: 640px) 48px, (max-width: 1024px) 54px, 60px"
+                    className="object-contain block p-0.5 rounded-[10px] sm:rounded-[12px]"
+                    priority
+                  />
+                </div>
+              </button>
+
+              <Link
+                href="/"
+                className="flex items-center focus:outline-none group/brand flex-shrink-0"
+                aria-label={brandDisplayName}
+              >
+                <span
+                  className={cn(
+                    'font-heading font-extrabold text-xl sm:text-2xl lg:text-[28px] xl:text-[31px] tracking-[-0.025em] text-[#060D27] dark:text-white leading-none whitespace-nowrap transition-colors group-hover/brand:text-garjane-primary',
+                    language === 'kn' && 'font-kannada font-bold tracking-normal'
+                  )}
+                >
+                  {brandDisplayName}
+                </span>
+              </Link>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
@@ -215,6 +265,45 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
           </div>
         )}
       </nav>
+
+      {/* Dedicated Logo Preview Modal */}
+      {isLogoLightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 md:p-8 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Garjane News Logo"
+          onClick={() => setIsLogoLightboxOpen(false)}
+        >
+          {/* Close (X) button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsLogoLightboxOpen(false);
+            }}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer"
+            aria-label="Close"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Full logo image only - no captions, descriptions, or subtitles */}
+          <div
+            className="relative max-w-[90vw] max-h-[85vh] w-auto h-auto flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src="/images/Garjane-news-logo.png"
+              alt="Garjane News Logo"
+              width={1888}
+              height={2246}
+              className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-2xl shadow-2xl"
+              priority
+            />
+          </div>
+        </div>
+      )}
     </header>
   );
 }

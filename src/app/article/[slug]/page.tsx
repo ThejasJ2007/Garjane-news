@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       name: 'Garjane News',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://garjanenews.com/logo.png',
+        url: 'https://garjanenews.com/images/Garjane-news-logo.png',
       },
     },
     mainEntityOfPage: {
