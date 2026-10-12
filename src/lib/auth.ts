@@ -3,24 +3,47 @@ import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 import { UserSession } from '@/types';
 
-const jwtSecretValue =
-  process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === 'production'
-    ? ''
-    : 'dev-jwt-secret-key-min-32-characters-garjane');
+const DEV_JWT_PLACEHOLDERS = [
+  'dev-jwt-secret-key-min-32-characters-garjane',
+  'your-super-secret-jwt-key-min-32-chars',
+];
 
-if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
-  console.warn('WARNING: JWT_SECRET environment variable is not set in production.');
+const DEV_SESSION_PLACEHOLDERS = [
+  'dev-session-password-min-32-characters-garjane',
+  'your-session-password-min-32-chars',
+];
+
+export function getJwtSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET?.trim();
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    if (!secret || secret.length < 32 || DEV_JWT_PLACEHOLDERS.includes(secret)) {
+      throw new Error(
+        'FATAL: In production, JWT_SECRET must be configured with a secure string of at least 32 characters and cannot use a development placeholder.'
+      );
+    }
+    return new TextEncoder().encode(secret);
+  }
+
+  return new TextEncoder().encode(secret || 'dev-jwt-secret-key-min-32-characters-garjane');
 }
 
-const JWT_SECRET = new TextEncoder().encode(
-  jwtSecretValue || 'dev-jwt-secret-key-min-32-characters-garjane'
-);
-const SESSION_PASSWORD =
-  process.env.SESSION_PASSWORD ||
-  (process.env.NODE_ENV === 'production'
-    ? ''
-    : 'dev-session-password-min-32-characters-garjane');
+export function getSessionPassword(): string {
+  const password = process.env.SESSION_PASSWORD?.trim();
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    if (!password || password.length < 32 || DEV_SESSION_PLACEHOLDERS.includes(password)) {
+      throw new Error(
+        'FATAL: In production, SESSION_PASSWORD must be configured with a secure string of at least 32 characters and cannot use a development placeholder.'
+      );
+    }
+    return password;
+  }
+
+  return password || 'dev-session-password-min-32-characters-garjane';
+}
 
 export async function createSession(user: {
   id: string;
@@ -41,7 +64,7 @@ export async function createSession(user: {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(JWT_SECRET);
+    .sign(getJwtSecret());
 
   const cookieStore = await cookies();
   cookieStore.set('session', token, {
@@ -62,7 +85,7 @@ export async function getSession(): Promise<UserSession | null> {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     return payload as unknown as UserSession;
   } catch {
     return null;
@@ -76,12 +99,14 @@ export async function deleteSession(): Promise<void> {
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   const bcrypt = await import('bcryptjs');
-  return bcrypt.compare(password, hash);
+  const b = (bcrypt as any).default || bcrypt;
+  return b.compare(password, hash);
 }
 
 export async function hashPassword(password: string): Promise<string> {
   const bcrypt = await import('bcryptjs');
-  return bcrypt.hash(password, 12);
+  const b = (bcrypt as any).default || bcrypt;
+  return b.hash(password, 12);
 }
 
 export async function getCurrentUser() {

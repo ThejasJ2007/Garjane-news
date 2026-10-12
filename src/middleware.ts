@@ -2,9 +2,26 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'dev-jwt-secret-key-min-32-characters-garjane'
-);
+const DEV_JWT_PLACEHOLDERS = [
+  'dev-jwt-secret-key-min-32-characters-garjane',
+  'your-super-secret-jwt-key-min-32-chars',
+];
+
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.JWT_SECRET?.trim();
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    if (!secret || secret.length < 32 || DEV_JWT_PLACEHOLDERS.includes(secret)) {
+      throw new Error(
+        'FATAL: In production, JWT_SECRET must be configured with a secure string of at least 32 characters and cannot use a development placeholder.'
+      );
+    }
+    return new TextEncoder().encode(secret);
+  }
+
+  return new TextEncoder().encode(secret || 'dev-jwt-secret-key-min-32-characters-garjane');
+}
 
 const PROTECTED_PATHS = [
   '/dashboard',
@@ -19,7 +36,8 @@ const ADMIN_EDITOR_PATHS = [
 
 async function verifyToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const secretKey = getJwtSecret();
+    const { payload } = await jwtVerify(token, secretKey);
     return payload as { user: { id: string; email: string; name: string; avatar?: string | null; role: string } };
   } catch {
     return null;

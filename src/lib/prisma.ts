@@ -14,10 +14,10 @@ const hasDatabaseUrl = Boolean(databaseUrl && databaseUrl.length > 0);
 let rawPrisma: PrismaClient | null = null;
 if (hasDatabaseUrl && databaseUrl) {
   try {
-    // Ensure a fast 2-second connection timeout if not already specified to prevent TCP hanging
+    // Ensure a connect timeout if not already specified
     let configuredUrl = databaseUrl;
     if (!configuredUrl.includes('connect_timeout=')) {
-      configuredUrl += (configuredUrl.includes('?') ? '&' : '?') + 'connect_timeout=2';
+      configuredUrl += (configuredUrl.includes('?') ? '&' : '?') + 'connect_timeout=10';
     }
 
     rawPrisma =
@@ -38,9 +38,9 @@ if (hasDatabaseUrl && databaseUrl) {
   }
 }
 
-// Circuit-breaker to avoid multi-second TCP timeouts when database is offline
-const DB_CHECK_INTERVAL_MS = 60_000;
-const DB_OPERATION_TIMEOUT_MS = 2_000;
+// Circuit-breaker to avoid hanging when database is offline
+const DB_CHECK_INTERVAL_MS = 10_000;
+const DB_OPERATION_TIMEOUT_MS = 6_000;
 
 function withTimeout<T>(promise: Promise<T>, ms = DB_OPERATION_TIMEOUT_MS): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -167,7 +167,7 @@ export async function isDatabaseConnected(): Promise<boolean> {
   }
 
   try {
-    await withTimeout(rawPrisma.$queryRaw`SELECT 1`, 1500);
+    await withTimeout(rawPrisma.$queryRaw`SELECT 1`, 5000);
     markDbSuccess();
     return true;
   } catch {
