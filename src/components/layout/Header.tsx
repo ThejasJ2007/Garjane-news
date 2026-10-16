@@ -294,8 +294,8 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
             <Image
               src="/images/Garjane-news-logo.png"
               alt="Garjane News Logo"
-              width={1888}
-              height={2246}
+              width={1520}
+              height={1851}
               className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-2xl shadow-2xl"
               priority
             />
