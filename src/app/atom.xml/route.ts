@@ -72,8 +72,8 @@ export async function GET() {
   <link rel="self" type="application/atom+xml" href="${baseUrl}/atom.xml" />
   <link rel="alternate" type="text/html" href="${baseUrl}" />
   <updated>${updated}</updated>
-  <logo>${baseUrl}/icon-192.png</logo>
-  <icon>${baseUrl}/favicon.svg</icon>
+  <logo>${baseUrl}/icon-192.png?v=2</logo>
+  <icon>${baseUrl}/favicon.svg?v=2</icon>
 ${entries}
 </feed>`;
 

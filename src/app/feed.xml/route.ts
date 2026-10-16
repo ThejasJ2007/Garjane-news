@@ -78,7 +78,7 @@ export async function GET() {
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml" />
     <image>
-      <url>${baseUrl}/favicon.svg</url>
+      <url>${baseUrl}/favicon.svg?v=2</url>
       <title><![CDATA[${siteTitle}]]></title>
       <link>${baseUrl}</link>
     </image>
