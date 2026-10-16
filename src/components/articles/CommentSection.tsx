@@ -6,7 +6,7 @@ import { createCommentAction, type CommentActionResult } from '@/actions/comment
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/ui/Avatar';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { Comment, User } from '@/types';
+import type { Comment, User, Language } from '@/types';
 
 interface CommentWithUser extends Comment {
   user?: Pick<User, 'name' | 'avatar'> | null;
@@ -16,7 +16,7 @@ interface CommentSectionProps {
   articleId: string;
   allowComments?: boolean;
   comments?: CommentWithUser[];
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 export function CommentSection({

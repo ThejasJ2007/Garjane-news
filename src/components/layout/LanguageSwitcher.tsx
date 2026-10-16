@@ -46,7 +46,7 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
     setIsOpen(false);
   };
 
-  const currentLabel = language === 'kn' ? 'ಕನ್ನಡ' : 'English';
+  const currentLabel = language === 'kn' ? 'ಕನ್ನಡ' : language === 'hi' ? 'हिन्दी' : 'English';
 
   return (
     <div ref={containerRef} className={cn('relative inline-block text-left', className)}>
@@ -56,7 +56,13 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-label={language === 'kn' ? 'ಭಾಷೆ ಬದಲಿಸಿ: ಪ್ರಸ್ತುತ ಕನ್ನಡ' : 'Change language: Currently English'}
+        aria-label={
+          language === 'kn'
+            ? 'ಭಾಷೆ ಬದಲಿಸಿ: ಪ್ರಸ್ತುತ ಕನ್ನಡ'
+            : language === 'hi'
+            ? 'भाषा बदलें: वर्तमान हिन्दी'
+            : 'Change language: Currently English'
+        }
         className={cn(
           'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold select-none transition-all duration-200 border shadow-sm',
           'focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:outline-none',
@@ -104,6 +110,25 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
           >
             <span>ಕನ್ನಡ</span>
             {language === 'kn' && (
+              <Check className="w-3.5 h-3.5 text-garjane-primary dark:text-garjane-primary-light" aria-hidden="true" />
+            )}
+          </button>
+
+          {/* Hindi Option */}
+          <button
+            type="button"
+            role="option"
+            aria-selected={language === 'hi'}
+            onClick={() => selectLanguage('hi')}
+            className={cn(
+              'flex items-center justify-between w-full px-3 py-2 rounded-lg text-xs font-semibold transition-colors mt-0.5',
+              language === 'hi'
+                ? 'bg-garjane-primary/10 text-garjane-primary dark:text-garjane-primary-light font-bold'
+                : 'text-garjane-text-primary dark:text-garjane-text-inverse hover:bg-garjane-primary/5 dark:hover:bg-white/5'
+            )}
+          >
+            <span>हिन्दी</span>
+            {language === 'hi' && (
               <Check className="w-3.5 h-3.5 text-garjane-primary dark:text-garjane-primary-light" aria-hidden="true" />
             )}
           </button>

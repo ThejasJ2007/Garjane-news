@@ -3,8 +3,25 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { createSession, deleteSession, hashPassword, verifyPassword, getCurrentUser } from '@/lib/auth';
-import { loginSchema, registerSchema, passwordChangeSchema, userUpdateSchema } from '@/lib/validations';
+import {
+  createSession,
+  deleteSession,
+  hashPassword,
+  verifyPassword,
+  getCurrentUser,
+  createPasswordResetToken,
+  verifyPasswordResetToken,
+} from '@/lib/auth';
+import {
+  loginSchema,
+  registerSchema,
+  passwordChangeSchema,
+  userUpdateSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from '@/lib/validations';
+import { sendPasswordResetEmail } from '@/lib/email';
+import { Language } from '@/lib/translations';
 import { z } from 'zod';
 
 export async function loginAction(formData: FormData) {
@@ -237,5 +254,130 @@ export async function unsubscribeNewsletterAction(token: string) {
     return { success: true, message: 'Successfully unsubscribed' };
   } catch {
     return { error: 'ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ / Database unavailable.' };
+  }
+}
+
+function getBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://garjane-news.vercel.app';
+  }
+  return 'http://localhost:3000';
+}
+
+export async function forgotPasswordAction(formData: FormData) {
+  const rawEmail = (formData.get('email') as string)?.trim().toLowerCase();
+  const rawLang = (formData.get('language') as Language) || 'kn';
+
+  const validated = forgotPasswordSchema.safeParse({ email: rawEmail });
+  if (!validated.success) {
+    return {
+      error: 'Invalid email address',
+      fields: validated.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email } = validated.data;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, email: true, name: true, passwordHash: true, isActive: true },
+    });
+
+    if (user && user.isActive) {
+      const resetToken = await createPasswordResetToken({
+        id: user.id,
+        email: user.email,
+        passwordHash: user.passwordHash,
+      });
+
+      const baseUrl = getBaseUrl();
+      const resetUrl = `${baseUrl}/reset-password?token=${encodeURIComponent(resetToken)}`;
+
+      await sendPasswordResetEmail({
+        to: user.email,
+        name: user.name,
+        resetUrl,
+        language: rawLang,
+      });
+    }
+
+    // Security best practice: Return generic confirmation regardless of email existence to prevent user enumeration
+    return {
+      success: true,
+      message: 'REQUEST_ACCEPTED',
+    };
+  } catch (err: any) {
+    return {
+      error: 'ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ. / Database service temporarily unavailable. Please try again later.',
+    };
+  }
+}
+
+export async function verifyResetTokenAction(token: string) {
+  if (!token || typeof token !== 'string') {
+    return { valid: false, error: 'invalid' };
+  }
+
+  try {
+    const result = await verifyPasswordResetToken(token);
+    if (!result.valid) {
+      return { valid: false, error: result.error || 'invalid' };
+    }
+
+    return {
+      valid: true,
+      email: result.user?.email,
+      name: result.user?.name,
+    };
+  } catch {
+    return { valid: false, error: 'invalid' };
+  }
+}
+
+export async function resetPasswordAction(formData: FormData) {
+  const rawData = {
+    token: formData.get('token') as string,
+    password: formData.get('password') as string,
+    confirmPassword: formData.get('confirmPassword') as string,
+  };
+
+  const validated = resetPasswordSchema.safeParse(rawData);
+  if (!validated.success) {
+    return {
+      error: 'Validation failed',
+      fields: validated.error.flatten().fieldErrors,
+    };
+  }
+
+  const { token, password } = validated.data;
+
+  try {
+    const verifyResult = await verifyPasswordResetToken(token);
+    if (!verifyResult.valid || !verifyResult.user) {
+      return {
+        error: 'INVALID_OR_EXPIRED_TOKEN',
+        reason: verifyResult.error || 'invalid',
+      };
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    await prisma.user.update({
+      where: { id: verifyResult.user.id },
+      data: { passwordHash },
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    return {
+      error: 'ಡೇಟಾಬೇಸ್ ಸಂಪರ್ಕ ಲಭ್ಯವಿಲ್ಲ / Database unavailable. Please try again later.',
+    };
   }
 }

@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { Language } from '@/types';
 
 interface BreakingTickerProps {
   items: Array<{
@@ -14,7 +15,7 @@ interface BreakingTickerProps {
     level: string;
     article?: { slug: string } | null;
   }>;
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 export function BreakingTicker({ items, language = 'kn' }: BreakingTickerProps) {

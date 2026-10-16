@@ -11,13 +11,14 @@ import { EmptyState } from '@/components/ui/EmptyState';
 export const revalidate = 60;
 
 interface AuthorPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
-  const author = await getAuthorById(params.id);
+  const { id } = await params;
+  const author = await getAuthorById(id);
   if (!author) {
     return {
       title: 'ಲೇಖಕರು ಕಂಡುಬಂದಿಲ್ಲ | Author Not Found - Garjane News',
@@ -31,13 +32,14 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {
-  const author = await getAuthorById(params.id);
+  const { id } = await params;
+  const author = await getAuthorById(id);
 
   if (!author) {
     notFound();
   }
 
-  const articlesRes = await getArticlesByAuthor(params.id, { page: 1, limit: 12 });
+  const articlesRes = await getArticlesByAuthor(id, { page: 1, limit: 12 });
   const articles = articlesRes.data;
 
   return (

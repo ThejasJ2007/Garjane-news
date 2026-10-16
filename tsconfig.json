@@ -5,6 +5,8 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "es2018",
+    "downlevelIteration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -36,7 +38,7 @@
     ".next-dev/types/**/*.ts",
     ".next-build/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", "scripts", ".e2e*", ".next*", ".audit*", ".schema*"]
 }
+
+

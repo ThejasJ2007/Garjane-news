@@ -10,13 +10,14 @@ import { formatRelativeTimeKn } from '@/lib/utils';
 export const revalidate = 60;
 
 interface GalleryDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: GalleryDetailPageProps): Promise<Metadata> {
-  const gallery = await getGalleryById(params.id);
+  const { id } = await params;
+  const gallery = await getGalleryById(id);
   if (!gallery) {
     return {
       title: 'ಗ್ಯಾಲರಿ ಕಂಡುಬಂದಿಲ್ಲ | Gallery Not Found - Garjane News',
@@ -38,7 +39,8 @@ export async function generateMetadata({ params }: GalleryDetailPageProps): Prom
 }
 
 export default async function GalleryDetailPage({ params }: GalleryDetailPageProps) {
-  const gallery = await getGalleryById(params.id);
+  const { id } = await params;
+  const gallery = await getGalleryById(id);
 
   if (!gallery) {
     notFound();

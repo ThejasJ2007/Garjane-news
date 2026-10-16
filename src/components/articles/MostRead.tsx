@@ -6,12 +6,12 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { ArticleWithRelations, ArticleWithRelationsMinimal } from '@/types';
+import type { ArticleWithRelations, ArticleWithRelationsMinimal, Language } from '@/types';
 
 interface MostReadItemProps {
   article: ArticleWithRelations | ArticleWithRelationsMinimal;
   rank: number;
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 function MostReadItem({ article, rank, language }: MostReadItemProps) {
@@ -68,7 +68,7 @@ interface MostReadProps {
   titleKn?: string;
   subtitle?: string;
   subtitleKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   className?: string;
   limit?: number;
 }
@@ -145,7 +145,7 @@ interface TrendingNowProps {
   topics: TrendingTopic[];
   title?: string;
   titleKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   className?: string;
 }
 
@@ -224,7 +224,7 @@ interface BreakingNowProps {
   articles: (ArticleWithRelations | ArticleWithRelationsMinimal)[];
   title?: string;
   titleKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   className?: string;
   limit?: number;
 }

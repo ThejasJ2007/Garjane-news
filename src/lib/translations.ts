@@ -1,4 +1,4 @@
-export type Language = 'kn' | 'en';
+export type Language = 'kn' | 'en' | 'hi';
 
 export interface Translations {
   common: {
@@ -159,6 +159,47 @@ export interface Translations {
     dark: string;
     system: string;
     selectTheme: string;
+  };
+  auth: {
+    signIn: string;
+    signInTitle: string;
+    signInSubtitle: string;
+    signInRoleDesc: string;
+    email: string;
+    emailPlaceholder: string;
+    password: string;
+    passwordPlaceholder: string;
+    rememberMe: string;
+    forgotPassword: string;
+    signInButton: string;
+    signingIn: string;
+    newUserPrompt: string;
+    createAccount: string;
+    forgotPasswordTitle: string;
+    forgotPasswordSubtitle: string;
+    sendResetLink: string;
+    sendingResetLink: string;
+    resetLinkSentTitle: string;
+    resetLinkSentDesc: string;
+    backToSignIn: string;
+    resetPasswordTitle: string;
+    resetPasswordSubtitle: string;
+    newPassword: string;
+    confirmPassword: string;
+    saveNewPassword: string;
+    savingNewPassword: string;
+    passwordResetSuccessTitle: string;
+    passwordResetSuccessDesc: string;
+    signInWithNewPassword: string;
+    invalidLinkTitle: string;
+    invalidLinkDesc: string;
+    requestNewLink: string;
+    passwordsDoNotMatch: string;
+    passwordTooShort: string;
+    invalidEmail: string;
+    connectionError: string;
+    showPassword: string;
+    hidePassword: string;
   };
 }
 
@@ -323,6 +364,47 @@ export const translations: Record<Language, Translations> = {
       system: 'ಸಿಸ್ಟಮ್',
       selectTheme: 'ಥೀಮ್ ಆಯ್ಕೆಮಾಡಿ',
     },
+    auth: {
+      signIn: 'ಲಾಗಿನ್',
+      signInTitle: 'ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ',
+      signInSubtitle: 'Sign In to Garjane News',
+      signInRoleDesc: 'ವರದಿಗಾರರು, ಸಂಪಾದಕರು ಮತ್ತು ಚಂದಾದಾರರ ಆಡಳಿತ ತಾಣ',
+      email: 'ಇಮೇಲ್ ವಿಳಾಸ',
+      emailPlaceholder: 'name@example.com',
+      password: 'ಪಾಸ್‌ವರ್ಡ್',
+      passwordPlaceholder: '••••••••',
+      rememberMe: 'ನನ್ನನ್ನು ನೆನಪಿಡಿ',
+      forgotPassword: 'ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?',
+      signInButton: 'ಲಾಗಿನ್',
+      signingIn: 'ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ...',
+      newUserPrompt: 'ಹೊಸ ಬಳಕೆದಾರರೇ?',
+      createAccount: 'ಖಾತೆ ತೆರೆಯಿರಿ',
+      forgotPasswordTitle: 'ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ',
+      forgotPasswordSubtitle: 'ನಿಮ್ಮ ನೋಂದಾಯಿತ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ. ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಲು ನಾವು ಲಿಂಕ್ ಕಳುಹಿಸುತ್ತೇವೆ.',
+      sendResetLink: 'ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಿ',
+      sendingResetLink: 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...',
+      resetLinkSentTitle: 'ವಿನಂತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ',
+      resetLinkSentDesc: 'ಈ ಇಮೇಲ್ ನೋಂದಾಯಿತವಾಗಿದ್ದರೆ, ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್ ಮತ್ತು ಸ್ಪ್ಯಾಮ್ ಫೋಲ್ಡರ್ ಪರಿಶೀಲಿಸಿ.',
+      backToSignIn: 'ಲಾಗಿನ್‌ಗೆ ಹಿಂತಿರುಗಿ',
+      resetPasswordTitle: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ',
+      resetPasswordSubtitle: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಖಾತೆಗೆ ಹೊಸ ಬಲವಾದ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.',
+      newPassword: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್',
+      confirmPassword: 'ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ',
+      saveNewPassword: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಉಳಿಸಿ',
+      savingNewPassword: 'ಉಳಿಸಲಾಗುತ್ತಿದೆ...',
+      passwordResetSuccessTitle: 'ಪಾಸ್‌ವರ್ಡ್ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಗಿದೆ!',
+      passwordResetSuccessDesc: 'ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಲಾಗಿದೆ. ಈಗ ನೀವು ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಬಹುದು.',
+      signInWithNewPassword: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಲಾಗಿನ್ ಮಾಡಿ',
+      invalidLinkTitle: 'ಲಿಂಕ್ ಅಮಾನ್ಯವಾಗಿದೆ ಅಥವಾ ಅವಧಿ ಮೀರಿದೆ',
+      invalidLinkDesc: 'ಈ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಅಮಾನ್ಯವಾಗಿದೆ, ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ ಅಥವಾ ಅವಧಿ ಮೀರಿದೆ. ದಯವಿಟ್ಟು ಹೊಸ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ವಿನಂತಿಸಿ.',
+      requestNewLink: 'ಹೊಸ ಲಿಂಕ್ ವಿನಂತಿಸಿ',
+      passwordsDoNotMatch: 'ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ',
+      passwordTooShort: 'ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು',
+      invalidEmail: 'ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ',
+      connectionError: 'ಸಂಪರ್ಕ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.',
+      showPassword: 'ಪಾಸ್‌ವರ್ಡ್ ತೋರಿಸಿ',
+      hidePassword: 'ಪಾಸ್‌ವರ್ಡ್ ಮರೆಮಾಡಿ',
+    },
   },
 
   en: {
@@ -484,6 +566,250 @@ export const translations: Record<Language, Translations> = {
       dark: 'Dark',
       system: 'System',
       selectTheme: 'Select theme',
+    },
+    auth: {
+      signIn: 'Sign In',
+      signInTitle: 'Sign In to Your Account',
+      signInSubtitle: 'Sign In to Garjane News',
+      signInRoleDesc: 'Admin portal for reporters, editors, and subscribers',
+      email: 'Email Address',
+      emailPlaceholder: 'name@example.com',
+      password: 'Password',
+      passwordPlaceholder: '••••••••',
+      rememberMe: 'Remember me',
+      forgotPassword: 'Forgot Password?',
+      signInButton: 'Sign In',
+      signingIn: 'Signing In...',
+      newUserPrompt: 'New user?',
+      createAccount: 'Create Account',
+      forgotPasswordTitle: 'Reset Your Password',
+      forgotPasswordSubtitle: 'Enter your registered email address and we will send you a password reset link.',
+      sendResetLink: 'Send Reset Link',
+      sendingResetLink: 'Sending Reset Link...',
+      resetLinkSentTitle: 'Reset Request Accepted',
+      resetLinkSentDesc: 'If this email is registered in our system, a password reset link has been sent. Please check your inbox and spam folder.',
+      backToSignIn: 'Back to Sign In',
+      resetPasswordTitle: 'Set New Password',
+      resetPasswordSubtitle: 'Please enter a new strong password for your account.',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm Password',
+      saveNewPassword: 'Save New Password',
+      savingNewPassword: 'Saving New Password...',
+      passwordResetSuccessTitle: 'Password Reset Successful!',
+      passwordResetSuccessDesc: 'Your password has been updated. You can now sign in with your new password.',
+      signInWithNewPassword: 'Sign In with New Password',
+      invalidLinkTitle: 'Invalid or Expired Link',
+      invalidLinkDesc: 'This password reset link is invalid, has already been used, or has expired. Please request a new reset link.',
+      requestNewLink: 'Request a New Link',
+      passwordsDoNotMatch: 'Passwords do not match',
+      passwordTooShort: 'Password must be at least 8 characters',
+      invalidEmail: 'Please enter a valid email address',
+      connectionError: 'Connection error occurred. Please try again.',
+      showPassword: 'Show password',
+      hidePassword: 'Hide password',
+    },
+  },
+
+  hi: {
+    common: {
+      brandName: 'गर्जने न्यूज़',
+      readMore: 'और पढ़ें',
+      viewAll: 'सभी देखें',
+      share: 'शेयर करें:',
+      copyLink: 'लिंक कॉपी करें',
+      copied: 'कॉपी किया गया',
+      bookmark: 'बुकमार्क',
+      views: 'व्यूज',
+      minRead: 'मिनट का पठन',
+      breaking: 'ब्रेकिंग',
+      live: 'लाइव',
+      featured: 'विशेष',
+      editorPick: 'संपादक की पसंद',
+      reporter: 'संवाददाता:',
+      author: 'लेखक:',
+      published: 'प्रकाशित:',
+      updated: 'अपडेटेड:',
+      ad: 'विज्ञापन',
+      error: 'त्रुटि हुई',
+      tryAgain: 'पुनः प्रयास करें',
+      noImage: 'कोई छवि नहीं',
+      justNow: 'अभी-अभी',
+      minutesAgo: 'मिनट पहले',
+      hoursAgo: 'घंटे पहले',
+      daysAgo: 'दिन पहले',
+    },
+    nav: {
+      brandName: 'गर्जने न्यूज़',
+      home: 'होम',
+      nelamangala: 'नेलमंगला',
+      karnataka: 'कर्नाटक',
+      bengaluru: 'बेंगलुरु',
+      politics: 'राजनीति',
+      crime: 'अपराध',
+      sports: 'खेल',
+      cinema: 'सिनेमा',
+      videos: 'वीडियो',
+      signIn: 'लॉग इन',
+      getStarted: 'खाता बनाएं',
+      dashboard: 'डैशबोर्ड',
+      profile: 'प्रोफाइल',
+      signOut: 'लॉग आउट',
+      search: 'खोजें',
+      menu: 'मेनू',
+      close: 'बंद करें',
+      switchLang: 'भाषा बदलें',
+      lightMode: 'लाइट मोड में बदलें',
+      darkMode: 'डार्क मोड में बदलें',
+    },
+    home: {
+      heroHeading: 'प्रमुख समाचार',
+      editorsPicks: 'संपादक की पसंद',
+      editorsPicksDesc: 'गर्जने न्यूज़ संपादकीय टीम की चुनिंदा प्रमुख खबरें',
+      breakingNews: 'ब्रेकिंग न्यूज़',
+      latestNews: 'ताज़ा ख़बरें',
+      latestNewsDesc: 'नेलमंगला और कर्नाटक के नवीनतम घटनाक्रम',
+      trendingNow: 'ट्रेंडिंग न्यूज़',
+      mostRead: 'सबसे ज़्यादा पढ़ी गई',
+      videoReports: 'वीडियो रिपोर्ट्स',
+      videoReportsDesc: 'नेलमंगला और कर्नाटक की ज़मीनी रिपोर्ट',
+      photoGalleries: 'फोटो गैलरी',
+      photoGalleriesDesc: 'स्थानीय घटनाओं का विशेष चित्र संग्रह',
+      stayUpdated: 'अपडेट रहें',
+      newsletterDesc: 'ताज़ा समाचार सीधे अपने ईमेल पर मुफ्त पाएं।',
+      emailPlaceholder: 'अपना ईमेल दर्ज करें',
+      subscribe: 'सब्सक्राइब करें',
+      subscribedSuccess: 'सफलतापूर्वक सदस्यता ले ली गई!',
+      invalidEmail: 'कृपया एक मान्य ईमेल पता दर्ज करें',
+    },
+    article: {
+      language: 'भाषा:',
+      fontSize: 'फ़ॉन्ट आकार:',
+      comments: 'टिप्पणियां',
+      leaveComment: 'अपनी राय दें',
+      commentPlaceholder: 'अपनी टिप्पणी यहां लिखें...',
+      submitComment: 'टिप्पणी भेजें',
+      submitting: 'भेजा जा रहा है...',
+      commentSuccess: 'आपकी टिप्पणी प्राप्त हो गई है। समीक्षा के बाद प्रकाशित की जाएगी।',
+      commentError: 'टिप्पणी नहीं भेजी जा सकी। कृपया पुनः प्रयास करें।',
+      commentsClosed: 'इस लेख के लिए टिप्पणियां बंद हैं।',
+      previousArticle: 'पिछला लेख',
+      nextArticle: 'अगला लेख',
+      relatedArticles: 'संबंधित लेख',
+      liveUpdates: 'लाइव अपडेट',
+      photoGallery: 'फोटो गैलरी',
+      media: 'मीडिया संग्रह',
+      images: 'तस्वीरें',
+      videos: 'वीडियो',
+      photosCount: 'तस्वीरें',
+      reporterBioDefault: 'गर्जने न्यूज़ स्थानीय संवाददाता',
+    },
+    footer: {
+      company: 'कंपनी',
+      editorial: 'संपादकीय',
+      legal: 'कानूनी',
+      forYou: 'आपके लिए',
+      contactUs: 'हमसे संपर्क करें',
+      aboutUs: 'हमारे बारे में',
+      contact: 'संपर्क',
+      editorialPolicy: 'संपादकीय नीति',
+      ethicsStandards: 'नैतिकता और मानक',
+      correctionsPolicy: 'सुधार नीति',
+      lettersToEditor: 'संपादक को पत्र',
+      privacyPolicy: 'गोपनीयता नीति',
+      termsOfService: 'सेवा की शर्तें',
+      advertiseWithUs: 'विज्ञापन दें',
+      newsletter: 'न्यूज़लेटर',
+      photoGalleries: 'फोटो गैलरी',
+      videos: 'वीडियो',
+      rightsReserved: 'सर्वाधिकार सुरक्षित।',
+      websiteDeveloper: 'वेबसाइट डेवलपर',
+      webDeveloperTitle: 'वेब डेवलपर और डिज़ाइनर',
+      designedAndDevelopedBy: 'डिज़ाइन और विकसित: तेजस',
+      privacy: 'गोपनीयता',
+      terms: 'शर्तें',
+      sitemap: 'साइटमैप',
+      followUsOn: 'हमें फॉलो करें',
+      subscribeOn: 'सब्सक्राइब करें',
+      taglineDefault: 'आपकी स्थानीय खबर, आपकी आवाज़',
+      addressDefault: 'नेलमंगला, बेंगलुरु ग्रामीण और कर्नाटक की विश्वसनीय खबरों का मुख्य स्रोत।',
+    },
+    search: {
+      title: 'समाचार खोजें',
+      subtitle: 'नेलमंगला, कर्नाटक और ताज़ा ख़बरों को खोजें',
+      placeholder: 'लेख, स्थान या विषय खोजें...',
+      searchBtn: 'खोजें',
+      popularTopics: 'लोकप्रिय विषय:',
+      resultsFor: 'खोज परिणाम:',
+      noResultsFound: 'कोई परिणाम नहीं मिला',
+      tryDifferentKeywords: 'कृपया अन्य कीवर्ड के साथ पुनः प्रयास करें।',
+    },
+    sort: {
+      sortBy: 'क्रमबद्ध करें:',
+      latestFirst: 'नवीनतम',
+      mostViewed: 'सर्वाधिक देखे गए',
+      shortestRead: 'कम समय का पठन',
+    },
+    emptyState: {
+      noNewsTitle: 'कोई समाचार नहीं',
+      noNewsDesc: 'नए समाचार प्रकाशित होते ही यहां दिखाई देंगे।',
+      noArticlesTitle: 'कोई लेख नहीं मिला',
+      noArticlesDesc: 'इस श्रेणी में नए लेख जल्द प्रकाशित होंगे।',
+      noResultsTitle: 'कोई परिणाम नहीं मिला',
+      noResultsDesc: 'कृपया अन्य कीवर्ड के साथ प्रयास करें।',
+      noPhotosTitle: 'कोई फोटो गैलरी नहीं',
+      noPhotosDesc: 'नए फोटो संग्रह जल्द उपलब्ध होंगे।',
+      noVideosTitle: 'कोई वीडियो नहीं',
+      noVideosDesc: 'नई वीडियो रिपोर्ट जल्द अपलोड की जाएगी।',
+      noDataTitle: 'जानकारी उपलब्ध नहीं',
+      noDataDesc: 'विवरण उपलब्ध होते ही यहां प्रकाशित किया जाएगा।',
+    },
+    theme: {
+      theme: 'थीम',
+      light: 'लाइट',
+      dark: 'डार्क',
+      system: 'सिस्टम',
+      selectTheme: 'थीम चुनें',
+    },
+    auth: {
+      signIn: 'लॉग इन',
+      signInTitle: 'खाते में लॉग इन करें',
+      signInSubtitle: 'Sign In to Garjane News',
+      signInRoleDesc: 'संवाददाता, संपादक और पाठकों का प्रशासनिक पोर्टल',
+      email: 'ईमेल पता',
+      emailPlaceholder: 'name@example.com',
+      password: 'पासवर्ड',
+      passwordPlaceholder: '••••••••',
+      rememberMe: 'मुझे याद रखें',
+      forgotPassword: 'पासवर्ड भूल गए?',
+      signInButton: 'लॉग इन',
+      signingIn: 'लॉग इन हो रहा है...',
+      newUserPrompt: 'नए उपयोगकर्ता हैं?',
+      createAccount: 'खाता बनाएं',
+      forgotPasswordTitle: 'पासवर्ड रीसेट करें',
+      forgotPasswordSubtitle: 'अपना पंजीकृत ईमेल पता दर्ज करें। हम पासवर्ड रीसेट करने के लिए एक लिंक भेजेंगे।',
+      sendResetLink: 'रीसेट लिंक भेजें',
+      sendingResetLink: 'भेजा जा रहा है...',
+      resetLinkSentTitle: 'अनुरोध स्वीकार किया गया',
+      resetLinkSentDesc: 'यदि यह ईमेल पंजीकृत है, तो पासवर्ड रीसेट लिंक भेज दिया गया है। कृपया अपना इनबॉक्स और स्पैम फ़ोल्डर जांचें।',
+      backToSignIn: 'लॉग इन पर वापस जाएं',
+      resetPasswordTitle: 'नया पासवर्ड सेट करें',
+      resetPasswordSubtitle: 'कृपया अपने खाते के लिए एक नया मजबूत पासवर्ड दर्ज करें।',
+      newPassword: 'नया पासवर्ड',
+      confirmPassword: 'पासवर्ड की पुष्टि करें',
+      saveNewPassword: 'नया पासवर्ड सहेजें',
+      savingNewPassword: 'सहेजा जा रहा है...',
+      passwordResetSuccessTitle: 'पासवर्ड सफलतापूर्वक बदल दिया गया!',
+      passwordResetSuccessDesc: 'आपका पासवर्ड अपडेट कर दिया गया है। अब आप अपने नए पासवर्ड के साथ लॉग इन कर सकते हैं।',
+      signInWithNewPassword: 'नए पासवर्ड के साथ लॉग इन करें',
+      invalidLinkTitle: 'लिंक अमान्य या समाप्त हो गया है',
+      invalidLinkDesc: 'यह पासवर्ड रीसेट लिंक अमान्य है, पहले ही उपयोग किया जा चुका है या समाप्त हो गया है। कृपया एक नया रीसेट लिंक का अनुरोध करें।',
+      requestNewLink: 'नया लिंक अनुरोध करें',
+      passwordsDoNotMatch: 'पासवर्ड मेल नहीं खाते',
+      passwordTooShort: 'पासवर्ड कम से कम 8 वर्णों का होना चाहिए',
+      invalidEmail: 'कृपया एक मान्य ईमेल पता दर्ज करें',
+      connectionError: 'कनेक्शन त्रुटि। कृपया पुनः प्रयास करें।',
+      showPassword: 'पासवर्ड दिखाएं',
+      hidePassword: 'पासवर्ड छुपाएं',
     },
   },
 };

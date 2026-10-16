@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { Expand, Camera } from 'lucide-react';
 import { Lightbox } from './PhotoGallery';
 import { Badge } from '@/components/ui/Badge';
-import type { PhotoGallery, GalleryImage } from '@/types';
+import type { PhotoGallery, GalleryImage, Language } from '@/types';
 
 interface GalleryViewerProps {
   gallery: PhotoGallery & { images: GalleryImage[] };
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 export function GalleryViewer({ gallery, language = 'kn' }: GalleryViewerProps) {

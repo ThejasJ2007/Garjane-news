@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Language } from '@/types';
 
 interface NewsletterProps {
   title?: string;
@@ -18,7 +19,7 @@ interface NewsletterProps {
   buttonTextKn?: string;
   placeholder?: string;
   placeholderKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   className?: string;
   variant?: 'default' | 'inline' | 'footer';
 }

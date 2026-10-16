@@ -13,12 +13,13 @@ export const metadata: Metadata = {
 };
 
 interface EditArticlePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditArticlePage({ params }: EditArticlePageProps) {
+  const { id } = await params;
   const user = await getCurrentUser();
 
   if (!user || !['ADMIN', 'EDITOR', 'REPORTER'].includes(user.role)) {
@@ -26,7 +27,7 @@ export default async function EditArticlePage({ params }: EditArticlePageProps) 
   }
 
   const [article, categories, locations] = await Promise.all([
-    getArticleById(params.id),
+    getArticleById(id),
     getCategories(),
     getLocations(),
   ]);

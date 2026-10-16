@@ -7,9 +7,11 @@ import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
 import { loginAction } from '@/actions/auth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export default function LoginPage() {
       if (err?.message?.includes('NEXT_REDIRECT') || err?.digest?.startsWith('NEXT_REDIRECT')) {
         return;
       }
-      setError('ಸಂಪರ್ಕ ದೋಷ ಸಂಭವಿಸಿದೆ. / Connection error occurred.');
+      setError(t.auth.connectionError);
       setIsLoading(false);
     }
   }
@@ -40,13 +42,17 @@ export default function LoginPage() {
             <span className="text-garjane-primary-foreground font-heading font-bold text-3xl">ಗ</span>
           </div>
           <h1 className="font-heading font-bold text-headline-3 text-garjane-text-primary dark:text-garjane-text-inverse">
-            ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ
+            {language === 'kn' ? 'ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ' : language === 'hi' ? 'खाते में लॉग इन करें' : 'Sign In to Your Account'}
           </h1>
           <p className="mt-1 text-headline-4 text-garjane-text-secondary dark:text-garjane-text-muted">
             Sign In to Garjane News
           </p>
           <p className="mt-2 text-body-sm text-garjane-text-muted">
-            ವರದಿಗಾರರು, ಸಂಪಾದಕರು ಮತ್ತು ಚಂದಾದಾರರ ಆಡಳಿತ ತಾಣ
+            {language === 'kn'
+              ? 'ವರದಿಗಾರರು, ಸಂಪಾದಕರು ಮತ್ತು ಚಂದಾದಾರರ ಆಡಳಿತ ತಾಣ'
+              : language === 'hi'
+              ? 'संवाददाता, संपादक और पाठकों का प्रशासनिक पोर्टल'
+              : 'Admin portal for reporters, editors, and subscribers'}
           </p>
         </div>
 
@@ -60,7 +66,7 @@ export default function LoginPage() {
         <form action={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="email">
-              ಇಮೇಲ್ ವಿಳಾಸ / Email Address
+              {language === 'kn' ? 'ಇಮೇಲ್ ವಿಳಾಸ / Email Address' : language === 'hi' ? 'ईमेल पता / Email Address' : 'Email Address'}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
@@ -72,8 +78,9 @@ export default function LoginPage() {
                 type="email"
                 required
                 autoComplete="email"
+                inputMode="email"
                 placeholder="name@example.com"
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body min-h-[48px]"
               />
             </div>
           </div>
@@ -81,7 +88,7 @@ export default function LoginPage() {
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted" htmlFor="password">
-                ಪಾಸ್‌ವರ್ಡ್ / Password
+                {language === 'kn' ? 'ಪಾಸ್‌ವರ್ಡ್ / Password' : language === 'hi' ? 'पासवर्ड / Password' : 'Password'}
               </label>
             </div>
             <div className="relative">
@@ -95,38 +102,65 @@ export default function LoginPage() {
                 required
                 autoComplete="current-password"
                 placeholder="••••••••"
-                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body"
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-garjane-border-light dark:border-garjane-border-dark bg-garjane-background-light/50 dark:bg-garjane-background-dark/50 text-garjane-text-primary dark:text-garjane-text-inverse focus:outline-none focus:ring-2 focus:ring-garjane-primary/20 focus:border-garjane-primary text-body min-h-[48px]"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-garjane-text-muted hover:text-garjane-text-primary"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-garjane-text-muted hover:text-garjane-text-primary min-w-[44px] justify-center"
+                aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
+                aria-pressed={showPassword}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-body-sm">
-            <label className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center justify-between text-body-sm flex-wrap gap-2 pt-1">
+            <label className="flex items-center gap-2 cursor-pointer select-none py-1">
               <input
                 type="checkbox"
                 name="rememberMe"
-                className="rounded border-garjane-border-light dark:border-garjane-border-dark text-garjane-primary focus:ring-garjane-primary/20"
+                className="rounded border-garjane-border-light dark:border-garjane-border-dark text-garjane-primary focus:ring-garjane-primary/20 w-4 h-4 cursor-pointer"
               />
-              <span className="text-garjane-text-secondary dark:text-garjane-text-muted">ನನ್ನನ್ನು ನೆನಪಿಡಿ (Remember me)</span>
+              <span className="text-garjane-text-secondary dark:text-garjane-text-muted">
+                {language === 'kn'
+                  ? 'ನನ್ನನ್ನು ನೆನಪಿಡಿ'
+                  : language === 'hi'
+                  ? 'मुझे याद रखें'
+                  : 'Remember me'}
+              </span>
             </label>
+
+            <Link
+              id="forgot-password-link"
+              href="/forgot-password"
+              className="text-garjane-primary hover:text-garjane-primary-hover dark:text-red-400 dark:hover:text-red-300 font-semibold hover:underline text-body-sm transition-colors py-1.5 px-1 inline-flex items-center min-h-[44px]"
+            >
+              {language === 'kn'
+                ? 'ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?'
+                : language === 'hi'
+                ? 'पासवर्ड भूल गए?'
+                : 'Forgot Password?'}
+            </Link>
           </div>
 
           <Button
             type="submit"
-            className="w-full py-3 text-body font-medium flex items-center justify-center gap-2"
+            className="w-full py-3 text-body font-medium flex items-center justify-center gap-2 min-h-[48px]"
             disabled={isLoading}
           >
-            {isLoading ? 'ಲಾಗಿನ್ ಆಗುತ್ತಿದೆ... / Signing In...' : (
+            {isLoading ? (
+              <span>{t.auth.signingIn}</span>
+            ) : (
               <>
-                <span>ಲಾಗಿನ್ / Sign In</span>
+                <span>
+                  {language === 'kn'
+                    ? 'ಲಾಗಿನ್ / Sign In'
+                    : language === 'hi'
+                    ? 'लॉग इन / Sign In'
+                    : 'Sign In'}
+                </span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -134,9 +168,17 @@ export default function LoginPage() {
 
           <div className="text-center pt-2 border-t border-garjane-border-light dark:border-garjane-border-dark">
             <p className="text-body-sm text-garjane-text-muted">
-              ಹೊಸ ಬಳಕೆದಾರರೇ?{' '}
+              {language === 'kn'
+                ? 'ಹೊಸ ಬಳಕೆದಾರರೇ? '
+                : language === 'hi'
+                ? 'नए उपयोगकर्ता हैं? '
+                : 'New user? '}
               <Link href="/register" className="text-garjane-primary font-medium hover:underline">
-                ಖಾತೆ ತೆರೆಯಿರಿ / Create Account
+                {language === 'kn'
+                  ? 'ಖಾತೆ ತೆರೆಯಿರಿ / Create Account'
+                  : language === 'hi'
+                  ? 'खाता बनाएं / Create Account'
+                  : 'Create Account'}
               </Link>
             </p>
           </div>

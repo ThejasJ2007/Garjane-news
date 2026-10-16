@@ -7,11 +7,11 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { ArticleWithRelations, ArticleWithRelationsMinimal } from '@/types';
+import type { ArticleWithRelations, ArticleWithRelationsMinimal, Language } from '@/types';
 
 interface HeroStoryProps {
   article: ArticleWithRelations | ArticleWithRelationsMinimal;
-  language?: 'kn' | 'en';
+  language?: Language;
   priority?: boolean;
 }
 

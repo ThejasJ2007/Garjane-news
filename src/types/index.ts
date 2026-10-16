@@ -127,7 +127,7 @@ export type NavItem = {
   icon?: string;
 };
 
-export type Language = 'kn' | 'en';
+export type Language = 'kn' | 'en' | 'hi';
 
 export type Theme = 'light' | 'dark' | 'system';
 

@@ -8,12 +8,12 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { PhotoGallery, GalleryImage } from '@/types';
+import type { PhotoGallery, GalleryImage, Language } from '@/types';
 
 interface PhotoGalleryCardProps {
   gallery: PhotoGallery & { images: GalleryImage[] };
   variant?: 'default' | 'featured' | 'compact';
-  language?: 'kn' | 'en';
+  language?: Language;
   priority?: boolean;
 }
 
@@ -207,7 +207,7 @@ interface LightboxProps {
   images: GalleryImage[];
   initialIndex?: number;
   galleryTitle?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 export function Lightbox({ isOpen, onClose, images, initialIndex = 0, galleryTitle, language: propLanguage }: LightboxProps) {

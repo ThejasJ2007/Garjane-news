@@ -1,4 +1,5 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, decodeJwt } from 'jose';
+import crypto from 'crypto';
 import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 import { UserSession } from '@/types';
@@ -169,4 +170,78 @@ export function getSessionCookieOptions() {
     maxAge: 60 * 60 * 24 * 7,
     path: '/',
   };
+}
+
+export function getResetPasswordSecret(passwordHash: string): Uint8Array {
+  const baseSecret = process.env.JWT_SECRET?.trim() || 'dev-jwt-secret-key-min-32-characters-garjane';
+  const combined = `${baseSecret}:${passwordHash}`;
+  return crypto.createHash('sha256').update(combined).digest();
+}
+
+export async function createPasswordResetToken(user: {
+  id: string;
+  email: string;
+  passwordHash: string;
+}): Promise<string> {
+  const secret = getResetPasswordSecret(user.passwordHash);
+  const token = await new SignJWT({
+    sub: user.id,
+    email: user.email,
+    purpose: 'password-reset',
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('1h')
+    .sign(secret);
+
+  return token;
+}
+
+export interface VerifyResetTokenResult {
+  valid: boolean;
+  error?: 'invalid' | 'expired' | 'already_used' | 'user_not_found';
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export async function verifyPasswordResetToken(token: string): Promise<VerifyResetTokenResult> {
+  if (!token || typeof token !== 'string') {
+    return { valid: false, error: 'invalid' };
+  }
+
+  try {
+    const claims = decodeJwt(token);
+    if (!claims || claims.purpose !== 'password-reset' || !claims.sub || typeof claims.sub !== 'string') {
+      return { valid: false, error: 'invalid' };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: claims.sub },
+      select: { id: true, email: true, name: true, passwordHash: true, isActive: true },
+    });
+
+    if (!user || !user.isActive) {
+      return { valid: false, error: 'user_not_found' };
+    }
+
+    const secret = getResetPasswordSecret(user.passwordHash);
+    await jwtVerify(token, secret);
+
+    return {
+      valid: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    };
+  } catch (err: any) {
+    if (err?.code === 'ERR_JWT_EXPIRED') {
+      return { valid: false, error: 'expired' };
+    }
+    return { valid: false, error: 'already_used' };
+  }
 }

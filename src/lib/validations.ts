@@ -11,7 +11,20 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters').max(100),
   confirmPassword: z.string(),
-  language: z.enum(['kn', 'en']).default('kn'),
+  language: z.enum(['kn', 'en', 'hi']).default('kn'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Passwords do not match',
+  path: ['confirmPassword'],
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Reset token is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(100),
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -123,7 +136,7 @@ export const breakingNewsSchema = z.object({
 export const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().max(100).optional(),
-  language: z.enum(['kn', 'en']).default('kn'),
+  language: z.enum(['kn', 'en', 'hi']).default('kn'),
 });
 
 export const commentSchema = z.object({
@@ -188,5 +201,7 @@ export type CommentInput = z.infer<typeof commentSchema>;
 export type ContactInput = z.infer<typeof contactSchema>;
 export type UserUpdateInput = z.infer<typeof userUpdateSchema>;
 export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type SearchInput = z.infer<typeof searchSchema>;
 export type PaginationInput = z.infer<typeof paginationSchema>;

@@ -7,12 +7,12 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useLanguage } from '@/contexts/LanguageContext';
-import type { VideoWithRelations } from '@/types';
+import type { VideoWithRelations, Language } from '@/types';
 
 interface VideoCardProps {
   video: VideoWithRelations;
   variant?: 'default' | 'featured' | 'compact';
-  language?: 'kn' | 'en';
+  language?: Language;
   priority?: boolean;
 }
 

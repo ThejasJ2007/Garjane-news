@@ -12,3 +12,21 @@ dev-server-stderr.log
 *.log
 runtime-server.log
 tsconfig.tsbuildinfo
+cookies.txt
+.cookie
+.vercel
+.supabase
+*.pem
+*.key
+
+# Verification artifacts (local-only evidence, never commit)
+.audit*
+.db-check*
+.schema*
+.tsc*
+.lint*
+.e2e*
+.autoglm*
+.next-build-live.txt
+schema-verify-result.txt
+

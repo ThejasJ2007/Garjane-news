@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Language } from '@/types';
 
 interface SectionHeaderProps {
   title: string;
@@ -20,7 +21,7 @@ interface SectionHeaderProps {
   viewAllTextKn?: string;
   action?: React.ReactNode;
   className?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
 }
 
 export function SectionHeader({
@@ -91,7 +92,7 @@ interface CategoryNavProps {
     _count?: { articles: number };
   }>;
   activeCategory?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   className?: string;
 }
 

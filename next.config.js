@@ -69,7 +69,23 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.in',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fonts.gstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fonts.googleapis.com',
       },
     ],
     formats: ['image/avif', 'image/webp'],

@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { Suspense, useState, useTransition } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Mail, CheckCircle2, BellRing, Sparkles, AlertCircle } from 'lucide-react';
 import { subscribeNewsletterAction, unsubscribeNewsletterAction } from '@/actions/auth';
 import { Button } from '@/components/ui/Button';
 
-export default function NewsletterPage({
-  searchParams,
-}: {
-  searchParams?: { token?: string; action?: string };
-}) {
+function NewsletterContent() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<{ success?: boolean; message?: string; error?: string } | null>(null);
 
@@ -21,10 +20,10 @@ export default function NewsletterPage({
     });
   }
 
-  async function handleUnsubscribe(token: string) {
+  async function handleUnsubscribe(tok: string) {
     setStatus(null);
     startTransition(async () => {
-      const res = await unsubscribeNewsletterAction(token);
+      const res = await unsubscribeNewsletterAction(tok);
       setStatus(res);
     });
   }
@@ -45,7 +44,7 @@ export default function NewsletterPage({
         </div>
 
         {/* Unsubscribe banner if token provided in URL */}
-        {searchParams?.token && (
+        {token && (
           <div className="mb-8 p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-center">
             <h3 className="text-headline-4 font-semibold text-amber-900 dark:text-amber-200 mb-2">
               ಚಂದಾದಾರಿಕೆ ರದ್ದುಗೊಳಿಸಬೇಕೇ? / Unsubscribe?
@@ -55,7 +54,7 @@ export default function NewsletterPage({
             </p>
             <Button
               variant="outline"
-              onClick={() => handleUnsubscribe(searchParams.token!)}
+              onClick={() => handleUnsubscribe(token)}
               disabled={isPending}
             >
               ಚಂದಾದಾರಿಕೆ ರದ್ದು ಮಾಡಿ / Unsubscribe
@@ -145,3 +144,12 @@ export default function NewsletterPage({
     </div>
   );
 }
+
+export default function NewsletterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center">Loading...</div>}>
+      <NewsletterContent />
+    </Suspense>
+  );
+}
+

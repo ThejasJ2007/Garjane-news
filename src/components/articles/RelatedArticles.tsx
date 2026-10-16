@@ -6,13 +6,13 @@ import { Clock, Eye, MapPin, Tag, Flame, Star, Zap, Radio, ChevronRight } from '
 import { formatRelativeTimeKn, cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
-import type { ArticleWithRelations } from '@/types';
+import type { ArticleWithRelations, Language } from '@/types';
 
 interface RelatedArticlesProps {
   articles: ArticleWithRelations[];
   title?: string;
   titleKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   variant?: 'grid' | 'list' | 'sidebar';
   limit?: number;
   showAuthor?: boolean;
@@ -139,7 +139,7 @@ function ArticleCardGridItem({
 }: {
   article: ArticleWithRelations;
   index: number;
-  language: 'kn' | 'en';
+  language: Language;
   showAuthor: boolean;
   showStats: boolean;
   showCategory: boolean;
@@ -295,7 +295,7 @@ function ArticleCardListItem({
   showLocation,
 }: {
   article: ArticleWithRelations;
-  language: 'kn' | 'en';
+  language: Language;
   showAuthor: boolean;
   showStats: boolean;
   showCategory: boolean;
@@ -414,7 +414,7 @@ function ArticleCardSidebarItem({
 }: {
   article: ArticleWithRelations;
   rank: number;
-  language: 'kn' | 'en';
+  language: Language;
 }) {
   const displayHeadline = language === 'kn' && article.headlineKn ? article.headlineKn : article.headline;
 
@@ -461,7 +461,7 @@ interface RelatedArticlesCarouselProps {
   articles: ArticleWithRelations[];
   title?: string;
   titleKn?: string;
-  language?: 'kn' | 'en';
+  language?: Language;
   autoPlay?: boolean;
   className?: string;
 }
