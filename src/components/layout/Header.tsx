@@ -138,11 +138,11 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
               >
                 <div className="relative flex items-center justify-center overflow-hidden rounded-[10px] sm:rounded-[12px] shadow-sm transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98] h-10 sm:h-11 lg:h-12 aspect-[1.08/1] bg-transparent">
                   <Image
-                    src="/images/Garjane-news-logo.png"
+                    src="/images/Garjane-news-logo.png?v=3"
                     alt={brandDisplayName}
                     fill
                     sizes="(max-width: 640px) 48px, (max-width: 1024px) 54px, 60px"
-                    className="object-contain block p-0.5 rounded-[10px] sm:rounded-[12px]"
+                    className="object-cover block p-0.5 rounded-[10px] sm:rounded-[12px]"
                     priority
                   />
                 </div>
@@ -292,11 +292,11 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src="/images/Garjane-news-logo.png"
+              src="/images/Garjane-news-logo.png?v=3"
               alt="Garjane News Logo"
               width={1520}
               height={1851}
-              className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-2xl shadow-2xl"
+              className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-cover rounded-2xl shadow-2xl"
               priority
             />
           </div>

@@ -52,11 +52,11 @@ export default function ForgotPasswordPage() {
         <div className="text-center">
           <div className="relative h-14 aspect-[1.08/1] mx-auto mb-4">
             <Image
-              src="/images/Garjane-news-logo.png"
+              src="/images/Garjane-news-logo.png?v=3"
               alt="Garjane News Logo"
               fill
               sizes="64px"
-              className="object-contain"
+              className="object-cover"
               priority
             />
           </div>

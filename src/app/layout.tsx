@@ -158,7 +158,7 @@ export default async function RootLayout({
               name: siteSettings?.siteName || 'Garjane News',
               alternateName: siteSettings?.siteNameKn || 'ಗರ್ಜನೆ ನ್ಯೂಸ್',
               url: process.env.NEXT_PUBLIC_APP_URL,
-              logo: `${process.env.NEXT_PUBLIC_APP_URL}/images/Garjane-news-logo.png`,
+              logo: `${process.env.NEXT_PUBLIC_APP_URL}/images/Garjane-news-logo.png?v=3`,
               sameAs: siteSettings?.socialLinks ? Object.values(siteSettings.socialLinks as Record<string, string>).filter(Boolean) : [],
               description: siteSettings?.description || 'Your Local News, Your Voice',
             }),

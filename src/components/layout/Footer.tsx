@@ -166,11 +166,11 @@ export function Footer({ siteSettings }: FooterProps) {
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-5" aria-label={t.common.brandName}>
               <Image
-                src="/images/Garjane-news-logo.png"
+                src="/images/Garjane-news-logo.png?v=3"
                 alt={t.common.brandName}
                 width={48}
                 height={48}
-                className="w-10 h-10 lg:w-12 lg:h-12 object-contain flex-shrink-0"
+                className="w-10 h-10 lg:w-12 lg:h-12 object-cover flex-shrink-0"
                 priority
               />
               <span className={cn(
