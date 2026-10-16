@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Lock, Eye, EyeOff, CheckCircle2, AlertTriangle, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { verifyResetTokenAction, resetPasswordAction } from '@/actions/auth';
@@ -203,8 +204,15 @@ function ResetPasswordContent() {
       <div className="max-w-md w-full space-y-8 bg-garjane-background-card dark:bg-garjane-background-cardDark p-6 sm:p-8 rounded-2xl border border-garjane-border-light dark:border-garjane-border-dark shadow-card-elevated">
         {/* Brand Header */}
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-garjane-primary flex items-center justify-center mx-auto mb-4 shadow-lg shadow-garjane-primary/20">
-            <span className="text-garjane-primary-foreground font-heading font-bold text-3xl">ಗ</span>
+          <div className="relative h-14 aspect-[1.08/1] mx-auto mb-4">
+            <Image
+              src="/images/Garjane-news-logo.png"
+              alt="Garjane News Logo"
+              fill
+              sizes="64px"
+              className="object-contain"
+              priority
+            />
           </div>
           <h1 className="font-heading font-bold text-headline-3 text-garjane-text-primary dark:text-garjane-text-inverse">
             {t.auth.resetPasswordTitle}
