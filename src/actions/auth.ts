@@ -258,11 +258,14 @@ export async function unsubscribeNewsletterAction(token: string) {
 }
 
 function getBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
+  if (process.env.NEXT_PUBLIC_APP_URL?.trim()) {
+    return process.env.NEXT_PUBLIC_APP_URL.trim().replace(/\/$/, '');
   }
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, '')}`;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim()) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.trim().replace(/\/$/, '')}`;
+  }
+  if (process.env.VERCEL_URL?.trim()) {
+    return `https://${process.env.VERCEL_URL.trim().replace(/\/$/, '')}`;
   }
   if (process.env.NODE_ENV === 'production') {
     return 'https://garjane-news.vercel.app';
@@ -300,12 +303,26 @@ export async function forgotPasswordAction(formData: FormData) {
       const baseUrl = getBaseUrl();
       const resetUrl = `${baseUrl}/reset-password?token=${encodeURIComponent(resetToken)}`;
 
-      await sendPasswordResetEmail({
+      const emailResult = await sendPasswordResetEmail({
         to: user.email,
         name: user.name,
         resetUrl,
         language: rawLang,
       });
+
+      if (!emailResult.success) {
+        console.error(
+          `[AUTH_ACTION] [DIAGNOSTIC] Password reset email not dispatched for user ${user.id} | Category: ${emailResult.category} | Reason: ${emailResult.error || 'unspecified'}`
+        );
+      } else {
+        console.log(
+          `[AUTH_ACTION] [DIAGNOSTIC] Password reset email accepted by mail provider for user ${user.id} | Category: ${emailResult.category} | MessageId: ${emailResult.messageId || 'unknown'}`
+        );
+      }
+    } else {
+      console.log(
+        `[AUTH_ACTION] [DIAGNOSTIC] Password reset requested for unregistered or inactive email`
+      );
     }
 
     // Security best practice: Return generic confirmation regardless of email existence to prevent user enumeration

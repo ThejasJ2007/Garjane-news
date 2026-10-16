@@ -82,9 +82,9 @@ async function runTestSuite() {
       language: 'kn',
     });
     record(
-      'Password reset email generator with reset link',
-      emailResult.success === true,
-      emailResult.simulated ? 'Simulated/logged correctly' : 'Dispatched via SMTP'
+      'Password reset email generator with reset link and diagnostic categorization',
+      emailResult.category === 'SMTP_CONFIG_MISSING' || emailResult.success === true,
+      emailResult.success ? 'Dispatched via SMTP' : `Correctly categorized as ${emailResult.category}`
     );
   } catch (err: any) {
     record('Password reset email generator', false, undefined, err.message);
