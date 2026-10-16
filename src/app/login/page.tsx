@@ -42,7 +42,7 @@ export default function LoginPage() {
             <span className="text-garjane-primary-foreground font-heading font-bold text-3xl">ಗ</span>
           </div>
           <h1 className="font-heading font-bold text-headline-3 text-garjane-text-primary dark:text-garjane-text-inverse">
-            {language === 'kn' ? 'ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ' : language === 'hi' ? 'खाते में लॉग इन करें' : 'Sign In to Your Account'}
+            {language === 'kn' ? 'ಖಾತೆಗೆ ಲಾಗಿನ್ ಮಾಡಿ' : 'Sign In to Your Account'}
           </h1>
           <p className="mt-1 text-headline-4 text-garjane-text-secondary dark:text-garjane-text-muted">
             Sign In to Garjane News
@@ -50,8 +50,6 @@ export default function LoginPage() {
           <p className="mt-2 text-body-sm text-garjane-text-muted">
             {language === 'kn'
               ? 'ವರದಿಗಾರರು, ಸಂಪಾದಕರು ಮತ್ತು ಚಂದಾದಾರರ ಆಡಳಿತ ತಾಣ'
-              : language === 'hi'
-              ? 'संवाददाता, संपादक और पाठकों का प्रशासनिक पोर्टल'
               : 'Admin portal for reporters, editors, and subscribers'}
           </p>
         </div>
@@ -66,7 +64,7 @@ export default function LoginPage() {
         <form action={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted mb-1.5" htmlFor="email">
-              {language === 'kn' ? 'ಇಮೇಲ್ ವಿಳಾಸ / Email Address' : language === 'hi' ? 'ईमेल पता / Email Address' : 'Email Address'}
+              {language === 'kn' ? 'ಇಮೇಲ್ ವಿಳಾಸ / Email Address' : 'Email Address'}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-garjane-text-muted">
@@ -88,7 +86,7 @@ export default function LoginPage() {
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-body-sm font-medium text-garjane-text-secondary dark:text-garjane-text-muted" htmlFor="password">
-                {language === 'kn' ? 'ಪಾಸ್‌ವರ್ಡ್ / Password' : language === 'hi' ? 'पासवर्ड / Password' : 'Password'}
+                {language === 'kn' ? 'ಪಾಸ್‌ವರ್ಡ್ / Password' : 'Password'}
               </label>
             </div>
             <div className="relative">
@@ -126,8 +124,6 @@ export default function LoginPage() {
               <span className="text-garjane-text-secondary dark:text-garjane-text-muted">
                 {language === 'kn'
                   ? 'ನನ್ನನ್ನು ನೆನಪಿಡಿ'
-                  : language === 'hi'
-                  ? 'मुझे याद रखें'
                   : 'Remember me'}
               </span>
             </label>
@@ -139,8 +135,6 @@ export default function LoginPage() {
             >
               {language === 'kn'
                 ? 'ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?'
-                : language === 'hi'
-                ? 'पासवर्ड भूल गए?'
                 : 'Forgot Password?'}
             </Link>
           </div>
@@ -157,8 +151,6 @@ export default function LoginPage() {
                 <span>
                   {language === 'kn'
                     ? 'ಲಾಗಿನ್ / Sign In'
-                    : language === 'hi'
-                    ? 'लॉग इन / Sign In'
                     : 'Sign In'}
                 </span>
                 <ArrowRight className="w-4 h-4" />
@@ -170,14 +162,10 @@ export default function LoginPage() {
             <p className="text-body-sm text-garjane-text-muted">
               {language === 'kn'
                 ? 'ಹೊಸ ಬಳಕೆದಾರರೇ? '
-                : language === 'hi'
-                ? 'नए उपयोगकर्ता हैं? '
                 : 'New user? '}
               <Link href="/register" className="text-garjane-primary font-medium hover:underline">
                 {language === 'kn'
                   ? 'ಖಾತೆ ತೆರೆಯಿರಿ / Create Account'
-                  : language === 'hi'
-                  ? 'खाता बनाएं / Create Account'
                   : 'Create Account'}
               </Link>
             </p>

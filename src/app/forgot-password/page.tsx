@@ -108,8 +108,6 @@ export default function ForgotPasswordPage() {
               >
                 {language === 'kn'
                   ? 'ಮತ್ತೊಂದು ಇಮೇಲ್ ಪ್ರಯತ್ನಿಸಿ'
-                  : language === 'hi'
-                  ? 'दूसरा ईमेल आज़माएं'
                   : 'Try another email'}
               </button>
             </div>

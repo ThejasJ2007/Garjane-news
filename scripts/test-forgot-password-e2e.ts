@@ -59,14 +59,13 @@ async function runTestSuite() {
 
   // --- UNIT TEST 1: Translations ---
   try {
-    const hasKn = Boolean(translations.kn.auth.forgotPassword && translations.kn.auth.resetPasswordTitle);
-    const hasHi = Boolean(translations.hi.auth.forgotPassword && translations.hi.auth.resetPasswordTitle);
-    const hasEn = Boolean(translations.en.auth.forgotPassword && translations.en.auth.resetPasswordTitle);
-    const passed = hasKn && hasHi && hasEn;
+    const hasKn = Boolean(translations.kn.auth.forgotPassword && translations.kn.auth.resetPasswordTitle && translations.kn.auth.resetLinkSentTitle);
+    const hasEn = Boolean(translations.en.auth.forgotPassword && translations.en.auth.resetPasswordTitle && translations.en.auth.resetLinkSentTitle);
+    const passed = hasKn && hasEn;
     record(
-      'Multi-language translation coverage (KN, HI, EN)',
+      'Multi-language translation coverage (KN, EN)',
       passed,
-      `KN: "${translations.kn.auth.forgotPassword}", HI: "${translations.hi.auth.forgotPassword}", EN: "${translations.en.auth.forgotPassword}"`
+      `KN: "${translations.kn.auth.forgotPassword}", EN: "${translations.en.auth.forgotPassword}"`
     );
   } catch (err: any) {
     record('Multi-language translation coverage', false, undefined, err.message);

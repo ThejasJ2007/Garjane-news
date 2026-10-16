@@ -58,9 +58,7 @@ export function Header({ breakingNews = [], user, menuItems }: HeaderProps) {
   const brandDisplayName =
     language === 'kn'
       ? 'ಗರ್ಜನೆ ನ್ಯೂಸ್'
-      : (language as string) === 'hi'
-        ? 'गर्जने न्यूज़'
-        : 'Garjane News';
+      : 'Garjane News';
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);

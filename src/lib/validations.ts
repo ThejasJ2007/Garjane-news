@@ -11,7 +11,7 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters').max(100),
   confirmPassword: z.string(),
-  language: z.enum(['kn', 'en', 'hi']).default('kn'),
+  language: z.enum(['kn', 'en']).default('kn'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -136,7 +136,7 @@ export const breakingNewsSchema = z.object({
 export const newsletterSchema = z.object({
   email: z.string().email('Invalid email address'),
   name: z.string().max(100).optional(),
-  language: z.enum(['kn', 'en', 'hi']).default('kn'),
+  language: z.enum(['kn', 'en']).default('kn'),
 });
 
 export const commentSchema = z.object({

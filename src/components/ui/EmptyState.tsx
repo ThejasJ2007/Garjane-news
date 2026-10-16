@@ -123,21 +123,21 @@ export type EmptyStateVariant = keyof typeof illustrations;
 type MultilingualText = Record<Language, string>;
 
 const defaultTitles: Record<EmptyStateVariant, MultilingualText> = {
-  news: { kn: 'ಸುದ್ದಿಗಳಿಲ್ಲ', en: 'No news yet', hi: 'कोई समाचार नहीं' },
-  search: { kn: 'ಯಾವುದೇ ಫಲಿತಾಂಶ ಕಂಡುಬಂದಿಲ್ಲ', en: 'No results found', hi: 'कोई परिणाम नहीं मिला' },
-  gallery: { kn: 'ಫೋಟೋಗಳಿಲ್ಲ', en: 'No photos yet', hi: 'कोई फोटो नहीं' },
-  video: { kn: 'ವೀಡಿಯೊಗಳಿಲ್ಲ', en: 'No videos yet', hi: 'कोई वीडियो नहीं' },
-  articles: { kn: 'ಲೇಖನಗಳಿಲ್ಲ', en: 'No articles yet', hi: 'कोई लेख नहीं' },
-  dashboard: { kn: 'ಮಾಹಿತಿ ಇಲ್ಲ', en: 'Nothing to show', hi: 'कोई जानकारी नहीं' },
+  news: { kn: 'ಸುದ್ದಿಗಳಿಲ್ಲ', en: 'No news yet' },
+  search: { kn: 'ಯಾವುದೇ ಫಲಿತಾಂಶ ಕಂಡುಬಂದಿಲ್ಲ', en: 'No results found' },
+  gallery: { kn: 'ಫೋಟೋಗಳಿಲ್ಲ', en: 'No photos yet' },
+  video: { kn: 'ವೀಡಿಯೊಗಳಿಲ್ಲ', en: 'No videos yet' },
+  articles: { kn: 'ಲೇಖನಗಳಿಲ್ಲ', en: 'No articles yet' },
+  dashboard: { kn: 'ಮಾಹಿತಿ ಇಲ್ಲ', en: 'Nothing to show' },
 };
 
 const defaultDescriptions: Record<EmptyStateVariant, MultilingualText> = {
-  news: { kn: 'ಹೊಸ ಸುದ್ದಿಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.', en: 'New stories will appear here once published.', hi: 'नए समाचार प्रकाशित होते ही यहां दिखाई देंगे।' },
-  search: { kn: 'ದಯವಿಟ್ಟು ಬೇರೆ ಪದಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.', en: 'Please try different keywords.', hi: 'कृपया अन्य कीवर्ड आज़माएं।' },
-  gallery: { kn: 'ಹೊಸ ಫೋಟೋ ಗ್ಯಾಲರಿಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತವೆ.', en: 'New photo galleries will be added soon.', hi: 'नई फोटो गैलरी जल्द उपलब्ध होगी।' },
-  video: { kn: 'ಹೊಸ ವೀಡಿಯೊಗಳು ಶೀಘ್ರದಲ್ಲೇ ಪ್ರಕಟವಾಗುತ್ತವೆ.', en: 'New videos will be published soon.', hi: 'नए वीडियो जल्द प्रकाशित होंगे।' },
-  articles: { kn: 'ಈ ಸ್ಥಳದಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಲಭ್ಯವಿಲ್ಲ.', en: 'No articles are available here yet.', hi: 'यहां अभी कोई लेख उपलब्ध नहीं है।' },
-  dashboard: { kn: 'ಮಾಹಿತಿ ಲಭ್ಯವಾದಾಗ ಇಲ್ಲಿ ತೋರಿಸಲಾಗುತ್ತದೆ.', en: 'Data will be shown here when available.', hi: 'विवरण उपलब्ध होते ही यहां दिखाया जाएगा।' },
+  news: { kn: 'ಹೊಸ ಸುದ್ದಿಗಳು ಪ್ರಕಟವಾದಾಗ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.', en: 'New stories will appear here once published.' },
+  search: { kn: 'ದಯವಿಟ್ಟು ಬೇರೆ ಪದಗಳನ್ನು ಪ್ರಯತ್ನಿಸಿ.', en: 'Please try different keywords.' },
+  gallery: { kn: 'ಹೊಸ ಫೋಟೋ ಗ್ಯಾಲರಿಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರುತ್ತವೆ.', en: 'New photo galleries will be added soon.' },
+  video: { kn: 'ಹೊಸ ವೀಡಿಯೊಗಳು ಶೀಘ್ರದಲ್ಲೇ ಪ್ರಕಟವಾಗುತ್ತವೆ.', en: 'New videos will be published soon.' },
+  articles: { kn: 'ಈ ಸ್ಥಳದಲ್ಲಿ ಯಾವುದೇ ಲೇಖನಗಳು ಲಭ್ಯವಿಲ್ಲ.', en: 'No articles are available here yet.' },
+  dashboard: { kn: 'ಮಾಹಿತಿ ಲಭ್ಯವಾದಾಗ ಇಲ್ಲಿ ತೋರಿಸಲಾಗುತ್ತದೆ.', en: 'Data will be shown here when available.' },
 };
 
 export interface EmptyStateProps {

@@ -46,7 +46,7 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
     setIsOpen(false);
   };
 
-  const currentLabel = language === 'kn' ? 'ಕನ್ನಡ' : language === 'hi' ? 'हिन्दी' : 'English';
+  const currentLabel = language === 'kn' ? 'ಕನ್ನಡ' : 'English';
 
   return (
     <div ref={containerRef} className={cn('relative inline-block text-left', className)}>
@@ -59,8 +59,6 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
         aria-label={
           language === 'kn'
             ? 'ಭಾಷೆ ಬದಲಿಸಿ: ಪ್ರಸ್ತುತ ಕನ್ನಡ'
-            : language === 'hi'
-            ? 'भाषा बदलें: वर्तमान हिन्दी'
             : 'Change language: Currently English'
         }
         className={cn(
@@ -110,25 +108,6 @@ export function LanguageSwitcher({ className, showIcon = true }: LanguageSwitche
           >
             <span>ಕನ್ನಡ</span>
             {language === 'kn' && (
-              <Check className="w-3.5 h-3.5 text-garjane-primary dark:text-garjane-primary-light" aria-hidden="true" />
-            )}
-          </button>
-
-          {/* Hindi Option */}
-          <button
-            type="button"
-            role="option"
-            aria-selected={language === 'hi'}
-            onClick={() => selectLanguage('hi')}
-            className={cn(
-              'flex items-center justify-between w-full px-3 py-2 rounded-lg text-xs font-semibold transition-colors mt-0.5',
-              language === 'hi'
-                ? 'bg-garjane-primary/10 text-garjane-primary dark:text-garjane-primary-light font-bold'
-                : 'text-garjane-text-primary dark:text-garjane-text-inverse hover:bg-garjane-primary/5 dark:hover:bg-white/5'
-            )}
-          >
-            <span>हिन्दी</span>
-            {language === 'hi' && (
               <Check className="w-3.5 h-3.5 text-garjane-primary dark:text-garjane-primary-light" aria-hidden="true" />
             )}
           </button>

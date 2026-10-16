@@ -255,7 +255,6 @@ export async function sendPasswordResetEmail({
 
   const subjectMap: Record<Language, string> = {
     kn: 'ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ - ಗರ್ಜನೆ ನ್ಯೂಸ್ / Password Reset Link - Garjane News',
-    hi: 'पासवर्ड रीसेट लिंक - गर्जने न्यूज़ / Password Reset Link - Garjane News',
     en: 'Password Reset Request - Garjane News',
   };
 
@@ -264,13 +263,9 @@ export async function sendPasswordResetEmail({
   const greeting = name
     ? language === 'kn'
       ? `ನಮಸ್ಕಾರ ${name},`
-      : language === 'hi'
-      ? `नमस्ते ${name},`
       : `Hello ${name},`
     : language === 'kn'
     ? 'ನಮಸ್ಕಾರ,'
-    : language === 'hi'
-    ? 'नमस्ते,'
     : 'Hello,';
 
   const htmlContent = `

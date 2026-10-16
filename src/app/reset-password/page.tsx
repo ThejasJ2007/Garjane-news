@@ -118,8 +118,6 @@ function ResetPasswordContent() {
           <p className="text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted">
             {language === 'kn'
               ? 'ಲಿಂಕ್ ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ...'
-              : language === 'hi'
-              ? 'लिंक की पुष्टि हो रही है...'
               : 'Verifying reset link...'}
           </p>
         </div>
