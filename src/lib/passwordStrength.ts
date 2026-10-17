@@ -61,7 +61,7 @@ export function evaluatePassword(password: string): StrengthResult {
     if (password.length < MIN_LENGTH) {
         level = score <= 0 ? "veryWeak" : "weak";
     } else if (onlyNumbers && password.length < 12) {
-        level = "weak"; // 123456789 → weak
+        level = "weak";
     } else if (onlyLetters && password.length < 14) {
         level = score >= 3 ? "good" : score >= 2 ? "fair" : "weak";
     } else if (hasRepeatedRuns || hasSequence) {
@@ -80,17 +80,15 @@ export function evaluatePassword(password: string): StrengthResult {
 
     const filledSegments = Math.min(
         STRENGTH_SEGMENTS.length,
-        level === "empty"
-            ? 0
-            : level === "veryWeak"
-                ? 1
-                : level === "weak"
-                    ? 2
-                    : level === "fair"
-                        ? 3
-                        : level === "good"
-                            ? 4
-                            : 5
+        level === "veryWeak"
+            ? 1
+            : level === "weak"
+                ? 2
+                : level === "fair"
+                    ? 3
+                    : level === "good"
+                        ? 4
+                        : 5
     );
 
     return { level, filledSegments };
