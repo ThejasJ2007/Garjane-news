@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -9,6 +9,7 @@ import { verifyResetTokenAction, resetPasswordAction } from '@/actions/auth';
 import { Button } from '@/components/ui/Button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PasswordStrengthMeter } from '@/components/PasswordStrengthMeter';
+import { evaluatePassword, isPasswordAcceptable } from '@/lib/passwordStrength';
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -38,6 +39,7 @@ function ResetPasswordContent() {
     showPassword: t.auth.showPassword,
     hidePassword: t.auth.hidePassword,
     lengthError: t.auth.passwordTooShort,
+    weakPasswordError: "ಪಾಸ್‌ವರ್ಡ್ ದುರ್ಬಲವಾಗಿದೆ. ಕೇವಲ 'ಉತ್ತಮ' ಅಥವಾ 'ಬಲವಾದ' ಪಾಸ್‌ವರ್ಡ್‌ಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ.",
     matchError: t.auth.passwordsDoNotMatch,
     strength: {
       empty: "ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ",
@@ -64,6 +66,7 @@ function ResetPasswordContent() {
     showPassword: "Show password",
     hidePassword: "Hide password",
     lengthError: "Password must be at least 8 characters.",
+    weakPasswordError: "Password is too weak. Only Good or Strong passwords are accepted.",
     matchError: "Passwords do not match.",
     strength: {
       empty: "Enter a password",
@@ -81,6 +84,11 @@ function ResetPasswordContent() {
       announcement: "Password strength changed to",
     },
   };
+
+  const passwordStrength = useMemo(() => evaluatePassword(password), [password]);
+  const isStrongEnough = isPasswordAcceptable(passwordStrength.level);
+  const passwordsMatch = password.length > 0 && confirmPassword.length > 0 && password === confirmPassword;
+  const canSubmit = !isLoading && password.length >= 8 && isStrongEnough && passwordsMatch;
 
   useEffect(() => {
     let isMounted = true;
@@ -127,12 +135,17 @@ function ResetPasswordContent() {
     setError(null);
 
     if (password.length < 8) {
-      setError(t.auth.passwordTooShort);
+      setError(dictionary.lengthError);
+      return;
+    }
+
+    if (!isStrongEnough) {
+      setError(dictionary.weakPasswordError);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError(t.auth.passwordsDoNotMatch);
+      setError(dictionary.matchError);
       return;
     }
 
@@ -213,7 +226,7 @@ function ResetPasswordContent() {
               className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-medium text-body-sm text-garjane-text-secondary dark:text-garjane-text-muted hover:text-garjane-primary transition-colors min-h-[44px]"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>{t.auth.backToSignIn}</span>
+              <span>{dictionary.backToSignIn}</span>
             </Link>
           </div>
         </div>
@@ -338,9 +351,19 @@ function ResetPasswordContent() {
               announcement={dictionary.passwordStrength.announcement}
             />
 
-            <p className="mt-2 text-xs text-garjane-text-muted">
-              {dictionary.lengthError}
-            </p>
+            {password.length === 0 ? (
+              <p className="mt-2 text-xs text-garjane-text-muted">
+                {dictionary.lengthError}
+              </p>
+            ) : password.length < 8 ? (
+              <p className="mt-2 text-xs text-red-500 dark:text-red-400 font-medium">
+                {dictionary.lengthError}
+              </p>
+            ) : !isStrongEnough ? (
+              <p className="mt-2 text-xs text-amber-600 dark:text-amber-400 font-medium">
+                {dictionary.weakPasswordError}
+              </p>
+            ) : null}
           </div>
 
           {/* Confirm Password */}
@@ -377,12 +400,17 @@ function ResetPasswordContent() {
                 {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            {confirmPassword.length > 0 && password !== confirmPassword && (
+              <p className="mt-1.5 text-xs text-red-500 dark:text-red-400 font-medium">
+                {dictionary.matchError}
+              </p>
+            )}
           </div>
 
           <Button
             type="submit"
             className="w-full py-3 text-body font-medium flex items-center justify-center gap-2 min-h-[48px]"
-            disabled={isLoading || password.length < 8 || password !== confirmPassword}
+            disabled={!canSubmit}
           >
             {isLoading ? (
               <span>{t.auth.savingNewPassword}</span>

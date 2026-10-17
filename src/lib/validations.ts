@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isPasswordStrongEnough } from './passwordStrength';
 
 export const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -28,6 +29,9 @@ export const resetPasswordSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
+}).refine((data) => isPasswordStrongEnough(data.password), {
+  message: 'Password is too weak. Only Good or Strong passwords are accepted.',
+  path: ['password'],
 });
 
 export const articleSchema = z.object({

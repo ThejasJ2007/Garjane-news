@@ -367,9 +367,15 @@ export async function resetPasswordAction(formData: FormData) {
 
   const validated = resetPasswordSchema.safeParse(rawData);
   if (!validated.success) {
+    const fieldErrors = validated.error.flatten().fieldErrors;
+    const firstError =
+      fieldErrors.password?.[0] ||
+      fieldErrors.confirmPassword?.[0] ||
+      fieldErrors.token?.[0] ||
+      'Validation failed';
     return {
-      error: 'Validation failed',
-      fields: validated.error.flatten().fieldErrors,
+      error: firstError,
+      fields: fieldErrors,
     };
   }
 

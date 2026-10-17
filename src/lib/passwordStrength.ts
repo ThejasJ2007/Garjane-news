@@ -1,5 +1,3 @@
-"use client";
-
 import { ZxcvbnFactory } from "@zxcvbn-ts/core";
 import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
@@ -42,7 +40,11 @@ export type StrengthResult = {
     filledSegments: number;
 };
 
-const MIN_LENGTH = 8;
+export const MIN_PASSWORD_LENGTH = 8;
+
+export function isPasswordAcceptable(level: StrengthLevel): boolean {
+    return level === "good" || level === "strong" || level === "veryStrong";
+}
 
 export function evaluatePassword(password: string): StrengthResult {
     if (!password) {
@@ -58,7 +60,7 @@ export function evaluatePassword(password: string): StrengthResult {
 
     let level: StrengthLevel;
 
-    if (password.length < MIN_LENGTH) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
         level = score <= 0 ? "veryWeak" : "weak";
     } else if (onlyNumbers && password.length < 12) {
         level = "weak";
@@ -92,6 +94,12 @@ export function evaluatePassword(password: string): StrengthResult {
     );
 
     return { level, filledSegments };
+}
+
+export function isPasswordStrongEnough(password: string): boolean {
+    if (!password || password.length < MIN_PASSWORD_LENGTH) return false;
+    const { level } = evaluatePassword(password);
+    return isPasswordAcceptable(level);
 }
 
 function hasSequentialRun(password: string): boolean {
