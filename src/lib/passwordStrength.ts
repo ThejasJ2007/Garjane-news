@@ -43,7 +43,7 @@ export type StrengthResult = {
 export const MIN_PASSWORD_LENGTH = 8;
 
 export function isPasswordAcceptable(level: StrengthLevel): boolean {
-    return level === "good" || level === "strong" || level === "veryStrong";
+    return level === "strong" || level === "veryStrong";
 }
 
 export function evaluatePassword(password: string): StrengthResult {

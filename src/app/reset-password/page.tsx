@@ -39,7 +39,7 @@ function ResetPasswordContent() {
     showPassword: t.auth.showPassword,
     hidePassword: t.auth.hidePassword,
     lengthError: t.auth.passwordTooShort,
-    weakPasswordError: "ಪಾಸ್‌ವರ್ಡ್ ದುರ್ಬಲವಾಗಿದೆ. ಕೇವಲ 'ಉತ್ತಮ' ಅಥವಾ 'ಬಲವಾದ' ಪಾಸ್‌ವರ್ಡ್‌ಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ.",
+    weakPasswordError: "ಪಾಸ್‌ವರ್ಡ್ ದುರ್ಬಲವಾಗಿದೆ. ಕೇವಲ 'ಬಲವಾದ' ಅಥವಾ 'ಅತ್ಯಂತ ಬಲವಾದ' ಪಾಸ್‌ವರ್ಡ್‌ಗಳನ್ನು ಮಾತ್ರ ಸ್ವೀಕರಿಸಲಾಗುತ್ತದೆ.",
     matchError: t.auth.passwordsDoNotMatch,
     strength: {
       empty: "ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ",
@@ -66,7 +66,7 @@ function ResetPasswordContent() {
     showPassword: "Show password",
     hidePassword: "Hide password",
     lengthError: "Password must be at least 8 characters.",
-    weakPasswordError: "Password is too weak. Only Good or Strong passwords are accepted.",
+    weakPasswordError: "Password is too weak. Only Strong or Very Strong passwords are accepted.",
     matchError: "Passwords do not match.",
     strength: {
       empty: "Enter a password",
