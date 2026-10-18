@@ -42,7 +42,7 @@ function XTwitterIcon({ className = 'w-[22px] h-[22px]' }: { className?: string 
     >
       <path
         d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-        fill="#000000"
+        fill="currentColor"
       />
     </svg>
   );
@@ -236,7 +236,7 @@ export function Footer({ siteSettings }: FooterProps) {
                   className="inline-flex items-center justify-center rounded-sm transition-all duration-200 ease-out hover:scale-[1.12] hover:drop-shadow-[0_0_12px_rgba(0,0,0,0.35)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
                   aria-label="X / Twitter"
                 >
-                  <XTwitterIcon className="w-[22px] h-[22px]" />
+                  <XTwitterIcon className="w-[22px] h-[22px] text-[#000000] dark:text-white" />
                 </a>
                 <div
                   role="tooltip"
