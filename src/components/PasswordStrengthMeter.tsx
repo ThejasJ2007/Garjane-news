@@ -71,7 +71,7 @@ export function PasswordStrengthMeter({
 
     const activeLabels = labels ?? defaultLabels;
     const activeGoodJobLabel =
-        goodJobLabel ?? (language === "kn" ? "ಉತ್ತಮ ಕೆಲಸ!" : "good job!");
+        goodJobLabel ?? (language === "kn" ? "ಉತ್ತಮ ಕೆಲಸ! 👍" : "Good Job !👍");
     const activeMeterLabel =
         meterLabel ?? (language === "kn" ? "ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ" : "Password strength");
     const activeIconLabel =

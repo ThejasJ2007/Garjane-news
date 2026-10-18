@@ -58,7 +58,7 @@ export default function RegisterPage() {
       veryStrong: 'ಅತ್ಯಂತ ಬಲವಾದ',
     },
     passwordStrength: {
-      goodJob: 'ಉತ್ತಮ ಕೆಲಸ!',
+      goodJob: 'ಉತ್ತಮ ಕೆಲಸ! 👍',
       meterLabel: 'ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ',
       iconLabel: 'ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ ಸೂಚಕ',
       announcement: 'ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ ಬದಲಾಗಿದೆ',
@@ -95,7 +95,7 @@ export default function RegisterPage() {
       veryStrong: 'Very Strong',
     },
     passwordStrength: {
-      goodJob: 'good job!',
+      goodJob: 'Good Job !👍',
       meterLabel: 'Password strength',
       iconLabel: 'Password strength indicator',
       announcement: 'Password strength changed to',
