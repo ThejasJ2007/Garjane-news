@@ -85,7 +85,14 @@ export async function registerAction(formData: FormData) {
 
   const validated = registerSchema.safeParse(rawData);
   if (!validated.success) {
-    return { error: 'Invalid input', fields: validated.error.flatten().fieldErrors };
+    const fieldErrors = validated.error.flatten().fieldErrors;
+    const firstError =
+      fieldErrors.password?.[0] ||
+      fieldErrors.confirmPassword?.[0] ||
+      fieldErrors.name?.[0] ||
+      fieldErrors.email?.[0] ||
+      'Invalid input';
+    return { error: firstError, fields: fieldErrors };
   }
 
   const { name, email, password } = validated.data;

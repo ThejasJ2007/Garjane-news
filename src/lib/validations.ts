@@ -16,6 +16,9 @@ export const registerSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
+}).refine((data) => isPasswordStrongEnough(data.password), {
+  message: 'Password is too weak. Only Strong or Very Strong passwords are accepted.',
+  path: ['password'],
 });
 
 export const forgotPasswordSchema = z.object({
