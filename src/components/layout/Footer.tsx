@@ -125,6 +125,9 @@ export function Footer({ siteSettings }: FooterProps) {
   const contactPhone = socialLinks?.phone || '9019987639 / 9743519979';
   const contactPhoneClean = contactPhone.split('/')[0].trim();
   const contactPhoneHref = `tel:${contactPhoneClean.replace(/[^0-9+]/g, '')}`;
+  const contactAddress = language === 'en'
+    ? (socialLinks?.address || t.footer.addressDefault)
+    : (socialLinks?.addressKn || t.footer.addressDefault);
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
@@ -436,9 +439,7 @@ export function Footer({ siteSettings }: FooterProps) {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
                 <span className="text-[#172B4D] dark:text-slate-300 font-medium leading-relaxed">
-                  {language === 'en'
-                    ? (siteSettings?.description || t.footer.addressDefault)
-                    : (siteSettings?.descriptionKn || t.footer.addressDefault)}
+                  {contactAddress}
                 </span>
               </div>
               {contactEmail && (

@@ -28,6 +28,8 @@ async function main() {
         youtube: 'https://www.youtube.com/@GarjaneNews1',
         email: 'v4news@gmail.com',
         phone: '9019987639 / 9743519979',
+        address: 'Number 1778, 1st Floor, Rayan Nagara, Opp BSNL Tele Exchange, Kunigal Road, Nelamangala, Bengaluru Rural, 562123',
+        addressKn: 'ನಂ. 1778, 1ನೇ ಮಹಡಿ, ರಾಯನ್ ನಗರ, ಬಿಎಸ್‌ಎನ್‌ಎಲ್ ಟೆಲಿ ಎಕ್ಸ್‌ಚೇಂಜ್ ಎದುರು, ಕುಣಿಗಲ್ ರಸ್ತೆ, ನೆಲಮಂಗಲ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ, 562123',
       },
     },
   });

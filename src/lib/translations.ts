@@ -325,7 +325,7 @@ export const translations: Record<Language, Translations> = {
       followUsOn: 'ನಮ್ಮನ್ನು ಫಾಲೋ ಮಾಡಿ',
       subscribeOn: 'ಸಬ್‌ಸ್ಕ್ರೈಬ್ ಮಾಡಿ',
       taglineDefault: 'ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ',
-      addressDefault: 'ನೆಲಮಂಗಲ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ ಹಾಗೂ ಕರ್ನಾಟಕದ ಸಮಗ್ರ, ನಿಖರ ಮತ್ತು ವಸ್ತುನಿಷ್ಠ ಸುದ್ದಿಗಳ ಮುಂಚೂಣಿ ತಾಣ.',
+      addressDefault: 'ನಂ. 1778, 1ನೇ ಮಹಡಿ, ರಾಯನ್ ನಗರ, ಬಿಎಸ್‌ಎನ್‌ಎಲ್ ಟೆಲಿ ಎಕ್ಸ್‌ಚೇಂಜ್ ಎದುರು, ಕುಣಿಗಲ್ ರಸ್ತೆ, ನೆಲಮಂಗಲ, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ, 562123',
     },
     search: {
       title: 'ಸುದ್ದಿ ಹುಡುಕಾಟ',
@@ -529,7 +529,7 @@ export const translations: Record<Language, Translations> = {
       followUsOn: 'Follow us on',
       subscribeOn: 'Subscribe on',
       taglineDefault: 'Your Local News, Your Voice',
-      addressDefault: 'Nelamangala, Bengaluru Rural, and Karnataka trusted source for breaking local news and reports.',
+      addressDefault: 'Number 1778, 1st Floor, Rayan Nagara, Opp BSNL Tele Exchange, Kunigal Road, Nelamangala, Bengaluru Rural, 562123',
     },
     search: {
       title: 'Search News',

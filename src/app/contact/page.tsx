@@ -38,10 +38,11 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-body">ಮುಖ್ಯ ಕಚೇರಿ / Head Office</h3>
                   <address className="not-italic text-body-sm text-garjane-text-muted mt-1 leading-relaxed">
-                    Garjane News ಮೀಡಿಯಾ ಹೌಸ್,<br />
-                    ಬೆಂಗಳೂರು-ತುಮಕೂರು ಮುಖ್ಯ ರಸ್ತೆ,<br />
-                    ನೆಲಮಂಗಲ ಟೌನ್, ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ - 562123<br />
-                    ಕರ್ನಾಟಕ, ಭಾರತ.
+                    Garjane News ಮೀಡಿಯಾ ಹೌಸ್ / Media House,<br />
+                    Number 1778, 1st Floor, Rayan Nagara,<br />
+                    Opp BSNL Tele Exchange, Kunigal Road,<br />
+                    Nelamangala, Bengaluru Rural, 562123<br />
+                    ಕರ್ನಾಟಕ, ಭಾರತ / Karnataka, India.
                   </address>
                 </div>
               </div>
