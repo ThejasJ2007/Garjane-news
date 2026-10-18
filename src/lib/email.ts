@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import nodemailer from 'nodemailer';
 import { Language } from './translations';
 
@@ -270,10 +268,24 @@ export async function sendPasswordResetEmail({
     ? 'ನಮಸ್ಕಾರ,'
     : 'Hello,';
 
-  const logoPath = path.join(process.cwd(), 'public', 'images', 'Garjane-news-logo.png');
-  const hasLocalLogo = fs.existsSync(logoPath);
-  const appBaseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://garjanenews.com').replace(/\/+$/, '');
-  const logoSrc = hasLocalLogo ? 'cid:garjane-news-logo' : `${appBaseUrl}/images/Garjane-news-logo.png`;
+  // Use a reliable, publicly reachable HTTPS CDN URL for email clients (Gmail, Outlook, etc.).
+  // Localhost and unresolvable domains fail under Google's Image Proxy, and CID attachments often trigger broken image placeholders in Gmail Web.
+  const CDN_LOGO_URL =
+    'https://cdn.jsdelivr.net/gh/ThejasJ2007/Garjane-news@main/public/images/Garjane-news-logo.png';
+  const customLogoUrl = process.env.EMAIL_LOGO_URL?.trim();
+  const rawAppUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  const isLiveCustomHttps =
+    Boolean(rawAppUrl) &&
+    rawAppUrl!.startsWith('https://') &&
+    !rawAppUrl!.includes('localhost') &&
+    !rawAppUrl!.includes('127.0.0.1') &&
+    !rawAppUrl!.includes('garjanenews.com');
+
+  const logoUrl =
+    customLogoUrl ||
+    (isLiveCustomHttps
+      ? `${rawAppUrl!.replace(/\/+$/, '')}/images/Garjane-news-logo.png`
+      : CDN_LOGO_URL);
 
   const htmlContent = `
 <!DOCTYPE html>
@@ -298,11 +310,12 @@ export async function sendPasswordResetEmail({
                       <tr>
                         <td align="center">
                           <img
-                            src="${logoSrc}"
+                            src="${logoUrl}"
                             alt="Garjane News Logo"
                             width="64"
                             height="64"
-                            style="display: block; width: 64px; height: 64px; max-width: 64px; border-radius: 14px; border: 0; outline: none; text-decoration: none;"
+                            border="0"
+                            style="display: block; width: 64px; height: 64px; max-width: 64px; border-radius: 14px; border: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                           />
                         </td>
                       </tr>
@@ -416,22 +429,12 @@ Garjane News (ಗರ್ಜನೆ ನ್ಯೂಸ್)
   }
 
   try {
-    const attachments = [];
-    if (hasLocalLogo) {
-      attachments.push({
-        filename: 'Garjane-news-logo.png',
-        path: logoPath,
-        cid: 'garjane-news-logo',
-      });
-    }
-
     const info = await transporter.sendMail({
       from,
       to,
       subject,
       text: textContent,
       html: htmlContent,
-      attachments: attachments.length > 0 ? attachments : undefined,
     });
 
     const acceptedCount = Array.isArray(info.accepted) ? info.accepted.length : 0;
