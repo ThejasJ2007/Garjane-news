@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import nodemailer from 'nodemailer';
 import { Language } from './translations';
 
@@ -268,6 +270,11 @@ export async function sendPasswordResetEmail({
     ? 'ನಮಸ್ಕಾರ,'
     : 'Hello,';
 
+  const logoPath = path.join(process.cwd(), 'public', 'images', 'Garjane-news-logo.png');
+  const hasLocalLogo = fs.existsSync(logoPath);
+  const appBaseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://garjanenews.com').replace(/\/+$/, '');
+  const logoSrc = hasLocalLogo ? 'cid:garjane-news-logo' : `${appBaseUrl}/images/Garjane-news-logo.png`;
+
   const htmlContent = `
 <!DOCTYPE html>
 <html lang="${language}">
@@ -287,9 +294,19 @@ export async function sendPasswordResetEmail({
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center">
-                    <div style="display: inline-block; width: 44px; height: 44px; background-color: #ffffff; border-radius: 12px; line-height: 44px; text-align: center; margin-bottom: 8px;">
-                      <span style="color: #C01A2A; font-size: 24px; font-weight: bold;">ಗ</span>
-                    </div>
+                    <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 0 auto 12px auto;">
+                      <tr>
+                        <td align="center">
+                          <img
+                            src="${logoSrc}"
+                            alt="Garjane News Logo"
+                            width="64"
+                            height="64"
+                            style="display: block; width: 64px; height: 64px; max-width: 64px; border-radius: 14px; border: 0; outline: none; text-decoration: none;"
+                          />
+                        </td>
+                      </tr>
+                    </table>
                     <h1 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 700; letter-spacing: -0.01em;">ಗರ್ಜನೆ ನ್ಯೂಸ್ &bull; Garjane News</h1>
                     <p style="margin: 4px 0 0 0; color: #fecdd3; font-size: 12px;">ನಿಮ್ಮ ಊರಿನ ಸುದ್ದಿ, ನಿಮ್ಮ ಧ್ವನಿ</p>
                   </td>
@@ -399,12 +416,22 @@ Garjane News (ಗರ್ಜನೆ ನ್ಯೂಸ್)
   }
 
   try {
+    const attachments = [];
+    if (hasLocalLogo) {
+      attachments.push({
+        filename: 'Garjane-news-logo.png',
+        path: logoPath,
+        cid: 'garjane-news-logo',
+      });
+    }
+
     const info = await transporter.sendMail({
       from,
       to,
       subject,
       text: textContent,
       html: htmlContent,
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
 
     const acceptedCount = Array.isArray(info.accepted) ? info.accepted.length : 0;
