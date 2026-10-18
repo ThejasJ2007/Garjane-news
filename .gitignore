@@ -29,4 +29,7 @@ cookies.txt
 .autoglm*
 .next-build-live.txt
 schema-verify-result.txt
+.kilo
+scratch/
+
 

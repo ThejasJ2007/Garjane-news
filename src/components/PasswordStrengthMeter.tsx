@@ -6,14 +6,15 @@ import {
     evaluatePassword,
     type StrengthLevel,
 } from "@/lib/passwordStrength";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type PasswordStrengthMeterProps = {
     password: string;
-    labels: Record<StrengthLevel, string>;
-    goodJobLabel: string;
-    meterLabel: string;
-    iconLabel: string;
-    announcement: string;
+    labels?: Record<StrengthLevel, string>;
+    goodJobLabel?: string;
+    meterLabel?: string;
+    iconLabel?: string;
+    announcement?: string;
 };
 
 const ICON_BG: Record<StrengthLevel, string> = {
@@ -44,6 +45,46 @@ export function PasswordStrengthMeter({
     iconLabel,
     announcement,
 }: PasswordStrengthMeterProps) {
+    const { language } = useLanguage();
+
+    const defaultLabels: Record<StrengthLevel, string> = useMemo(() => {
+        return language === "kn"
+            ? {
+                  empty: "ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ",
+                  veryWeak: "ಬಹಳ ದುರ್ಬಲ",
+                  weak: "ದುರ್ಬಲ",
+                  fair: "ಸಾಧಾರಣ",
+                  good: "ಉತ್ತಮ",
+                  strong: "ಬಲವಾದ",
+                  veryStrong: "ಅತ್ಯಂತ ಬಲವಾದ",
+              }
+            : {
+                  empty: "Enter a password",
+                  veryWeak: "Very Weak",
+                  weak: "Weak",
+                  fair: "Fair",
+                  good: "Good",
+                  strong: "Strong",
+                  veryStrong: "Very Strong",
+              };
+    }, [language]);
+
+    const activeLabels = labels ?? defaultLabels;
+    const activeGoodJobLabel =
+        goodJobLabel ?? (language === "kn" ? "ಉತ್ತಮ ಕೆಲಸ!" : "good job!");
+    const activeMeterLabel =
+        meterLabel ?? (language === "kn" ? "ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ" : "Password strength");
+    const activeIconLabel =
+        iconLabel ??
+        (language === "kn"
+            ? "ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ ಸೂಚಕ"
+            : "Password strength indicator");
+    const activeAnnouncement =
+        announcement ??
+        (language === "kn"
+            ? "ಪಾಸ್‌ವರ್ಡ್ ಸಾಮರ್ಥ್ಯ ಬದಲಾಗಿದೆ"
+            : "Password strength changed to");
+
     const { level, filledSegments } = useMemo(
         () => evaluatePassword(password),
         [password]
@@ -61,14 +102,14 @@ export function PasswordStrengthMeter({
     const showGoodJob = level === "strong" || level === "veryStrong";
 
     const liveMessage =
-        level === "empty" ? "" : `${announcement}: ${labels[level]}`;
+        level === "empty" ? "" : `${activeAnnouncement}: ${activeLabels[level]}`;
 
     return (
         <div className="mt-2 w-full">
             <div
                 className="flex items-center gap-3"
                 role="group"
-                aria-label={meterLabel}
+                aria-label={activeMeterLabel}
             >
                 <div className="flex flex-1 items-center gap-1.5">
                     {STRENGTH_SEGMENTS.map((segment, idx) => {
@@ -99,7 +140,7 @@ export function PasswordStrengthMeter({
                 <div
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${ICON_BG[level]}`}
                     role="img"
-                    aria-label={`${iconLabel}: ${labels[level]}`}
+                    aria-label={`${activeIconLabel}: ${activeLabels[level]}`}
                     style={{
                         transitionProperty: prefersReducedMotion
                             ? "none"
@@ -118,11 +159,11 @@ export function PasswordStrengthMeter({
                     transitionDuration: prefersReducedMotion ? "0ms" : "300ms",
                 }}
             >
-                {labels[level]}
+                {activeLabels[level]}
                 {showGoodJob && (
                     <>
                         <span className="ml-1 font-normal text-slate-500">{" — "}</span>
-                        <span className="font-normal text-slate-600">{goodJobLabel}</span>
+                        <span className="font-normal text-slate-600">{activeGoodJobLabel}</span>
                     </>
                 )}
             </p>
