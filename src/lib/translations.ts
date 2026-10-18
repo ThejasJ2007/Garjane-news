@@ -385,7 +385,7 @@ export const translations: Record<Language, Translations> = {
       sendingResetLink: 'ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ...',
       resetLinkSentTitle: 'ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ!',
       resetLinkSentDesc:
-        'ನಿಮ್ಮ ಇಮೇಲ್ ಐಡಿಗೆ ನಾವು ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಿದ್ದೇವೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್ ಅಥವಾ ಸ್ಪ್ಯಾಮ್ ಫೋಲ್ಡರ್ ಪರಿಶೀಲಿಸಿ.',
+        'ನಿಮ್ಮ ಇಮೇಲ್ ಐಡಿಗೆ ನಾವು ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಿದ್ದೇವೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್ ಪರಿಶೀಲಿಸಿ.',
       backToSignIn: 'ಲಾಗಿನ್‌ಗೆ ಹಿಂತಿರುಗಿ',
       resetPasswordTitle: 'ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಿ',
       resetPasswordSubtitle: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಖಾತೆಗೆ ಹೊಸ ಬಲವಾದ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.',
@@ -589,7 +589,7 @@ export const translations: Record<Language, Translations> = {
       sendingResetLink: 'Sending Reset Link...',
       resetLinkSentTitle: 'Password Reset Link Sent Successfully!',
       resetLinkSentDesc:
-        "We've sent a password reset link to your Email ID. Please check your inbox or spam folder.",
+        "We've sent a password reset link to your Email ID. Please check your inbox.",
       backToSignIn: 'Back to Sign In',
       resetPasswordTitle: 'Set New Password',
       resetPasswordSubtitle: 'Please enter a new strong password for your account.',
