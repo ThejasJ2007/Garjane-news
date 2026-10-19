@@ -1,5 +1,36 @@
 import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { extendTailwindMerge } from 'tailwind-merge';
+
+/**
+ * tailwind-merge does not know about the custom font sizes defined in tailwind.config.ts
+ * (text-body, text-body-sm, text-body-lg, text-headline-*, text-caption, text-overline).
+ * Without registering them, tailwind-merge classifies them as text-color classes, so
+ * whenever they are merged with a real color class (e.g. `text-garjane-secondary-foreground`
+ * in the Button variants), the color class gets stripped and buttons lose their foreground
+ * color (invisible text/icons on dark backgrounds in light theme). Registering the custom
+ * font sizes under the 'font-size' class group keeps both the color and the font size.
+ */
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [
+        {
+          text: [
+            'body',
+            'body-sm',
+            'body-lg',
+            'headline-1',
+            'headline-2',
+            'headline-3',
+            'headline-4',
+            'caption',
+            'overline',
+          ],
+        },
+      ],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
