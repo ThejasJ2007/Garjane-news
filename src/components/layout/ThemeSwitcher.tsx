@@ -11,6 +11,52 @@ interface ThemeSwitcherProps {
   showLabels?: boolean;
 }
 
+type ThemeValue = 'light' | 'dark' | 'system';
+type ResolvedTheme = 'light' | 'dark';
+
+const DARK_MEDIA_QUERY = '(prefers-color-scheme: dark)';
+
+function resolveTheme(theme: ThemeValue): ResolvedTheme {
+  if (theme !== 'system') return theme;
+  return window.matchMedia(DARK_MEDIA_QUERY).matches ? 'dark' : 'light';
+}
+
+/**
+ * Applies the theme to <html> straight away.
+ *
+ * next-themes only writes the theme to the document when the stored preference
+ * actually changes value. If the document is out of sync with that preference
+ * (the inline theme script did not run, a cached document was restored, ...),
+ * picking the option that is already selected is a no-op and the page keeps the
+ * old theme until it is reloaded by hand. Writing the theme here keeps the
+ * document in sync with the selection immediately, with no manual intervention.
+ */
+function applyTheme(theme: ThemeValue): ResolvedTheme {
+  const resolved = resolveTheme(theme);
+  const root = document.documentElement;
+
+  // Suppress transitions while the theme swaps, mirroring `disableTransitionOnChange`.
+  const transitionGuard = document.createElement('style');
+  transitionGuard.appendChild(
+    document.createTextNode(
+      '*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}'
+    )
+  );
+  document.head.appendChild(transitionGuard);
+
+  root.classList.remove('light', 'dark');
+  root.classList.add(resolved);
+  root.setAttribute('data-theme', resolved);
+  root.style.colorScheme = resolved;
+
+  window.getComputedStyle(document.body);
+  setTimeout(() => {
+    transitionGuard.remove();
+  }, 1);
+
+  return resolved;
+}
+
 export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +93,14 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
     };
   }, [isOpen]);
 
-  const currentTheme = theme || 'system';
+  const currentTheme: ThemeValue = (theme as ThemeValue) || 'system';
+
+  // Keep the document in sync with the active preference, so the page always
+  // renders the selected theme without needing a reload.
+  useEffect(() => {
+    if (!mounted) return;
+    applyTheme(currentTheme);
+  }, [mounted, currentTheme]);
 
   const themeOptions = [
     {
@@ -90,7 +143,10 @@ export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
     );
   }
 
-  const handleSelect = (val: string) => {
+  const handleSelect = (val: ThemeValue) => {
+    // Apply the theme to the document right away so the switch is instant and
+    // works even when the preference itself does not change value.
+    applyTheme(val);
     setTheme(val);
     setIsOpen(false);
   };
