@@ -26,6 +26,51 @@
     @apply bg-garjane-background-dark text-garjane-text-inverse;
   }
 
+  /* Light mode CSS variables */
+  :root,
+  [data-theme="light"] {
+    --garjane-background-primary: #FAFAFA;
+    --garjane-background-card: #FFFFFF;
+    --garjane-background-elevated: #FFFFFF;
+    --garjane-background-overlay: rgba(26, 26, 46, 0.05);
+    --garjane-text-primary: #1A1A2E;
+    --garjane-text-secondary: #4A4A5A;
+    --garjane-text-muted: #7A7A8A;
+    --garjane-text-inverse: #FFFFFF;
+    --garjane-border-light: #E5E5E5;
+    --garjane-border-default: #E5E5E5;
+    --garjane-breaking-bg: #FEF2F2;
+    --garjane-breaking-text: #991B1B;
+    --garjane-shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+    --garjane-shadow-elevated: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    --garjane-shadow-card-light: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+    --garjane-shadow-card-hover-light: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+    --garjane-shadow-card-elevated-light: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+    --garjane-shadow-breaking: 0 0 0 1px #FCA5A5, 0 4px 6px -1px rgb(220 38 38 / 0.15);
+  }
+
+  /* Dark mode CSS variables */
+  .dark {
+    --garjane-background-primary: #0D0D14;
+    --garjane-background-card: #1A1A2E;
+    --garjane-background-elevated: #2D2D4A;
+    --garjane-background-overlay: rgba(0, 0, 0, 0.5);
+    --garjane-text-primary: #FFFFFF;
+    --garjane-text-secondary: #CBD5E1;
+    --garjane-text-muted: #94A3B8;
+    --garjane-text-inverse: #1A1A2E;
+    --garjane-border-light: #2D2D4A;
+    --garjane-border-default: #2D2D4A;
+    --garjane-breaking-bg: #450A0A;
+    --garjane-breaking-text: #FCA5A5;
+    --garjane-shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+    --garjane-shadow-elevated: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --garjane-shadow-card-light: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+    --garjane-shadow-card-hover-light: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --garjane-shadow-card-elevated-light: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --garjane-shadow-breaking: 0 0 0 1px #FCA5A5, 0 4px 6px -1px rgb(220 38 38 / 0.2);
+  }
+
   /* Kannada text rendering */
   .font-kannada {
     font-family: var(--font-noto-sans-kannada);

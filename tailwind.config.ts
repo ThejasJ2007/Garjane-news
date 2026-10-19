@@ -34,6 +34,9 @@ const config: Config = {
             dark: '#0D0D14',
             card: '#FFFFFF',
             cardDark: '#1A1A2E',
+            cardLight: '#FFFFFF',
+            elevated: '#FFFFFF',
+            overlay: 'rgba(26, 26, 46, 0.05)',
           },
           text: {
             primary: '#1A1A2E',
@@ -41,6 +44,7 @@ const config: Config = {
             muted: '#7A7A8A',
             inverse: '#FFFFFF',
             link: '#C01A2A',
+            lightInverse: '#1A1A2E',
           },
           border: {
             light: '#E5E5E5',
@@ -96,7 +100,10 @@ const config: Config = {
         'card': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
         'card-hover': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
         'card-elevated': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-        'breaking': '0 0 0 1px #FCA5A5, 0 4px 6px -1px rgb(220 38 38 / 0.2)',
+        'breaking': '0 0 0 1px #FCA5A5, 0 4px 6px -1px rgb(220 38 38 / 0.15)',
+        'card-light': '0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08)',
+        'card-hover-light': '0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08)',
+        'card-elevated-light': '0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08)',
       },
       animation: {
         'ticker': 'ticker 30s linear infinite',
