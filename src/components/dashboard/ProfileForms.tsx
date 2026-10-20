@@ -216,7 +216,7 @@ export function ProfileForms({ user }: ProfileFormsProps) {
             <Button
               type="submit"
               variant="secondary"
-              className="flex items-center gap-2 text-garjane-text-primary dark:text-white transition-colors duration-200"
+              className="rounded-xl flex items-center gap-2 text-garjane-text-primary dark:text-white transition-colors duration-200"
               disabled={isUpdatingPassword}
             >
               <Shield className="w-4 h-4 shrink-0 text-garjane-text-primary dark:text-white update-password-icon transition-colors duration-200" />{' '}
