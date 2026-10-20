@@ -598,17 +598,17 @@ export function ArticleDetail({
               <div className="flex items-center gap-2">
                 <span className="text-caption text-garjane-text-muted">{t.footer.followUsOn}:</span>
                 <a href="https://www.facebook.com/profile.php?id=61563431741881" target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="share-button" aria-label="Facebook">
+                  <Button variant="ghost" size="sm" className="share-button hover:text-[#1877F2] hover:bg-blue-50 dark:hover:bg-blue-950/40" aria-label="Facebook">
                     <Facebook className="w-5 h-5" />
                   </Button>
                 </a>
                 <a href="https://twitter.com/garjanenews" target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="share-button" aria-label="Twitter">
+                  <Button variant="ghost" size="sm" className="share-button hover:text-black dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Twitter">
                     <Twitter className="w-5 h-5" />
                   </Button>
                 </a>
                 <a href="https://www.instagram.com/garjanenews_kannada/" target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="sm" className="share-button" aria-label="Instagram">
+                  <Button variant="ghost" size="sm" className="share-button hover:text-[#E4405F] hover:bg-pink-50 dark:hover:bg-pink-950/40" aria-label="Instagram">
                     <Instagram className="w-5 h-5" />
                   </Button>
                 </a>
