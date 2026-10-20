@@ -173,7 +173,11 @@
   }
 
   .btn-secondary {
-    @apply btn bg-garjane-secondary text-garjane-secondary-foreground hover:bg-garjane-secondary-light focus-visible:ring-garjane-secondary;
+    @apply btn bg-garjane-background-light dark:bg-garjane-secondary text-garjane-text-primary dark:text-garjane-secondary-foreground hover:bg-slate-200/80 dark:hover:bg-garjane-secondary-light border border-garjane-border-light dark:border-garjane-border-dark focus-visible:ring-garjane-secondary;
+  }
+
+  .update-password-icon {
+    @apply text-garjane-text-primary dark:text-white transition-colors duration-200;
   }
 
   .btn-outline {

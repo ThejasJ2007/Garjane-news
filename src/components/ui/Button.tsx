@@ -16,7 +16,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants = {
       primary: 'bg-garjane-primary text-garjane-primary-foreground hover:bg-garjane-primary-dark active:bg-garjane-primary-dark focus-visible:ring-garjane-primary',
-      secondary: 'bg-garjane-secondary text-garjane-secondary-foreground hover:bg-garjane-secondary-dark active:bg-garjane-secondary-dark focus-visible:ring-garjane-secondary',
+      secondary: 'bg-garjane-background-light dark:bg-garjane-secondary text-garjane-text-primary dark:text-garjane-secondary-foreground hover:bg-slate-200/80 dark:hover:bg-garjane-secondary-light active:bg-slate-300 dark:active:bg-garjane-secondary-dark border border-garjane-border-light dark:border-garjane-border-dark focus-visible:ring-garjane-secondary',
       outline: 'border-2 border-garjane-primary text-garjane-primary hover:bg-garjane-primary hover:text-garjane-primary-foreground focus-visible:ring-garjane-primary',
       ghost: 'text-garjane-text-primary dark:text-garjane-text-inverse hover:bg-black/5 dark:hover:bg-white/10 focus-visible:ring-garjane-primary',
       destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',

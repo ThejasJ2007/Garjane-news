@@ -213,8 +213,14 @@ export function ProfileForms({ user }: ProfileFormsProps) {
           </div>
 
           <div className="pt-2">
-            <Button type="submit" variant="secondary" className="flex items-center gap-2 text-garjane-secondary-foreground dark:text-white" disabled={isUpdatingPassword}>
-              <Shield className="w-4 h-4 shrink-0 text-garjane-secondary-foreground dark:text-white" /> {isUpdatingPassword ? 'ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...' : 'ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ / Update Password'}
+            <Button
+              type="submit"
+              variant="secondary"
+              className="flex items-center gap-2 text-garjane-text-primary dark:text-white transition-colors duration-200"
+              disabled={isUpdatingPassword}
+            >
+              <Shield className="w-4 h-4 shrink-0 text-garjane-text-primary dark:text-white update-password-icon transition-colors duration-200" />{' '}
+              {isUpdatingPassword ? 'ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...' : 'ಪಾಸ್‌ವರ್ಡ್ ನವೀಕರಿಸಿ / Update Password'}
             </Button>
           </div>
         </form>
