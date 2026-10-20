@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 /**
  * Official Facebook App Icon
  * Official Facebook brand blue (#1877F2) with white 'f'.
- * No extra shadows, gradients, or decorative effects.
  */
 export function FacebookIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
@@ -30,8 +29,7 @@ export function FacebookIcon({ className = 'w-6 h-6' }: { className?: string }) 
 
 /**
  * Official X (formerly Twitter) Logo
- * Authentic mathematical double-struck 𝕏 glyph in official black (#000000) / dark-mode white (#FFFFFF).
- * No extra shadows, gradients, or decorative effects.
+ * Authentic mathematical double-struck 𝕏 glyph.
  */
 export function XTwitterIcon({ className = 'w-[22px] h-[22px]' }: { className?: string }) {
   return (
@@ -56,7 +54,6 @@ export function XTwitterIcon({ className = 'w-[22px] h-[22px]' }: { className?: 
 /**
  * Official Instagram App Icon
  * Authentic official Instagram brand gradient with white camera glyph.
- * No extra shadows, borders, or decorative effects.
  */
 export function InstagramIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
@@ -99,7 +96,6 @@ export function InstagramIcon({ className = 'w-6 h-6' }: { className?: string })
 /**
  * Official YouTube Play Button App Icon
  * Official YouTube brand red (#FF0000) with centered white play triangle.
- * No extra shadows, gradients, or decorative effects.
  */
 export function YouTubeIcon({ className = 'w-6 h-6' }: { className?: string }) {
   return (
@@ -127,6 +123,8 @@ export interface SocialMediaIconsProps {
   twitterUrl?: string;
   instagramUrl?: string;
   youtubeUrl?: string;
+  followUsText?: string;
+  subscribeOnText?: string;
   className?: string;
 }
 
@@ -135,53 +133,183 @@ export function SocialMediaIcons({
   twitterUrl = 'https://twitter.com/garjanenews',
   instagramUrl = 'https://www.instagram.com/garjanenews_kannada/',
   youtubeUrl = 'https://www.youtube.com/@GarjaneNews1',
+  followUsText = 'Follow us on',
+  subscribeOnText = 'Subscribe on',
   className,
 }: SocialMediaIconsProps) {
   return (
     <div className={cn('flex items-center gap-4', className)}>
       {/* Facebook */}
-      <a
-        href={facebookUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded-full transition-opacity duration-200 hover:opacity-80 active:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
-        aria-label="Facebook"
-      >
-        <FacebookIcon className="w-6 h-6" />
-      </a>
+      <div className="relative group inline-flex items-center justify-center">
+        <a
+          href={facebookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-full transition-opacity duration-200 hover:opacity-85 active:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
+          aria-label="Facebook"
+        >
+          <FacebookIcon className="w-6 h-6" />
+        </a>
+        <div
+          role="tooltip"
+          className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 -translate-x-1/2 translate-y-1 scale-95 opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100"
+        >
+          <div className="social-tooltip social-tooltip-facebook">
+            <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
+              {followUsText}
+            </span>
+            <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
+              Facebook
+            </span>
+            <svg
+              className="absolute -bottom-[8px] left-1/2 -translate-x-1/2 pointer-events-none"
+              width="18"
+              height="9"
+              viewBox="0 0 18 9"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 0 L9 8 L17 0"
+                stroke="#1877f2"
+                strokeWidth="2"
+                fill="#ffffff"
+                strokeLinejoin="round"
+              />
+              <line x1="2" y1="0" x2="16" y2="0" stroke="#ffffff" strokeWidth="3" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       {/* X (formerly Twitter) */}
-      <a
-        href={twitterUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded-sm transition-opacity duration-200 hover:opacity-80 active:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
-        aria-label="X (formerly Twitter)"
-      >
-        <XTwitterIcon className="w-[22px] h-[22px]" />
-      </a>
+      <div className="relative group inline-flex items-center justify-center">
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-sm transition-opacity duration-200 hover:opacity-85 active:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
+          aria-label="X (formerly Twitter)"
+        >
+          <XTwitterIcon className="w-[22px] h-[22px]" />
+        </a>
+        <div
+          role="tooltip"
+          className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 -translate-x-1/2 translate-y-1 scale-95 opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100"
+        >
+          <div className="social-tooltip social-tooltip-twitter">
+            <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
+              {followUsText}
+            </span>
+            <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
+              X
+            </span>
+            <svg
+              className="absolute -bottom-[8px] left-1/2 -translate-x-1/2 pointer-events-none"
+              width="18"
+              height="9"
+              viewBox="0 0 18 9"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 0 L9 8 L17 0"
+                stroke="#000000"
+                strokeWidth="2"
+                fill="#ffffff"
+                strokeLinejoin="round"
+              />
+              <line x1="2" y1="0" x2="16" y2="0" stroke="#ffffff" strokeWidth="3" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       {/* Instagram */}
-      <a
-        href={instagramUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded-[6px] transition-opacity duration-200 hover:opacity-80 active:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
-        aria-label="Instagram"
-      >
-        <InstagramIcon className="w-6 h-6" />
-      </a>
+      <div className="relative group inline-flex items-center justify-center">
+        <a
+          href={instagramUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-[6px] transition-opacity duration-200 hover:opacity-85 active:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
+          aria-label="Instagram"
+        >
+          <InstagramIcon className="w-6 h-6" />
+        </a>
+        <div
+          role="tooltip"
+          className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 -translate-x-1/2 translate-y-1 scale-95 opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100"
+        >
+          <div className="social-tooltip social-tooltip-instagram">
+            <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
+              {followUsText}
+            </span>
+            <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
+              Instagram
+            </span>
+            <svg
+              className="absolute -bottom-[8px] left-1/2 -translate-x-1/2 pointer-events-none"
+              width="18"
+              height="9"
+              viewBox="0 0 18 9"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 0 L9 8 L17 0"
+                stroke="#d6249f"
+                strokeWidth="2"
+                fill="#ffffff"
+                strokeLinejoin="round"
+              />
+              <line x1="2" y1="0" x2="16" y2="0" stroke="#ffffff" strokeWidth="3" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       {/* YouTube */}
-      <a
-        href={youtubeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center rounded-[6px] transition-opacity duration-200 hover:opacity-80 active:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
-        aria-label="YouTube"
-      >
-        <YouTubeIcon className="w-6 h-6" />
-      </a>
+      <div className="relative group inline-flex items-center justify-center">
+        <a
+          href={youtubeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-[6px] transition-opacity duration-200 hover:opacity-85 active:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-garjane-primary focus-visible:ring-offset-2"
+          aria-label="YouTube"
+        >
+          <YouTubeIcon className="w-6 h-6" />
+        </a>
+        <div
+          role="tooltip"
+          className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 -translate-x-1/2 translate-y-1 scale-95 opacity-0 transition-all duration-200 ease-out group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100"
+        >
+          <div className="social-tooltip social-tooltip-youtube">
+            <span className="text-[13px] font-semibold text-[#0F172A] leading-tight whitespace-nowrap">
+              {subscribeOnText}
+            </span>
+            <span className="text-[14px] font-bold text-[#0F172A] leading-tight whitespace-nowrap">
+              YouTube
+            </span>
+            <svg
+              className="absolute -bottom-[8px] left-1/2 -translate-x-1/2 pointer-events-none"
+              width="18"
+              height="9"
+              viewBox="0 0 18 9"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 0 L9 8 L17 0"
+                stroke="#ff0000"
+                strokeWidth="2"
+                fill="#ffffff"
+                strokeLinejoin="round"
+              />
+              <line x1="2" y1="0" x2="16" y2="0" stroke="#ffffff" strokeWidth="3" />
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -69,6 +69,9 @@ export function Footer({ siteSettings }: FooterProps) {
     : (siteSettings?.taglineKn || t.footer.taglineDefault);
 
 
+  const followUsText = language === 'kn' ? 'ಫಾಲೋ ಮಾಡಿ' : 'Follow us on';
+  const subscribeOnText = language === 'kn' ? 'ಚಂದಾದಾರರಾಗಿ' : 'Subscribe on';
+
   return (
     <footer className="bg-white dark:bg-garjane-background-dark/95 text-[#172B4D] dark:text-slate-200 subpixel-antialiased border-t border-garjane-border-light dark:border-garjane-border-dark transition-colors" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 lg:py-16">
@@ -99,6 +102,8 @@ export function Footer({ siteSettings }: FooterProps) {
               twitterUrl={TWITTER_PAGE_URL}
               instagramUrl={INSTAGRAM_PAGE_URL}
               youtubeUrl={YOUTUBE_PAGE_URL}
+              followUsText={followUsText}
+              subscribeOnText={subscribeOnText}
             />
           </div>
 
