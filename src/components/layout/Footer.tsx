@@ -191,13 +191,13 @@ export function Footer({ siteSettings }: FooterProps) {
               {contactEmail && (
                 <a href={`mailto:${contactEmail}`} className="flex items-center gap-3 text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">
                   <Mail className="w-5 h-5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
-                  <span className="text-[#172B4D] dark:text-slate-300 font-medium">{contactEmail}</span>
+                  <span className="font-medium">{contactEmail}</span>
                 </a>
               )}
               {contactPhone && (
                 <a href={contactPhoneHref} className="flex items-center gap-3 text-[#172B4D] dark:text-slate-300 hover:text-garjane-primary dark:hover:text-garjane-primary-light transition-colors duration-200">
                   <Phone className="w-5 h-5 flex-shrink-0 text-garjane-primary" aria-hidden="true" />
-                  <span className="whitespace-nowrap text-[#172B4D] dark:text-slate-300 font-medium">{contactPhone}</span>
+                  <span className="whitespace-nowrap font-medium">{contactPhone}</span>
                 </a>
               )}
             </address>
